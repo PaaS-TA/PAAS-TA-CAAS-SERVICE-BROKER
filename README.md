@@ -25,10 +25,10 @@ CaaS 서비스 브로커는 CaaS 서버와 PaaS-TA(클라우드 파운드리)간
   - PaaS-TA Service Java broker (>= Java 8)
   - Spring boot 1.5.14
     > Spring boot JPA \
-    > Spring boot Web \
-    > Spring boot Security \
-    > Spring boot Session core \
-    > Spring boot Test
+      Spring boot Web \
+      Spring boot Security \
+      Spring boot Session core \
+      Spring boot Test
   
   - MySQL JDBC Driver (Runtime Provider)
   - Jayway Json-Path
@@ -40,44 +40,44 @@ CaaS 서비스 브로커는 CaaS 서버와 PaaS-TA(클라우드 파운드리)간
 - Catalog 조회 (GET) : http://localhost:8888/v2/catalog
   - Header
     > Authorization : Bearer type \
-    > X-Broker-Api-Version : 2.4 \
-    > Content-Type : application/json
+      X-Broker-Api-Version : 2.4 \
+      Content-Type : application/json
   
   - Body : None
 
 - 서비스 인스턴스 생성 (PUT) : 
   - Header
     > Authorization : Bearer type \
-    > X-Broker-Api-Version : 2.4 \
-    > Content-Type : application/json \
-    > Accept: application/json
+      X-Broker-Api-Version : 2.4 \
+      Content-Type : application/json \
+      Accept: application/json
   
   - Body
     > { \
-    >   "service_id": \<service-id-string>, \
-    >   "plan_id": \<plan-id-string>, \
-    >   "organization_guid": \<organization-guid-string>, \
-    >   "space_guid": \<space-guid-string>, \
-    >   "parameters": { "userName": \<user-name-in-caas-service> }\
-    > }
+        "service_id": \<service-id-string>, \
+        "plan_id": \<plan-id-string>, \
+        "organization_guid": \<organization-guid-string>, \
+        "space_guid": \<space-guid-string>, \
+        "parameters": { "userName": \<user-name-in-caas-service> } \
+      }
 
 
 - 서비스 인스턴스 갱신 (PATCH) : 
   - Header
     > Authorization : Bearer type \
-    > X-Broker-Api-Version : 2.4 \
-    > Content-Type : application/json 
+      X-Broker-Api-Version : 2.4 \
+      Content-Type : application/json 
   - Body
     > { \
-    >   "plan_id": \<plan-id-string>, \
-    >   "service_id": \<service-id-string> \
-    > } 
+        "plan_id": \<plan-id-string>, \
+        "service_id": \<service-id-string> \
+      } 
 
 
 - 서비스 인스턴스 삭제 (DELETE) : 
   - Header
     > Authorization : Bearer type \
-    > X-Broker-Api-Version : 2.4 \
-    > Content-Type : application/json 
+      X-Broker-Api-Version : 2.4 \
+      Content-Type : application/json 
   - Body : None
 
