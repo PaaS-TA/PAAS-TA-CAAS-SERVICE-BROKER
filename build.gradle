@@ -38,7 +38,7 @@ version = '1.0'
 
 jar {
     manifest {
-        attributes  'Title': 'Kubernetes Broker', 'Version': version, 'Main-Class': mainClassName
+        attributes  'Title': 'CaaS Broker', 'Version': version, 'Main-Class': mainClassName
     }
     baseName = 'openpaas-service-java-broker-kubernetes'
     archiveName "${baseName}.jar"
