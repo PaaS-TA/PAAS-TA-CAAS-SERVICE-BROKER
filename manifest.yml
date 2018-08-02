@@ -1,7 +1,0 @@
----
-applications:
-- name: spring-music
-  memory: 1G
-  random-route: true
-  path: build/libs/openpaas-service-java-broker-kubernetes.jar
-

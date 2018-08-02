@@ -1,0 +1,1 @@
+CREATE PROFILE ${planName} LIMIT SESSIONS_PER_USER ${connections};

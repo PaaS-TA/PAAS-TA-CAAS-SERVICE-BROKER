@@ -1,0 +1,1 @@
+DROP USER ${username} CASCADE;

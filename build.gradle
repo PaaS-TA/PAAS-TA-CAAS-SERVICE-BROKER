@@ -22,7 +22,7 @@ ext {
 
   springBootCfServiceBrokerVersion = "2.4.0"
   springBootVersion = '1.5.14.RELEASE'
-  baseName = 'oracle-service-broker'
+  baseName = 'caas-service-broker'
   version =  '2.4'
   
   hibernateValidatorVersion = '5.1.0.Final'
@@ -40,7 +40,7 @@ jar {
     manifest {
         attributes  'Title': 'CaaS Broker', 'Version': version, 'Main-Class': mainClassName
     }
-    baseName = 'openpaas-service-java-broker-kubernetes'
+    baseName = 'caas-service-broker'
     archiveName "${baseName}.jar"
     version = "" // omit the version from the war file name
     dependsOn configurations.runtime
@@ -60,12 +60,25 @@ configurations {
 dependencies {
     compile files('libs/openpaas-service-java-broker.jar')
     
+    providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
     runtime('mysql:mysql-connector-java')
 
     compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter-security')
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.springframework.boot:spring-boot-starter-freemarker')
     compile('org.springframework.boot:spring-boot-starter-actuator')
-    
+    compile('org.apache.commons:commons-dbcp2')
+    compile('org.apache.httpcomponents:httpclient')
+    compile('org.springframework:spring-context-support')
+    compile("commons-beanutils:commons-beanutils:1.9.2")
+    compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
+
     testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile("com.jayway.jsonpath:json-path:${jsonPathVersion}")
+	testCompile('org.apache.httpcomponents:httpclient:4.4.1')
+    testCompile('junit:junit:4.12')
+    testCompile('com.sun.xml.security:xml-security-impl:1.0')
 }
 
 task wrapper(type: Wrapper) {

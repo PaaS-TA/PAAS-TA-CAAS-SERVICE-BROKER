@@ -5,8 +5,11 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
-* Spring boot sample app.
-*/
+ * Kubernetes broker entry point.
+ * @author Hyerin
+ * @since 2018.07.24
+ * @version 20180724
+ */
 @EnableAutoConfiguration
 @ComponentScan
 public class Application {
