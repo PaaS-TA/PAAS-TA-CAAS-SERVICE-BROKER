@@ -22,7 +22,7 @@ ext {
 
   springBootCfServiceBrokerVersion = "2.4.0"
   springBootVersion = '1.5.14.RELEASE'
-  baseName = 'caas-service-broker'
+  baseName = 'paas-ta-caas-service-broker'
   version =  '2.4'
   
   hibernateValidatorVersion = '5.1.0.Final'
@@ -40,7 +40,7 @@ jar {
     manifest {
         attributes  'Title': 'CaaS Broker', 'Version': version, 'Main-Class': mainClassName
     }
-    baseName = 'caas-service-broker'
+    baseName = 'openpaas-service-java-broker-kubernetes'
     archiveName "${baseName}.jar"
     version = "" // omit the version from the war file name
     dependsOn configurations.runtime
