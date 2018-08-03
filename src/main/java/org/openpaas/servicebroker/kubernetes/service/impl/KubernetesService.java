@@ -114,6 +114,7 @@ public class KubernetesService {
 		String userName = createUser(spaceName, instance.getParameter("userName"));
 		
 		createRole(spaceName, userName);
+		createRoleBinding(spaceName, userName);
 		String tokenName = createSecret(spaceName, userName);
 		
 		//String accessToken = getSecret(spaceName, userName);
@@ -197,8 +198,9 @@ public class KubernetesService {
 	 */
 	public String createUser(String spaceName, String userName) {
 		logger.info("createUser Account~~ {}", userName);
-		
-		String convertName = userName.replaceAll("([:.#$&@!_\\(\\)`*%^~,\\<\\>\\[\\];+|-])+", "").toLowerCase()+"-admin";
+	
+		String tmpString [] = userName.split("@");
+		String convertName = tmpString[0].replaceAll("([:.#$&!_\\(\\)`*%^~,\\<\\>\\[\\];+|-])+", "").toLowerCase()+"-admin";
 		
 		Map<String,Object> model = new HashMap<>();
 		model.put("spaceName", spaceName);
@@ -218,15 +220,15 @@ public class KubernetesService {
 	}
 	
 	/**
-	 * 생성된 namespace에 role을 생성하고, 바인딩까지 한다.
-	 * role이름은 'namespace명-role' 이고, binding이름은 'namespace명-role-binding' 이다.  
+	 * 생성된 namespace에 role을 생성한다.
+	 * role이름은 'namespace명-role' 이다.  
      * instance/create_role.ftl의 변수를 채운 후 restTemplate로 rest 통신한다.
      * 
 	 * @author Hyerin
 	 * @since 2018.07.30
 	 */
 	public void createRole(String spaceName, String userName) {
-		logger.info("create Role And Binding~~ {}", userName);
+		logger.info("create Role {}", userName);
 		
 		Map<String,Object> model = new HashMap<>();
 		model.put("spaceName", spaceName);
@@ -242,6 +244,36 @@ public class KubernetesService {
 		
 		HttpEntity<String> reqEntity = new HttpEntity<>(yml, httpHeaders);
 		restTemplate.exchange(envConfig.getCaasUrl() + "/apis/rbac.authorization.k8s.io/v1/namespaces/"+ spaceName + "/roles", HttpMethod.POST, reqEntity, Map.class);
+
+	}
+	
+	
+	/**
+	 * 생성된 namespace에 roleBinding을 생성한다.
+	 * binding이름은 'namespace명-role-binding' 이다.  
+     * instance/create_roleBinding.ftl의 변수를 채운 후 restTemplate로 rest 통신한다.
+     * 
+	 * @author Hyerin
+	 * @since 2018.07.30
+	 */
+	public void createRoleBinding(String spaceName, String userName) {
+		logger.info("create Binding {}", userName);
+		
+		Map<String,Object> model = new HashMap<>();
+		model.put("spaceName", spaceName);
+		model.put("userName", userName);
+		model.put("roleName", spaceName + "-role");
+		String yml = null;
+		try {
+			yml = templateService.convert("instance/create_roleBinding.ftl", model);
+		} catch (KubernetesServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		HttpEntity<String> reqEntity = new HttpEntity<>(yml, httpHeaders);
+
+		restTemplate.exchange(envConfig.getCaasUrl() + "/apis/rbac.authorization.k8s.io/v1/namespaces/"+ spaceName + "/rolebindings", HttpMethod.POST, reqEntity, Map.class);
 
 	}
 	

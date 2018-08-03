@@ -40,17 +40,3 @@ rules:
 - apiGroups: ["core"]
   resources: ["serviceaccount"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete", "deletecollection"]
-
----
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: RoleBinding
-metadata:
-  name: ${roleName}-binding
-  namespace: ${spaceName}
-subjects:
-- kind: ServiceAccount
-  name: ${userName}
-roleRef:
-  kind: Role
-  name: ${roleName}
-  apiGroup: rbac.authorization.k8s.io
