@@ -40,11 +40,13 @@ public class InstanceBindingServiceImpl implements ServiceInstanceBindingService
 	static String username;
 	static String password;
 
-	/*
-	* ServiceInstance Binding(create)
-	*
-	* */
-
+	/**
+	 * ServiceInstance Binding(create) 객체를 생성하는 메소드.
+	 * @param request
+	 * @return
+	 * @throws ServiceInstanceBindingExistsException
+	 * @throws ServiceBrokerException
+	 */
 	public ServiceInstanceBinding createServiceInstanceBinding(CreateServiceInstanceBindingRequest request)
 			throws ServiceInstanceBindingExistsException, ServiceBrokerException {
 		logger.info("OracleServiceInstanceBindingService CLASS createServiceInstanceBinding");
