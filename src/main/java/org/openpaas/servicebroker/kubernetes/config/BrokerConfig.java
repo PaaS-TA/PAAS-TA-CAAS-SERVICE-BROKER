@@ -41,16 +41,16 @@ import javax.sql.DataSource;
 @EnableJpaRepositories("org.openpaas.servicebroker.kubernetes.repo")
 @EntityScan(value = "org.openpaas.servicebroker.kubernetes.model")
 public class BrokerConfig {
-	private static final Logger logger = LoggerFactory.getLogger( BrokerConfig.class );
+    private static final Logger logger = LoggerFactory.getLogger( BrokerConfig.class );
 
-	@Bean
-	public PropertyPlaceholderConfigurer properties() {
-		PropertyPlaceholderConfigurer propertyPlaceholderConfigurer = new PropertyPlaceholderConfigurer();
-		Resource[] resources = new ClassPathResource[] {
-			new ClassPathResource("application.yml")
-		};
-		propertyPlaceholderConfigurer.setLocations(resources);
-		propertyPlaceholderConfigurer.setIgnoreUnresolvablePlaceholders(true);
-		return propertyPlaceholderConfigurer;
-	}
+    @Bean
+    public PropertyPlaceholderConfigurer properties() {
+        PropertyPlaceholderConfigurer propertyPlaceholderConfigurer = new PropertyPlaceholderConfigurer();
+        Resource[] resources = new ClassPathResource[] {
+            new ClassPathResource("application.yml")
+        };
+        propertyPlaceholderConfigurer.setLocations(resources);
+        propertyPlaceholderConfigurer.setIgnoreUnresolvablePlaceholders(true);
+        return propertyPlaceholderConfigurer;
+    }
 }

@@ -24,33 +24,33 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 public class CatalogMockTest {
 
-	MockMvc mockMvc;
+    MockMvc mockMvc;
 
-	@InjectMocks
-	CatalogController controller;
+    @InjectMocks
+    CatalogController controller;
 
-	@Mock
-	CatalogService catalogService;
+    @Mock
+    CatalogService catalogService;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
 
-	    this.mockMvc = MockMvcBuilders.standaloneSetup(controller)
-	            .setMessageConverters(new MappingJackson2HttpMessageConverter()).build();
-	}
-	
-	@Test
-	public void catalogIsRetrievedCorrectly() throws Exception {
-	    when(catalogService.getCatalog()).thenReturn(CatalogFixture.getCatalog());
-	
-	    this.mockMvc.perform(get(CatalogController.BASE_PATH)
-	        .accept(MediaType.APPLICATION_JSON))
-	        .andExpect(status().isOk())
+        this.mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setMessageConverters(new MappingJackson2HttpMessageConverter()).build();
+    }
+    
+    @Test
+    public void catalogIsRetrievedCorrectly() throws Exception {
+        when(catalogService.getCatalog()).thenReturn(CatalogFixture.getCatalog());
+    
+        this.mockMvc.perform(get(CatalogController.BASE_PATH)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.services.", hasSize(1)))
             .andExpect(jsonPath("$.services[*].id", containsInAnyOrder(ServiceFixture.getService().getId())));
-	    
-	    // TO DO - check rest of the json including plans
-	}
+        
+        // TO DO - check rest of the json including plans
+    }
 }

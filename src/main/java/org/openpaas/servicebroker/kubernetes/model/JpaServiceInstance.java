@@ -61,9 +61,9 @@ public class JpaServiceInstance extends ServiceInstance {
     @Transient
     private Map<String, Object> parameters;
 
-	public JpaServiceInstance() {
-	    super();                                // empty datum,
-	    setParameters( new HashMap<>() );      // and empty params.
+    public JpaServiceInstance() {
+        super();                                // empty datum,
+        setParameters( new HashMap<>() );      // and empty params.
     }
 
     /**
@@ -77,7 +77,7 @@ public class JpaServiceInstance extends ServiceInstance {
 
         super.setServiceInstanceId( instance.getServiceInstanceId() );
         super.setPlanId( instance.getPlanId() );
-	    if (instance instanceof JpaServiceInstance) {
+        if (instance instanceof JpaServiceInstance) {
             // default setting
             setServiceDefinitionId( instance.getServiceDefinitionId() );
             setOrganizationGuid( instance.getOrganizationGuid() );
@@ -94,18 +94,18 @@ public class JpaServiceInstance extends ServiceInstance {
      * @param request
      */
     public JpaServiceInstance(CreateServiceInstanceRequest request) {
-	    // service (definition) id, plan id, org guid, space guid, service instance id
-	    super(request);
+        // service (definition) id, plan id, org guid, space guid, service instance id
+        super(request);
 
-	    // default setting
-	    setServiceDefinitionId( request.getServiceDefinitionId() );
-	    setPlanId( request.getPlanId() );
-	    setOrganizationGuid( request.getOrganizationGuid() );
-	    setSpaceGuid( request.getSpaceGuid() );
-	    setServiceInstanceId( request.getServiceInstanceId() );
+        // default setting
+        setServiceDefinitionId( request.getServiceDefinitionId() );
+        setPlanId( request.getPlanId() );
+        setOrganizationGuid( request.getOrganizationGuid() );
+        setSpaceGuid( request.getSpaceGuid() );
+        setServiceInstanceId( request.getServiceInstanceId() );
 
-	    // only JpaServiceInstance
-	    setParameters( request.getParameters() );
+        // only JpaServiceInstance
+        setParameters( request.getParameters() );
         setAdditionalParameters( getParameters() );
     }
 
@@ -214,8 +214,8 @@ public class JpaServiceInstance extends ServiceInstance {
      */
     @Override
     public boolean equals ( Object obj ) {
-	    if ( this == obj )
-	        return true;
+        if ( this == obj )
+            return true;
 
         if ( false == obj instanceof JpaServiceInstance )
             return false;

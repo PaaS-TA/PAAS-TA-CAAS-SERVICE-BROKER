@@ -18,33 +18,33 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CatalogServiceImpl implements CatalogService {
-	
-	private Catalog catalog;
-	private Map<String,ServiceDefinition> serviceDefs = new HashMap<String,ServiceDefinition>();
-	
-	@Autowired
-	public CatalogServiceImpl(Catalog catalog) {
-		this.catalog = catalog;
-		initializeMap();
-	}
+    
+    private Catalog catalog;
+    private Map<String,ServiceDefinition> serviceDefs = new HashMap<String,ServiceDefinition>();
+    
+    @Autowired
+    public CatalogServiceImpl(Catalog catalog) {
+        this.catalog = catalog;
+        initializeMap();
+    }
 
-	/**
-	 * 카탈로그에 대한 Service definition 정보를 내부의 map에 추가함.
-	 */
-	private void initializeMap() {
-		for (ServiceDefinition def: catalog.getServiceDefinitions()) {
-			serviceDefs.put(def.getId(), def);
-		}
+    /**
+     * 카탈로그에 대한 Service definition 정보를 내부의 map에 추가함.
+     */
+    private void initializeMap() {
+        for (ServiceDefinition def: catalog.getServiceDefinitions()) {
+            serviceDefs.put(def.getId(), def);
+        }
 
-	}
+    }
 
-	@Override
-	public Catalog getCatalog() throws ServiceBrokerException {
-		return catalog;
-	}
+    @Override
+    public Catalog getCatalog() throws ServiceBrokerException {
+        return catalog;
+    }
 
-	@Override
-	public ServiceDefinition getServiceDefinition(String serviceId) throws ServiceBrokerException {
-		return serviceDefs.get(serviceId);
-	}
+    @Override
+    public ServiceDefinition getServiceDefinition(String serviceId) throws ServiceBrokerException {
+        return serviceDefs.get(serviceId);
+    }
 }

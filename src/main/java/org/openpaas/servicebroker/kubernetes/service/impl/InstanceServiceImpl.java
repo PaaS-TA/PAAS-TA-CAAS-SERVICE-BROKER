@@ -116,7 +116,7 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 
         if (existsNamespace( instance.getKubernetesNamespace() )) {
             //kubernetesAdminServiceImpl.deleteNamespace( instance.getKubernetesNamespace() );
-        	kubernetesService.deleteNamespace(instance.getKubernetesNamespace());
+            kubernetesService.deleteNamespace(instance.getKubernetesNamespace());
             this.delete( instance );
         }
 

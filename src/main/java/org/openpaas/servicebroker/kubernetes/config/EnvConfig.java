@@ -12,37 +12,37 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class EnvConfig {
-	
-	@Value("${dashboard.url}")
-	String dashboardUrl;
-	
-	@Value("${caas.url}")
-	String caasUrl;
-	
-	@Value("${caas.admin-token}")
-	String adminToken;
+    
+    @Value("${dashboard.url}")
+    String dashboardUrl;
+    
+    @Value("${caas.url}")
+    String caasUrl;
+    
+    @Value("${caas.admin-token}")
+    String adminToken;
 
-	public String getCaasUrl() {
-		return caasUrl;
-	}
+    public String getCaasUrl() {
+        return caasUrl;
+    }
 
-	public void setCaasUrl(String caasUrl) {
-		this.caasUrl = caasUrl;
-	}
+    public void setCaasUrl(String caasUrl) {
+        this.caasUrl = caasUrl;
+    }
 
-	public String getAdminToken() {
-		return adminToken;
-	}
+    public String getAdminToken() {
+        return adminToken;
+    }
 
-	public void setAdminToken(String adminToken) {
-		this.adminToken = adminToken;
-	}
+    public void setAdminToken(String adminToken) {
+        this.adminToken = adminToken;
+    }
 
-	public String getDashboardUrl() {
-		return dashboardUrl;
-	}
+    public String getDashboardUrl() {
+        return dashboardUrl;
+    }
 
-	public void setDashboardUrl(String dashboardUrl) {
-		this.dashboardUrl = dashboardUrl;
-	}
+    public void setDashboardUrl(String dashboardUrl) {
+        this.dashboardUrl = dashboardUrl;
+    }
 }

@@ -13,22 +13,22 @@ import org.openpaas.servicebroker.kubernetes.exception.KubernetesServiceExceptio
  */
 public interface TemplateService {
 
-	/**
-	 * Template 내용 중 일부를 입력받은 모델의 내용으로 치환하여 실행하는 메소드
-	 * @param templateName
-	 * @param model
-	 * @return
-	 * @throws KubernetesServiceException
-	 */
-	public boolean execute(String templateName, Map<String, Object> model) throws KubernetesServiceException;
+    /**
+     * Template 내용 중 일부를 입력받은 모델의 내용으로 치환하여 실행하는 메소드
+     * @param templateName
+     * @param model
+     * @return
+     * @throws KubernetesServiceException
+     */
+    public boolean execute(String templateName, Map<String, Object> model) throws KubernetesServiceException;
 
-	/**
-	 * Template 내용 중 일부를 입력받은 모델의 내용으로 치환하여 반환하는 클래스
-	 * @param templateName
-	 * @param model
-	 * @return
-	 * @throws KubernetesServiceException
-	 */
-	public String convert(String templateName, Map<String, Object> model) throws KubernetesServiceException;
-	
+    /**
+     * Template 내용 중 일부를 입력받은 모델의 내용으로 치환하여 반환하는 클래스
+     * @param templateName
+     * @param model
+     * @return
+     * @throws KubernetesServiceException
+     */
+    public String convert(String templateName, Map<String, Object> model) throws KubernetesServiceException;
+    
 }

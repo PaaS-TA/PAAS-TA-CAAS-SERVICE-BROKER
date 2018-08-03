@@ -17,12 +17,12 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface JpaServiceInstanceBindingRepository extends JpaRepository<JpaServiceInstanceBinding, String>{
-	List<JpaServiceInstanceBinding> findByServiceInstanceId(String serviceInstanceId);
+    List<JpaServiceInstanceBinding> findByServiceInstanceId(String serviceInstanceId);
 
-	//@Query(value = "SELECT b FROM JpaServiceInstanceBinding b JOIN b.credentials c " + "WHERE ( KEY(c) = :username)", nativeQuery = true)
-	@Query(value = "SELECT username FROM dba_users where username=?1",nativeQuery = true)
-	List<Map<String,Object>> findByUsername(String userId);
+    //@Query(value = "SELECT b FROM JpaServiceInstanceBinding b JOIN b.credentials c " + "WHERE ( KEY(c) = :username)", nativeQuery = true)
+    @Query(value = "SELECT username FROM dba_users where username=?1",nativeQuery = true)
+    List<Map<String,Object>> findByUsername(String userId);
 
-	@Query(value = "select '*' from dba_profiles where profile = ?1", nativeQuery = true)
-	List<Map<String,Object>> isExistProfile(String planIdName);
+    @Query(value = "select '*' from dba_profiles where profile = ?1", nativeQuery = true)
+    List<Map<String,Object>> isExistProfile(String planIdName);
 }

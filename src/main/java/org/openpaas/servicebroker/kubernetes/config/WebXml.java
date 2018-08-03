@@ -13,9 +13,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
  * @version 20180724
  */
 public class WebXml extends SpringBootServletInitializer {
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(Application.class);
-	}
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(Application.class);
+    }
 
 }
