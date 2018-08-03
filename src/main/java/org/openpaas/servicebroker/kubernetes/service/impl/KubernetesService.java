@@ -35,6 +35,13 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * 이 서비스 브로커에서 접근하는 Kubernetes에 대한 서비스를 위한 클래스이다.
+ * @author hyerin
+ * @author Hyungu Cho
+ * @since 2018/07/24
+ * @version 20180801
+ */
 @Service
 public class KubernetesService {
 	
@@ -54,7 +61,8 @@ public class KubernetesService {
 
 	
 	/**
-	 * create restTemplate ignore ssl 
+	 * RestTemplate Bean 객체를 생성하는 메소드 (단, SSL은 무시) <br>
+	 * create restTemplate ignore ssl
 	 * @author Hyerin
 	 * @since 2018.07.24
 	 */
@@ -198,7 +206,7 @@ public class KubernetesService {
 	 */
 	public String createUser(String spaceName, String userName) {
 		logger.info("createUser Account~~ {}", userName);
-	
+		
 		String tmpString [] = userName.split("@");
 		String convertName = tmpString[0].replaceAll("([:.#$&!_\\(\\)`*%^~,\\<\\>\\[\\];+|-])+", "").toLowerCase()+"-admin";
 		
@@ -228,7 +236,7 @@ public class KubernetesService {
 	 * @since 2018.07.30
 	 */
 	public void createRole(String spaceName, String userName) {
-		logger.info("create Role {}", userName);
+		logger.info("create Role And Binding~~ {}", userName);
 		
 		Map<String,Object> model = new HashMap<>();
 		model.put("spaceName", spaceName);
@@ -344,7 +352,7 @@ public class KubernetesService {
 	}*/
 	
 	/**
-	 * namespace를 삭제한다.
+     * namespace를 삭제한다.
 	 * 삭제를 신청하는 사람이 관리자일 것이라 생각하여, 중복체크, 공유유저 삭제 등의 행동은 하지 않는다. 
      * 
 	 * @author Hyerin
@@ -377,8 +385,8 @@ public class KubernetesService {
 
 	/**
 	 * namespace에 quota를 재할당한다. 하위->상위 플랜 유효성 확인은 InstanceServiceImpl에서 대신 수행한다.
-	 * plan정보의 B -> i 로 바꾼 후에
-	 * instance/change_resource_quota.ftl의 변수를 채운 후 restTemplate로 rest 통신한다.
+	 * plan정보의 B -> i 로 바꾼 후에 instance/change_resource_quota.ftl의 변수를 채운 후
+	 * restTemplate로 rest 통신한다.
 	 *
 	 * @author Hyerin
 	 * @author Hyungu Cho

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 
 /**
- * Service Instance JPA 클래스
+ * Service Instance JPA Repository 클래스
  * @author Hyerin
  * @since 2018.07.24
  * @version 20180725

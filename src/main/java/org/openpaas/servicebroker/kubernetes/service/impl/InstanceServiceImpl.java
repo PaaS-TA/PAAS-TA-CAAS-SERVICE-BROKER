@@ -190,7 +190,11 @@ public class InstanceServiceImpl implements ServiceInstanceService {
         instanceRepository.delete( instance );
     }
 
-    // DashboardUrl 생성
+    /** Dashboard URL을 생성해 반환해준다.
+     * @param spaceName
+     * @param tokenName
+     * @return
+     */
     public String getDashboardUrl(String spaceName, String tokenName){
         return config.getDashboardUrl()+spaceName+"/token/"+tokenName;
     }
@@ -224,6 +228,12 @@ public class InstanceServiceImpl implements ServiceInstanceService {
         return uuid;
     }
 
+    /**
+     * 클래스의 메소드에서 Plan 정보가 필요한 경우, Service instance의 plan id를 이용해 plan을 찾아준다.
+     * @param instance
+     * @return Plan
+     * @throws ServiceBrokerException
+     */
     private Plan getPlan(JpaServiceInstance instance) throws ServiceBrokerException {
         logger.info("Get plan info. from Catalog service in this broker.");
         final List<Plan> plans =

@@ -9,11 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * // Kubernetes service broker에서는 bind/unbind를 쓰지 않기로 했으므로
- * // 비어있는 클래스로 바꿉니다. (commented from Hyungu Cho)
- * Created by Hyerin on 2018-04-10. thanks to Mingu!
- * This Class made for using JPA
- *
+ * CaaS service broker에서는 bind/unbind를 쓰지 않기로 했으나, service binding에 대한 동작은 남겨두어야 하는 것으로 판단했고,
+ * 따라서 binding/unbinding에 대한 entity 모델 클래스 자체는 남겨둡니다.
  * @author Hyungu Cho
  * @since 2018.07.24
  * @version 20180724

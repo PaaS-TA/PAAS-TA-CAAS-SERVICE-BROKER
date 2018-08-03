@@ -9,8 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
- * // Kubernetes service broker에서는 bind/unbind를 쓰지 않기로 했으므로
- * // 비어있는 클래스로 바꿉니다. (commented from Hyungu Cho)
+ * CaaS service broker에서는 bind/unbind를 쓰지 않기로 했으나 JPA Repository 클래스는 남겨둡니다.
  *
  * @author Hyungu Cho
  * @since 2018.07.24

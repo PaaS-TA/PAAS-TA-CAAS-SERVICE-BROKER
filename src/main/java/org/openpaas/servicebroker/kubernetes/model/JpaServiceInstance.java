@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Hyerin on 2018-04-10. thanks to Mingu!
- * This Class made for using JPA
+ * Service Instance에 대한 Entity 모델 클래스 (JPA를 이용해서 사용) <br>
+ * (Created by Hyerin on 2018-04-10. thanks to Mingu!)
  * @author Hyerin
  * @author Hyungu Cho
  * @version 20180724
@@ -66,6 +66,11 @@ public class JpaServiceInstance extends ServiceInstance {
 	    setParameters( new HashMap<>() );      // and empty params.
     }
 
+    /**
+     * 본 클래스는 ServiceInstance 클래스를 확장하고 JPA 사용을 위해 별도의 attribute를 추가한 것이므로,
+     * ServiceInstance를 이용한 생성자는 되도록 사용하지 않아야 함.
+     * @param instance
+     */
     @Deprecated
     public JpaServiceInstance(ServiceInstance instance) {
         super();
@@ -84,6 +89,10 @@ public class JpaServiceInstance extends ServiceInstance {
         }
     }
 
+    /**
+     * CreateServiceInstanceRequest가 들어왔을 경우의 생성자 (서비스 인스턴스 생성)
+     * @param request
+     */
     public JpaServiceInstance(CreateServiceInstanceRequest request) {
 	    // service (definition) id, plan id, org guid, space guid, service instance id
 	    super(request);
@@ -100,6 +109,10 @@ public class JpaServiceInstance extends ServiceInstance {
         setAdditionalParameters( getParameters() );
     }
 
+    /**
+     * DeleteServiceInstanceRequest가 들어왔을 경우의 생성자 (서비스 인스턴스 삭제)
+     * @param request
+     */
     public JpaServiceInstance(DeleteServiceInstanceRequest request) {
         // service (definition) id, service instance id, plan id
         super(request);
@@ -109,6 +122,10 @@ public class JpaServiceInstance extends ServiceInstance {
         setPlanId( request.getPlanId() );
     }
 
+    /**
+     * UpdateServiceInstanceRequest가 들어왔을 경우의 생성자 (서비스 인스턴스 수정)
+     * @param request
+     */
     public JpaServiceInstance(UpdateServiceInstanceRequest request) {
         // service (definition) id, service instance id, plan id
         super(request);
@@ -121,6 +138,10 @@ public class JpaServiceInstance extends ServiceInstance {
         setAdditionalParameters( getParameters() );
     }
 
+    /**
+     * 서비스 인스턴스 생성/수정시 들어오는 파라미터가 있을 경우, 해당 파라미터를 설정해주기 위한 메소드.
+     * @param params
+     */
     private void setAdditionalParameters(final Map<String, Object> params ) {
         Object kubernetesNamespace = params.get( "kubernetes_namespace" );
         Object kubernetesAccountName = params.get( "kubernetes_account_name" );
@@ -185,6 +206,12 @@ public class JpaServiceInstance extends ServiceInstance {
             return null;
     }
 
+    /**
+     * JpaServiceInstance의 동일성 비교를 위한 메소드. service instance id와 service definition id가 모두 일치할 경우,
+     * 동일한 객체로 인식하고 true를 반환한다.
+     * @param obj
+     * @return
+     */
     @Override
     public boolean equals ( Object obj ) {
 	    if ( this == obj )

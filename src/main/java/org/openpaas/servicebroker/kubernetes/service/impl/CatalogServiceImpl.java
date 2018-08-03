@@ -28,6 +28,9 @@ public class CatalogServiceImpl implements CatalogService {
 		initializeMap();
 	}
 
+	/**
+	 * 카탈로그에 대한 Service definition 정보를 내부의 map에 추가함.
+	 */
 	private void initializeMap() {
 		for (ServiceDefinition def: catalog.getServiceDefinitions()) {
 			serviceDefs.put(def.getId(), def);

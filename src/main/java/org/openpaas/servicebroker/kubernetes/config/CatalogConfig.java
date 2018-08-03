@@ -129,7 +129,11 @@ public class CatalogConfig {
     @Value("${serviceDefinition.plan3.weight}")
 	private Integer SERVICEDEFINITION_PLAN3_WEIGHT;
 
-
+	/**
+	 * Catalog bean 객체 생성 후 반환
+	 * @author hyerin
+	 * @return Catalog
+	 */
 	@Bean
 	public Catalog catalog() {
 		boolean SERVICEDEFINITION_BINDABLE = false;
@@ -182,7 +186,11 @@ public class CatalogConfig {
 				null ) ) );
 	}
 
-	/* Used by Pivotal CF console */
+	/**
+	 * Service Definition Metadata 객체를 생성 <br>
+	 * (Used by Pivotal CF console)
+	 * @return Map&lt;String, Object&gt;
+	 */
 	private Map<String, Object> getServiceDefinitionMetadata() {
 		Map<String, Object> sdMetadata = new HashMap<String, Object>();
 		sdMetadata.put("displayName", "CaaS Kubernetes Service");
@@ -195,6 +203,11 @@ public class CatalogConfig {
 		return sdMetadata;
 	}
 
+	/**
+	 * Costs, bullets 정보를 포함한 Plan metadata 객체를 생성
+	 * @param planType
+	 * @return Map&lt;String, Object&gt;
+	 */
 	private Map<String, Object> getPlanMetadata(String planType) {
 		Map<String, Object> planMetadata = new HashMap<>();
 		planMetadata.put("costs", getCosts(planType));
@@ -203,6 +216,11 @@ public class CatalogConfig {
 		return planMetadata;
 	}
 
+	/**
+	 * Plan의 Costs 정보를 Map 객체의 리스트 형태로 반환
+	 * @param planType
+	 * @return Map&lt;String, Object&gt;
+	 */
 	private List<Map<String, Object>> getCosts(String planType) {
 		Map<String, Object> costsMap = new HashMap<>();
 		Map<String, Object> amount = new HashMap<>();
@@ -233,7 +251,11 @@ public class CatalogConfig {
 		return Collections.singletonList(costsMap);
 	}
 
-
+	/**
+	 * Plan의 Bullets 정보를 담은 객체를 반환
+	 * @param planType
+	 * @return List&lt;String&gt;
+	 */
 	private List<String> getBullets(String planType) {
 		if (planType.equals("A")) {
 			return Arrays.asList("2 CPUs", "2GB Memory", "10GB Disk");

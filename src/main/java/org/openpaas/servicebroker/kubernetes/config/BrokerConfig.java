@@ -36,7 +36,6 @@ import javax.sql.DataSource;
  * @since 2018.07.24
  * @version 20180724
  */
-
 @Configuration
 @ComponentScan(basePackages = { "org.openpaas.servicebroker" })
 @EnableJpaRepositories("org.openpaas.servicebroker.kubernetes.repo")
