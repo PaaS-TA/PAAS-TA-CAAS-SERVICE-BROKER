@@ -4,7 +4,6 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
-import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.HashMap;
@@ -33,6 +32,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -60,7 +60,7 @@ public class KubernetesService {
     @Autowired
     HttpHeaders httpHeaders;
 
-
+    
     /**
      * RestTemplate Bean 객체를 생성하는 메소드 (단, SSL은 무시) <br>
      * create restTemplate ignore ssl
@@ -141,7 +141,7 @@ public class KubernetesService {
     }
 
     /**
-     * spacename은 orgGuid에 timestamp를 찍어 준 후 특수문자를 '-'로 치환한다.
+     * spacename은 orgGuid에 앞에는 paas- 뒤에는 -caas를 붙인다.
      * instance/create_namespace.ftl의 변수를 채운 후 restTemplate로 rest 통신한다.
      *
      * @author Hyerin
@@ -155,11 +155,11 @@ public class KubernetesService {
         model.put( "name", spaceName );
         String yml = null;
         try {
-            yml = templateService.convert( "instance/create_namespace.ftl", model );
-        } catch ( KubernetesServiceException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+			yml = templateService.convert( "instance/create_namespace.ftl", model );
+		} catch ( KubernetesServiceException e ) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         logger.debug( "Here is your yml file!!! {}", yml );
 
         HttpEntity<String> reqEntity = new HttpEntity<>( yml, httpHeaders );
@@ -186,12 +186,12 @@ public class KubernetesService {
         model.put( "plan", plan );
         String yml = null;
         try {
-            yml = templateService.convert( "instance/create_resource_quota.ftl", model );
-        } catch ( KubernetesServiceException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
+			yml = templateService.convert("instance/create_resource_quota.ftl", model);
+		} catch (KubernetesServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
         HttpEntity<String> reqEntity = new HttpEntity<>( yml, httpHeaders );
         restTemplate.exchange( envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/resourcequotas", HttpMethod.POST, reqEntity, Map.class );
 
@@ -216,12 +216,12 @@ public class KubernetesService {
         model.put( "userName", convertName );
         String yml = null;
         try {
-            yml = templateService.convert( "instance/create_account.ftl", model );
-        } catch ( KubernetesServiceException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
+			yml = templateService.convert("instance/create_account.ftl", model);
+		} catch (KubernetesServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
         HttpEntity<String> reqEntity = new HttpEntity<>( yml, httpHeaders );
         restTemplate.exchange( envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/serviceaccounts", HttpMethod.POST, reqEntity, Map.class );
 
@@ -245,12 +245,12 @@ public class KubernetesService {
         model.put( "roleName", spaceName + "-role" );
         String yml = null;
         try {
-            yml = templateService.convert( "instance/create_role.ftl", model );
-        } catch ( KubernetesServiceException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
+			yml = templateService.convert("instance/create_role.ftl", model);
+		} catch (KubernetesServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
         HttpEntity<String> reqEntity = new HttpEntity<>( yml, httpHeaders );
         restTemplate.exchange( envConfig.getCaasUrl() + "/apis/rbac.authorization.k8s.io/v1/namespaces/" + spaceName + "/roles", HttpMethod.POST, reqEntity, Map.class );
 
@@ -274,12 +274,12 @@ public class KubernetesService {
         model.put( "roleName", spaceName + "-role" );
         String yml = null;
         try {
-            yml = templateService.convert( "instance/create_roleBinding.ftl", model );
-        } catch ( KubernetesServiceException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
+			yml = templateService.convert("instance/create_roleBinding.ftl", model);
+		} catch (KubernetesServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
         HttpEntity<String> reqEntity = new HttpEntity<>( yml, httpHeaders );
 
         restTemplate.exchange( envConfig.getCaasUrl() + "/apis/rbac.authorization.k8s.io/v1/namespaces/" + spaceName + "/rolebindings", HttpMethod.POST, reqEntity, Map.class );
@@ -304,12 +304,11 @@ public class KubernetesService {
         model.put( "tokenName", userName + "-token" );
         String yml = null;
         try {
-            yml = templateService.convert( "instance/create_secret.ftl", model );
-        } catch ( KubernetesServiceException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
+			yml = templateService.convert("instance/create_secret.ftl", model);
+		} catch (KubernetesServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         HttpEntity<String> reqEntity = new HttpEntity<>( yml, httpHeaders );
         restTemplate.exchange( envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/secrets", HttpMethod.POST, reqEntity, Map.class );
         return userName + "-token";
@@ -374,13 +373,22 @@ public class KubernetesService {
 
     /**
      * Namespace가 존재하는지 확인한다.
-     *
+     * restTemplate으로 통신시, 있으면 200 OK, 없으면 404 Error를 뿜기 때문에 
+     * 에러가 생김 == 해당이름의 namespace가 없음이다.
      * @param namespace
      * @return
      */
     public boolean existsNamespace ( String namespace ) {
         // TODO namespace 존재 여부 확인 필요
-        return false;
+    	
+    	HttpEntity<String> reqEntity = new HttpEntity<>( httpHeaders );
+    	try {
+    		restTemplate.exchange( envConfig.getCaasUrl() + "/api/v1/namespaces/" + "hyein-test-case", HttpMethod.GET, reqEntity, Map.class );
+    	} catch (HttpClientErrorException e ){
+    		e.getStatusCode();
+    		return true;
+    	}
+		return false;
     }
 
     /**
@@ -402,12 +410,12 @@ public class KubernetesService {
         model.put( "plan", plan );
         String yml = null;
         try {
-            yml = templateService.convert( "instance/create_resource_quota.ftl", model );
-        } catch ( KubernetesServiceException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
+			yml = templateService.convert("instance/create_resource_quota.ftl", model);
+		} catch (KubernetesServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
         HttpEntity<String> reqEntity = new HttpEntity<>( yml, httpHeaders );
         // ResourceQuota Create-POST / Replace-PUT
         ResponseEntity<Map> resEntity =

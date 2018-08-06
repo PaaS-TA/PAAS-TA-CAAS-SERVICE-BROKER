@@ -79,7 +79,7 @@ public class InstanceServiceImpl implements ServiceInstanceService {
         }
 
         // kubernetes에 생성된 namespace가 있는지 확인한다.
-        if ( existsNamespace( instance.getKubernetesNamespace() ) )
+        if ( existsNamespace( instance.getOrganizationGuid() ) )
             throw new ServiceBrokerException( "Already exists namespace to given same name." );
 
         kubernetesService.createNamespaceUser(instance, getPlan(instance));
