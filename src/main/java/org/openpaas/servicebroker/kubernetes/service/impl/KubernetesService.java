@@ -151,8 +151,7 @@ public class KubernetesService {
         logger.debug( "create namespace!!! {}", orgGuid );
 
         Map<String, Object> model = new HashMap<>();
-        LocalDateTime localDateTime = LocalDateTime.now();
-        String spaceName = "paas-" + orgGuid + "-" + localDateTime.toString().replaceAll( "([:.])+", "-" ).toLowerCase() + "-caas";
+        String spaceName = "paas-" + orgGuid + "-caas";
         model.put( "name", spaceName );
         String yml = null;
         try {

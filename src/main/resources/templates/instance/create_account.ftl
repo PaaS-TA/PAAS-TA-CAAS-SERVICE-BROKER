@@ -3,4 +3,5 @@ kind: ServiceAccount
 metadata:
  name: ${userName}
  namespace: ${spaceName}
-automountServiceAccountToken: false
+secrets:
+  - name: ${userName}-token
