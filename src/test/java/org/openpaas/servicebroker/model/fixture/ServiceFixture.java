@@ -1,9 +1,12 @@
 package org.openpaas.servicebroker.model.fixture;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.openpaas.servicebroker.model.ServiceDefinition;
+import org.paasta.servicebroker.apiplatform.common.TestConstants;
 
 
 public class ServiceFixture {
@@ -21,6 +24,26 @@ public class ServiceFixture {
                 "for CaaS Plans, You can choose plan about CPU, Memory, disk.", 
                 false,
                 PlanFixture.getAllPlans());
+    }
+    
+    /* Service Metadata */
+    private static Map<String,Object> getMetadata() {
+        // Service Metadata
+        Map<String,Object> metadata = new HashMap<String,Object>();
+        metadata.put("displayName", TestConstants.SERVICEDEFINITION_NAME);
+        metadata.put("imageUrl","imageUrl");
+        metadata.put("longDescription","longDescription");
+        metadata.put("providerDisplayName","providerDisplayName");
+        metadata.put("documentationUrl","documentationUrl");
+        metadata.put("supportUrl","supportUrl");
+        return metadata;
+    }
+
+    public static List<ServiceDefinition> getCatalog() {
+        List<ServiceDefinition> result = new ArrayList<>();
+        result.add(getService());
+
+        return result;
     }
     
 }

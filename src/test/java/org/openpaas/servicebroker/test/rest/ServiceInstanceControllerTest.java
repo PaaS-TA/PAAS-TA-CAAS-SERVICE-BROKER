@@ -1,6 +1,18 @@
 package org.openpaas.servicebroker.test.rest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Base64;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,12 +24,12 @@ import org.openpaas.servicebroker.exception.ServiceBrokerException;
 import org.openpaas.servicebroker.model.CreateServiceInstanceRequest;
 import org.openpaas.servicebroker.model.DeleteServiceInstanceRequest;
 import org.openpaas.servicebroker.model.UpdateServiceInstanceRequest;
+import org.openpaas.servicebroker.model.fixture.RequestFixture;
+import org.openpaas.servicebroker.model.fixture.ServiceFixture;
+import org.openpaas.servicebroker.model.fixture.ServiceInstanceFixture;
 import org.openpaas.servicebroker.service.CatalogService;
 import org.openpaas.servicebroker.service.ServiceInstanceService;
 import org.paasta.servicebroker.apiplatform.common.TestConstants;
-import org.paasta.servicebroker.sourcecontrol.model.RequestFixture;
-import org.paasta.servicebroker.sourcecontrol.model.ServiceDefinitionFixture;
-import org.paasta.servicebroker.sourcecontrol.model.ServiceInstanceFixture;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
@@ -26,14 +38,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Base64;
-
-import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Created by user on 2017-09-12.
@@ -73,7 +78,7 @@ public class ServiceInstanceControllerTest {
         this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
 
         basicAuth = "Basic " + (Base64.getEncoder().encodeToString((broker_auth_user + ":" + broker_auth_pwd).getBytes()));
-        serviceDefinitionId = ServiceDefinitionFixture.getService().getId();
+        serviceDefinitionId = ServiceFixture.getService().getId();
         requestUrl = ServiceInstanceController.BASE_PATH + "/"+TestConstants.SV_INSTANCE_ID_001;
         dashboardUrl = TestConstants.DASHBOARD_URL+TestConstants.SV_INSTANCE_ID_001;
     }
@@ -84,7 +89,7 @@ public class ServiceInstanceControllerTest {
         // 서비스 인스턴스 생성
 
         //// serviceDefinition 조회
-        when(catalogService.getServiceDefinition(serviceDefinitionId)).thenReturn(ServiceDefinitionFixture.getService());
+        when(catalogService.getServiceDefinition(serviceDefinitionId)).thenReturn(ServiceFixture.getService());
         when(serviceInstanceService.createServiceInstance(any(CreateServiceInstanceRequest.class))).thenReturn(ServiceInstanceFixture.getServiceInstance());
 
         ObjectMapper mapper = new ObjectMapper();

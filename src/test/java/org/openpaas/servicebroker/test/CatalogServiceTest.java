@@ -8,9 +8,9 @@ import org.mockito.Mock;
 import org.openpaas.servicebroker.kubernetes.service.impl.CatalogServiceImpl;
 import org.openpaas.servicebroker.model.Catalog;
 import org.openpaas.servicebroker.model.ServiceDefinition;
+import org.openpaas.servicebroker.model.fixture.ServiceFixture;
 import org.openpaas.servicebroker.service.CatalogService;
 import org.paasta.servicebroker.apiplatform.common.TestConstants;
-import org.paasta.servicebroker.sourcecontrol.model.ServiceDefinitionFixture;
 
 /**
  * Created by user on 2017-09-20.
@@ -26,7 +26,7 @@ public class CatalogServiceTest {
 
     @Test
     public void test_getCatalog() throws Exception {
-        catalog = new Catalog(ServiceDefinitionFixture.getCatalog());
+        catalog = new Catalog(ServiceFixture.getCatalog());
         catalogService = new CatalogServiceImpl(catalog);
 
         Catalog result = catalogService.getCatalog();
