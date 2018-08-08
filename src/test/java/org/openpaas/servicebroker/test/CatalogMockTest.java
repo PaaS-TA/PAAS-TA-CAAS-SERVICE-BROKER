@@ -20,6 +20,7 @@ import org.openpaas.servicebroker.service.CatalogService;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 public class CatalogMockTest {
@@ -43,14 +44,18 @@ public class CatalogMockTest {
     @Test
     public void catalogIsRetrievedCorrectly() throws Exception {
         when(catalogService.getCatalog()).thenReturn(CatalogFixture.getCatalog());
-    
-        this.mockMvc.perform(get(CatalogController.BASE_PATH)
+        
+        ResultActions result = this.mockMvc.perform(get(CatalogController.BASE_PATH)
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.services.", hasSize(1)))
-            .andExpect(jsonPath("$.services[*].id", containsInAnyOrder(ServiceFixture.getService().getId())));
+            .andExpect(jsonPath("$.services", hasSize(1)))
+            .andExpect(jsonPath("$.services[*].id", containsInAnyOrder(ServiceFixture.getService().getId())))
+            .andExpect(jsonPath("$.services[*].name", containsInAnyOrder(ServiceFixture.getService().getName())));
         
         // TO DO - check rest of the json including plans
+        
+        String content = result.andReturn().getResponse().getContentAsString();
+        System.out.println("콘텐트를 출력해보장 " + content);
     }
 }

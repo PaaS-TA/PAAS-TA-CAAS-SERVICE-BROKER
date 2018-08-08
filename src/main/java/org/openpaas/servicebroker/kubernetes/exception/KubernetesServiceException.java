@@ -15,4 +15,12 @@ public class KubernetesServiceException extends ServiceBrokerException {
     public KubernetesServiceException(String message) {
         super(message);
     }
+    
+    public KubernetesServiceException(String message, Throwable cause) {
+        super(message, cause);
+    }
+    
+    public KubernetesServiceException(Throwable cause) {
+    	super(cause);
+    }
 }
