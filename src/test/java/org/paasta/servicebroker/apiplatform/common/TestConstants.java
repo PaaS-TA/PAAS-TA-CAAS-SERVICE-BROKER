@@ -32,6 +32,6 @@ public class TestConstants {
     public static final String DASHBOARD_URL = "http://test-dashboardurl";
 
 
-      public static final String BINDING_ID = "service_instance_binding_id";
+   public static final String BINDING_ID = "service_instance_binding_id";
 
 }
