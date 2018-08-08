@@ -1,7 +1,5 @@
 package org.openpaas.servicebroker.kubernetes.service.impl;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
 import java.util.List;
 
 import org.openpaas.servicebroker.exception.ServiceBrokerException;
@@ -79,11 +77,11 @@ public class InstanceServiceImpl implements ServiceInstanceService {
         }
 
         // kubernetes에 생성된 namespace가 있는지 확인한다.
-        if ( existsNamespace( instance.getOrganizationGuid() ) )
+        if ( existsNamespace( instance.getServiceInstanceId() ) )
             throw new ServiceBrokerException( "Already exists namespace to given same name." );
 
         kubernetesService.createNamespaceUser(instance, getPlan(instance));
-        instance.withDashboardUrl(getDashboardUrl(instance.getKubernetesNamespace(), instance.getKubernetesAccountAccessToken()));
+        instance.withDashboardUrl(getDashboardUrl(instance.getServiceInstanceId()));
         
         this.save(instance);
 
@@ -114,9 +112,9 @@ public class InstanceServiceImpl implements ServiceInstanceService {
         if ( instance == null )
             return null;
 
-        if (existsNamespace( instance.getKubernetesNamespace() )) {
+        if (existsNamespace( instance.getCaasNamespace() )) {
             //kubernetesAdminServiceImpl.deleteNamespace( instance.getKubernetesNamespace() );
-            kubernetesService.deleteNamespace(instance.getKubernetesNamespace());
+            kubernetesService.deleteNamespace(instance.getCaasNamespace());
             this.delete( instance );
         }
 
@@ -152,7 +150,7 @@ public class InstanceServiceImpl implements ServiceInstanceService {
                     throw new ServiceBrokerException( "Cannot change lower plan. (current: " + oldPlan.getName() + " / new: " + newPlan.getName() + ")" );
 
                 findInstance.setPlanId( planId );
-                kubernetesService.changeResourceQuota(findInstance.getKubernetesNamespace(), newPlan);
+                kubernetesService.changeResourceQuota(findInstance.getCaasNamespace(), newPlan);
             }
 
             this.save( findInstance );
@@ -195,8 +193,8 @@ public class InstanceServiceImpl implements ServiceInstanceService {
      * @param tokenName
      * @return
      */
-    public String getDashboardUrl(String spaceName, String tokenName){
-        return config.getDashboardUrl()+spaceName+"/token/"+tokenName;
+    public String getDashboardUrl(String serviceInstanceId){
+        return config.getDashboardUrl() + serviceInstanceId;
     }
 
     /**
@@ -207,25 +205,6 @@ public class InstanceServiceImpl implements ServiceInstanceService {
     public boolean existsNamespace(String namespace) {
         return kubernetesService.existsNamespace( namespace )
             || instanceRepository.existsByKubernetesNamespace( namespace );
-    }
-
-    /**
-     * UUID를 생성한다. (현재는 쓰지 않는 메소드)
-     * @param id
-     * @return
-     */
-    @Deprecated
-    public String generateUUID ( String id ) {
-        MessageDigest digest = null;
-        try {
-            digest = MessageDigest.getInstance("MD5");
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-        digest.update(id.getBytes());
-        String uuid =
-            new BigInteger(1, digest.digest()).toString(16).replaceAll("/[^a-zA-Z]+/", "").substring(0, 16);
-        return uuid;
     }
 
     /**
