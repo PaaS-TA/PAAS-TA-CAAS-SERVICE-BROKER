@@ -3,5 +3,3 @@ kind: ServiceAccount
 metadata:
  name: ${userName}
  namespace: ${spaceName}
-secrets:
-  - name: ${userName}-token
