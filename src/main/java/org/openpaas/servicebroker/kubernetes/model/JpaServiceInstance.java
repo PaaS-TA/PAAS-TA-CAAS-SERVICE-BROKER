@@ -43,19 +43,19 @@ public class JpaServiceInstance extends ServiceInstance {
     private String spaceGuid;
 
     @JsonSerialize
-    @JsonProperty("kubernetes_namespace")
-    @Column(name = "kubernetes_namespace")
-    private String kubernetesNamespace;
+    @JsonProperty("caas_namespace")
+    @Column(name = "caas_namespace")
+    private String caasNamespace;
 
     @JsonSerialize
-    @JsonProperty("kubernetes_account_name")
-    @Column(name = "kubernetes_account_name")
-    private String kubernetesAccountName;
+    @JsonProperty("caas_account_name")
+    @Column(name = "caas_account_name")
+    private String caasAccountName;
 
     @JsonSerialize
-    @JsonProperty("kubernetes_account_access_token")
-    @Column(name = "kubernetes_account_access_token")
-    private String kubernetesAccountAccessToken;
+    @JsonProperty("caas_account_access_token")
+    @Column(name = "caas_account_access_token")
+    private String caasAccountAccessToken;
 
     @JsonIgnore
     @Transient
@@ -143,13 +143,13 @@ public class JpaServiceInstance extends ServiceInstance {
      * @param params
      */
     private void setAdditionalParameters(final Map<String, Object> params ) {
-        Object kubernetesNamespace = params.get( "kubernetes_namespace" );
-        Object kubernetesAccountName = params.get( "kubernetes_account_name" );
-        Object kubernetesAccountAccessToken = params.get( "kubernetes_account_access_token" );
+        Object caasNamespace = params.get( "caas_namespace" );
+        Object caasAccountName = params.get( "caas_account_name" );
+        Object caasAccountAccessToken = params.get( "caas_account_access_token" );
 
-        setKubernetesNamespace( null == kubernetesNamespace? null : kubernetesNamespace.toString() );
-        setKubernetesAccountName( null == kubernetesAccountName? null : kubernetesAccountName.toString() );
-        setKubernetesAccountAccessToken( null == kubernetesAccountAccessToken? null : kubernetesAccountAccessToken.toString() );
+        setCaasNamespace( null == caasNamespace? null : caasNamespace.toString() );
+        setCaasAccountName( null == caasAccountName? null : caasAccountName.toString() );
+        setCaasAccountAccessToken( null == caasAccountAccessToken? null : caasAccountAccessToken.toString() );
     }
 
     @Id
@@ -177,14 +177,14 @@ public class JpaServiceInstance extends ServiceInstance {
     private void setDashboardUrl(String dashboardUrl) { super.withDashboardUrl( dashboardUrl ); }
 
     //// Under methods : Additional parameters on ServiceInstance ////
-    public String getKubernetesNamespace() { return kubernetesNamespace; }
-    public void setKubernetesNamespace(String kubernetesNamespace) { this.kubernetesNamespace = kubernetesNamespace; }
+    public String getCaasNamespace() { return caasNamespace; }
+    public void setCaasNamespace(String caasNamespace) { this.caasNamespace = caasNamespace; }
 
-    public String getKubernetesAccountName () { return kubernetesAccountName; }
-    public void setKubernetesAccountName ( String kubernetesAccountName ) { this.kubernetesAccountName = kubernetesAccountName; }
+    public String getCaasAccountName () { return caasAccountName; }
+    public void setCaasAccountName ( String caasAccountName ) { this.caasAccountName = caasAccountName; }
 
-    public String getKubernetesAccountAccessToken () { return kubernetesAccountAccessToken; }
-    public void setKubernetesAccountAccessToken ( String kubernetesAccountAccessToken ) { this.kubernetesAccountAccessToken = kubernetesAccountAccessToken; }
+    public String getCaasAccountAccessToken () { return caasAccountAccessToken; }
+    public void setCaasAccountAccessToken ( String caasAccountAccessToken ) { this.caasAccountAccessToken = caasAccountAccessToken; }
 
     @Transient
     public Map<String, Object> getParameters() { return parameters; }
