@@ -26,67 +26,29 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class InstanceBindingServiceImpl implements ServiceInstanceBindingService{
-    private static final Logger logger = LoggerFactory.getLogger(InstanceBindingServiceImpl.class);
-
-    @Autowired
-    private Environment env;
     
-    @Autowired
-    private InstanceServiceImpl instanceService;
+	private static final Logger logger = LoggerFactory.getLogger(InstanceBindingServiceImpl.class);
 
-    private static final String DUMMY_BINDING_ID = "bb5b5ecc-1389-4562-b922-8c616fc76e8c";
-    private static ServiceInstanceBinding DUMMY_BINDING_VARIABLE = null;
 
-    static String username;
-    static String password;
+	@Override
+	public ServiceInstanceBinding createServiceInstanceBinding(
+			CreateServiceInstanceBindingRequest request)
+			throws ServiceInstanceBindingExistsException, ServiceBrokerException {
 
-    /**
-     * ServiceInstance Binding(create) 객체를 생성하는 메소드.
-     * @param request
-     * @return
-     * @throws ServiceInstanceBindingExistsException
-     * @throws ServiceBrokerException
-     */
-    public ServiceInstanceBinding createServiceInstanceBinding(CreateServiceInstanceBindingRequest request)
-            throws ServiceInstanceBindingExistsException, ServiceBrokerException {
-        logger.info("OracleServiceInstanceBindingService CLASS createServiceInstanceBinding");
+		logger.debug("ScmManagerServiceInstanceBindingService CLASS createServiceInstanceBinding");
+		logger.debug("ServiceInstanceBinding not supported.");
 
-        // 최초 ServiceInstanceBinding 생성 요청시에는 해당 ServiceInstanceBinding 가 존재하지 않습니다.
-        ServiceInstanceBinding findBinding =
-            getServiceInstanceBinding(request.getBindingId(), request.getServiceInstanceId(), request.getAppGuid());
+		throw new ServiceBrokerException("Not Supported");
 
-        return findBinding;
-    }
+	}
 
-    /**
-     * Binding을 사용하지는 않지만 메소드 자체는 존재해야하므로, dummy 값을 생성한 후 해당 값을 반환해줌.
-     * @param bindingId
-     * @param serviceInstanceId
-     * @param appGuid
-     * @return
-     */
-    private ServiceInstanceBinding getServiceInstanceBinding(
-        String bindingId, String serviceInstanceId, String appGuid) {
-        if (null == DUMMY_BINDING_VARIABLE) {
-            DUMMY_BINDING_VARIABLE = new ServiceInstanceBinding(
-                DUMMY_BINDING_ID, serviceInstanceId, null, null, appGuid);
-        }
+	@Override
+	public ServiceInstanceBinding deleteServiceInstanceBinding(DeleteServiceInstanceBindingRequest request)
+			throws ServiceBrokerException {
+		logger.debug("ScmManagerServiceInstanceBindingService CLASS deleteServiceInstanceBinding");
+		logger.debug("ServiceInstanceBinding not supported");
 
-        return DUMMY_BINDING_VARIABLE;
-    }
+		throw new ServiceBrokerException("Not Supported");
 
-    @Override
-    public ServiceInstanceBinding deleteServiceInstanceBinding(DeleteServiceInstanceBindingRequest request)
-            throws ServiceBrokerException {
-
-        String bindingId = request.getBindingId();
-
-        // ServiceInstanceBinding 정보를 조회합니다.
-        ServiceInstanceBinding binding = getServiceInstanceBinding(
-            request.getBindingId(), request.getInstance().getServiceInstanceId(), null);
-
-        DUMMY_BINDING_VARIABLE = null;
-
-        return binding;
-    }
+	}
 }
