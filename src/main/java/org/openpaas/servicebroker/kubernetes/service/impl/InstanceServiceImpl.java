@@ -204,7 +204,7 @@ public class InstanceServiceImpl implements ServiceInstanceService {
      */
     public boolean existsNamespace(String namespace) {
         return kubernetesService.existsNamespace( namespace )
-            || instanceRepository.existsByKubernetesNamespace( namespace );
+            || instanceRepository.existsByCaasNamespace( namespace );
     }
 
     /**
