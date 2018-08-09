@@ -16,5 +16,5 @@ public interface JpaServiceInstanceRepository extends JpaRepository<JpaServiceIn
 
     JpaServiceInstance findByServiceInstanceId(String serviceInstanceId);
 
-    boolean existsByKubernetesNamespace(String kubernetesNamespace);
+    boolean existsByCaasNamespace(String kubernetesNamespace);
 }
