@@ -102,8 +102,11 @@ public class KubernetesService {
 	}
 
 	/**
-	 * 1. namespace 생성 2. namespace에 quota 할당 3. namespace의 user 생성 4. 생성한 user에
-	 * role 할당 및 binding 5. 생성한 'user이름-token'으로 secret 생성
+	 * 1. namespace 생성  
+	 * 2. namespace에 quota 할당  
+	 * 3. namespace의 user 생성 
+	 * 4. 생성한 user에 role 할당 및 binding 
+	 * 5. JPA instance 저장용 값 세팅 (spaceName, userName, token)
 	 *
 	 * @author Hyerin
 	 * @since 2018.07.30
@@ -116,7 +119,7 @@ public class KubernetesService {
 		
 		String tmpString[] = instance.getParameter("userName").split("@");
 		String userName = (instance.getOrganizationGuid() + tmpString[0].replaceAll("([:.#$&!_\\(\\)`*%^~,\\<\\>\\[\\];+|-])+", "")).toLowerCase() + "-admin";
-		String tokenName = createUser(spaceName, userName);
+		createUser(spaceName, userName);
 
 		createRole(spaceName, userName);
 		createRoleBinding(spaceName, userName);
@@ -127,13 +130,13 @@ public class KubernetesService {
 		// DB저장을 위한 JPAServiceInstance 리턴
 		instance.setCaasNamespace(spaceName);
 		instance.setCaasAccountName(userName);
-		instance.setCaasAccountAccessToken(tokenName);
+		instance.setCaasAccountAccessToken(getToken(spaceName, userName));
 		return instance;
 
 	}
 
 	/**
-	 * spacename은 orgGuid에 앞에는 paas- 뒤에는 -caas를 붙인다. instance/create_namespace.ftl의
+	 * spacename은 serviceInstance ID 에 앞에는 paas- 뒤에는 -caas를 붙인다. instance/create_namespace.ftl의
 	 * 변수를 채운 후 restTemplate로 rest 통신한다.
 	 *
 	 * @author Hyerin
@@ -196,7 +199,7 @@ public class KubernetesService {
 	 * @author Hyerin
 	 * @since 2018.07.30
 	 */
-	public String createUser(String spaceName, String userName) {
+	public void createUser(String spaceName, String userName) {
 		logger.info("createUser Account~~ {}", userName);
 
 		Map<String, Object> model = new HashMap<>();
@@ -215,6 +218,19 @@ public class KubernetesService {
 		restTemplate.exchange(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/serviceaccounts", HttpMethod.POST,reqEntity, String.class);
 		logger.info("created Account~~ {}", userName);
 		
+	}
+	
+	/**
+	 * 생성한 유저의 토큰값을 가져온다. 
+	 * JSON형태로 값이 넘어오니까 파싱하는 로직이 포함되어 있다.
+	 *
+	 * @author Hyerin
+	 * @since 2018.07.30
+	 */
+	public String getToken(String spaceName, String userName) {
+		
+		HttpEntity<String> reqEntity = new HttpEntity<>(httpHeaders);
+		
 		ResponseEntity<String> hihi = restTemplate.exchange(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/serviceaccounts/" + userName, HttpMethod.GET,reqEntity, String.class);
 
 		JSONParser jsonParser = new JSONParser();
@@ -222,12 +238,12 @@ public class KubernetesService {
 
 		try {
 			jsonObj = (JSONObject) jsonParser.parse(hihi.getBody());
-			//jsonObj = (JSONObject) jsonObj.get("secrets");
 		} catch (org.json.simple.parser.ParseException e) {
 			e.printStackTrace();
 		}
 
 		JSONArray jsonarr = (JSONArray) jsonObj.get("secrets");
+		
 		jsonObj = (JSONObject) jsonarr.get(0);
 		String token = jsonObj.get("name").toString();
 
