@@ -15,9 +15,11 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import org.openpaas.servicebroker.kubernetes.config.EnvConfig;
 import org.openpaas.servicebroker.kubernetes.exception.KubernetesServiceException;
 import org.openpaas.servicebroker.kubernetes.model.JpaServiceInstance;
@@ -182,12 +184,12 @@ public class KubernetesService {
 	 */
 	public String getToken(String spaceName, String userName) {
 		
-		JSONObject jsonObj = restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/serviceaccounts/" + userName, HttpMethod.GET, JSONObject.class);
-
-		JSONArray jsonarr = (JSONArray) jsonObj.get("secrets");
-		
-		jsonObj = (JSONObject) jsonarr.get(0);
-		String token = jsonObj.get("name").toString();
+		String jsonObj = restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/serviceaccounts/" + userName, HttpMethod.GET, String.class);
+		JsonParser parser = new JsonParser();
+		JsonElement element = parser.parse(jsonObj);
+		element = element.getAsJsonObject().get("secrets");
+		element = element.getAsJsonArray().get(0);
+		String token = element.getAsJsonObject().get("name").toString();
 
 		return token;
 	}
@@ -285,12 +287,12 @@ public class KubernetesService {
 
 		logger.info("get Secret {}", userName);
 
-		JSONObject jsonObj = restTemplateService.send( envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/secrets/" + userName, HttpMethod.GET, JSONObject.class);
+		String jsonObj = restTemplateService.send( envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/secrets/" + userName, HttpMethod.GET, String.class);
 
-		String token = null;
-
-		jsonObj = (JSONObject) jsonObj.get("data");
-		token = jsonObj.get("token").toString();
+		JsonParser parser = new JsonParser();
+		JsonElement element = parser.parse(jsonObj);
+		element = element.getAsJsonObject().get("data");
+		String token = element.getAsJsonObject().get("token").toString();
 
 		Decoder decoder = Base64.getDecoder();
 		String decodeToken = new String(decoder.decode(token));
