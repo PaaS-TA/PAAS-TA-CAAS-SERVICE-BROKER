@@ -38,8 +38,8 @@ public class EnvConfig {
         this.adminToken = adminToken;
     }
 
-    public String getDashboardUrl() {
-        return dashboardUrl;
+    public String getDashboardUrl(String serviceInstanceId) {
+        return dashboardUrl + serviceInstanceId;
     }
 
     public void setDashboardUrl(String dashboardUrl) {
