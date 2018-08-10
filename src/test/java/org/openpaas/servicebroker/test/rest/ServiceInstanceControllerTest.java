@@ -80,7 +80,7 @@ public class ServiceInstanceControllerTest {
         basicAuth = "Basic " + (Base64.getEncoder().encodeToString((broker_auth_user + ":" + broker_auth_pwd).getBytes()));
         serviceDefinitionId = ServiceFixture.getService().getId();
         requestUrl = ServiceInstanceController.BASE_PATH + "/"+TestConstants.SV_INSTANCE_ID_001;
-        dashboardUrl = TestConstants.DASHBOARD_URL+TestConstants.SV_INSTANCE_ID_001;
+        dashboardUrl = TestConstants.DASHBOARD_URL+ "/"+TestConstants.SV_INSTANCE_ID_001;
     }
 
     @Test

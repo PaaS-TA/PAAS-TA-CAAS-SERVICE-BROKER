@@ -9,6 +9,7 @@ import org.openpaas.servicebroker.model.CreateServiceInstanceResponse;
 import org.openpaas.servicebroker.model.ServiceDefinition;
 import org.openpaas.servicebroker.model.ServiceInstance;
 import org.openpaas.servicebroker.model.UpdateServiceInstanceRequest;
+import org.paasta.servicebroker.apiplatform.common.TestConstants;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -28,7 +29,7 @@ public class ServiceInstanceFixture {
                 "plan-one-id", 
                 DataFixture.getOrgOneGuid(), 
                 DataFixture.getSpaceOneGuid()).withServiceInstanceId("service-instnce-one-id"))
-            .withDashboardUrl("dashboard_url");
+        		.withDashboardUrl(TestConstants.DASHBOARD_URL + "/"+ TestConstants.SV_INSTANCE_ID_001);
                 
     }
     
@@ -38,7 +39,7 @@ public class ServiceInstanceFixture {
                 "plan-two-id", 
                 DataFixture.getOrgOneGuid(), 
                 DataFixture.getSpaceOneGuid()).withServiceInstanceId("service-instnce-two-id"))
-            .withDashboardUrl("dashboard_url");
+        		.withDashboardUrl(TestConstants.DASHBOARD_URL + "/"+ TestConstants.SV_INSTANCE_ID_002);
 
     }
     

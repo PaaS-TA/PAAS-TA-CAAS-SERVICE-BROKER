@@ -1,5 +1,8 @@
 package org.paasta.servicebroker.apiplatform.common;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by user on 2017-09-12.
  */
@@ -9,7 +12,7 @@ public class TestConstants {
     public static final String Headers_KEY_API_VERSION = "X-Broker-Api-Version";
     public static final String Headers_KEY_AUTHORIZATION = "Authorization";
 
-    public static final String PARAM_KEY_OWNER = "owner";
+    public static final String PARAM_KEY_OWNER = "userName";
     public static final String PARAM_KEY_OWNER_VALUE = "testuser001";
 
     public static final String PARAM_SERVICE_TYPE_SHARED = "Shared";
@@ -32,6 +35,14 @@ public class TestConstants {
     public static final String DASHBOARD_URL = "http://test-dashboardurl";
 
 
-   public static final String BINDING_ID = "service_instance_binding_id";
+    public static final String BINDING_ID = "service_instance_binding_id";
+   
+    public static final String JPA_SERVICE_DEFINITION_ID = SERVICEDEFINITION_ID;
+    public static final String JPA_ORGANIZTION_GUID = ORG_GUID_001;
+    public static final String JPA_SPACE_GUID = SPACE_GUID_001;
+    public static final String JPA_CAAS_NAMESPACE = "paas-" + SV_INSTANCE_ID_001 + "-caas";
+    public static final String JPA_CAAS_ACCOUNT_NAME = PARAM_KEY_OWNER_VALUE + "-admin";
+    public static final String JPA_CAAS_ACCOUNT_ACCESS_TOKEN = JPA_CAAS_ACCOUNT_NAME + "qwert";
+
 
 }
