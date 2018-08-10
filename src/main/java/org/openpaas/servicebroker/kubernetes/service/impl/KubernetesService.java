@@ -21,6 +21,7 @@ import org.json.simple.parser.JSONParser;
 import org.openpaas.servicebroker.kubernetes.config.EnvConfig;
 import org.openpaas.servicebroker.kubernetes.exception.KubernetesServiceException;
 import org.openpaas.servicebroker.kubernetes.model.JpaServiceInstance;
+import org.openpaas.servicebroker.kubernetes.service.RestTemplateService;
 import org.openpaas.servicebroker.kubernetes.service.TemplateService;
 import org.openpaas.servicebroker.model.Plan;
 import org.slf4j.Logger;
@@ -34,7 +35,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * 이 서비스 브로커에서 접근하는 Kubernetes에 대한 서비스를 위한 클래스이다.
@@ -56,50 +56,7 @@ public class KubernetesService {
 	private EnvConfig envConfig;
 
 	@Autowired
-	RestTemplate restTemplate;
-
-	@Autowired
-	HttpHeaders httpHeaders;
-
-	/**
-	 * RestTemplate Bean 객체를 생성하는 메소드 (단, SSL은 무시) <br>
-	 * create restTemplate ignore ssl
-	 *
-	 * @author Hyerin
-	 * @since 2018.07.24
-	 */
-	@Bean
-	public RestTemplate restTemplate() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
-		TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
-
-		SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom().loadTrustMaterial(null, acceptingTrustStrategy)
-				.build();
-
-		SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
-
-		CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(csf).build();
-
-		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-
-		requestFactory.setHttpClient(httpClient);
-		RestTemplate restTemplate = new RestTemplate(requestFactory);
-		return restTemplate;
-	}
-
-	/**
-	 * httpHeaders 정보를 세팅한다.
-	 *
-	 * @author Hyerin
-	 * @since 2018.07.24
-	 */
-	@Bean
-	public HttpHeaders httpHeaders() {
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Authorization", "Bearer " + envConfig.getAdminToken());
-		headers.add("Accept", "application/json,application/yaml,text/html");
-		headers.add("Content-Type", "application/yaml;charset=UTF-8");
-		return headers;
-	}
+	private RestTemplateService restTemplateService;
 
 	/**
 	 * 1. namespace 생성  
@@ -137,7 +94,7 @@ public class KubernetesService {
 
 	/**
 	 * spacename은 serviceInstance ID 에 앞에는 paas- 뒤에는 -caas를 붙인다. instance/create_namespace.ftl의
-	 * 변수를 채운 후 restTemplate로 rest 통신한다.
+	 * 변수를 채운 후 restTemplateService로 rest 통신한다.
 	 *
 	 * @author Hyerin
 	 * @since 2018.07.30
@@ -157,15 +114,14 @@ public class KubernetesService {
 		}
 		logger.debug("Here is your yml file!!! {}", yml);
 
-		HttpEntity<String> reqEntity = new HttpEntity<>(yml, httpHeaders);
-		restTemplate.exchange(envConfig.getCaasUrl() + "/api/v1/namespaces", HttpMethod.POST, reqEntity, String.class);
+		restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces", yml, HttpMethod.POST, String.class);
 
 		return spaceName;
 	}
 
 	/**
 	 * namespace에 quota를 할당한다. quota는 plan 정보대로 할당한다. plan정보의 B -> i 로 바꾼 후에
-	 * instance/create_resource_quota.ftl의 변수를 채운 후 restTemplate로 rest 통신한다.
+	 * instance/create_resource_quota.ftl의 변수를 채운 후 restTemplateService로 rest 통신한다.
 	 *
 	 * @author Hyerin
 	 * @since 2018.07.30
@@ -186,15 +142,14 @@ public class KubernetesService {
 			e.printStackTrace();
 		}
 
-		HttpEntity<String> reqEntity = new HttpEntity<>(yml, httpHeaders);
-		restTemplate.exchange(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/resourcequotas", HttpMethod.POST, reqEntity, Map.class);
+		restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/resourcequotas", yml, HttpMethod.POST, Map.class);
 
 	}
 
 	/**
 	 * parameter에 넘어온 userName 값으로 생선된 namespace의 관리자 계정을 생성한다. user명은 web 등에서
 	 * kubernetes 명명규칙에 맞는 변수가 넘어왔다고 가정한다. instance/create_account.ftl의 변수를 채운 후
-	 * restTemplate로 rest 통신한다.
+	 * restTemplateService로 rest 통신한다.
 	 *
 	 * @author Hyerin
 	 * @since 2018.07.30
@@ -213,9 +168,7 @@ public class KubernetesService {
 			e.printStackTrace();
 		}
 
-		HttpEntity<String> reqEntity = new HttpEntity<>(yml, httpHeaders);
-
-		restTemplate.exchange(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/serviceaccounts", HttpMethod.POST,reqEntity, String.class);
+		restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/serviceaccounts", yml, HttpMethod.POST, String.class);
 		logger.info("created Account~~ {}", userName);
 		
 	}
@@ -229,18 +182,7 @@ public class KubernetesService {
 	 */
 	public String getToken(String spaceName, String userName) {
 		
-		HttpEntity<String> reqEntity = new HttpEntity<>(httpHeaders);
-		
-		ResponseEntity<String> hihi = restTemplate.exchange(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/serviceaccounts/" + userName, HttpMethod.GET,reqEntity, String.class);
-
-		JSONParser jsonParser = new JSONParser();
-		JSONObject jsonObj = null;
-
-		try {
-			jsonObj = (JSONObject) jsonParser.parse(hihi.getBody());
-		} catch (org.json.simple.parser.ParseException e) {
-			e.printStackTrace();
-		}
+		JSONObject jsonObj = restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/serviceaccounts/" + userName, HttpMethod.GET, JSONObject.class);
 
 		JSONArray jsonarr = (JSONArray) jsonObj.get("secrets");
 		
@@ -252,7 +194,7 @@ public class KubernetesService {
 
 	/**
 	 * 생성된 namespace에 role을 생성한다. role이름은 'namespace명-role' 이다.
-	 * instance/create_role.ftl의 변수를 채운 후 restTemplate로 rest 통신한다.
+	 * instance/create_role.ftl의 변수를 채운 후 restTemplateService로 rest 통신한다.
 	 *
 	 * @author Hyerin
 	 * @since 2018.07.30
@@ -272,14 +214,13 @@ public class KubernetesService {
 			e.printStackTrace();
 		}
 
-		HttpEntity<String> reqEntity = new HttpEntity<>(yml, httpHeaders);
-		restTemplate.exchange(envConfig.getCaasUrl() + "/apis/rbac.authorization.k8s.io/v1/namespaces/" + spaceName + "/roles", HttpMethod.POST, reqEntity, Map.class);
+		restTemplateService.send(envConfig.getCaasUrl() + "/apis/rbac.authorization.k8s.io/v1/namespaces/" + spaceName + "/roles", yml, HttpMethod.POST, Map.class);
 
 	}
 
 	/**
 	 * 생성된 namespace에 roleBinding을 생성한다. binding이름은 'namespace명-role-binding' 이다.
-	 * instance/create_roleBinding.ftl의 변수를 채운 후 restTemplate로 rest 통신한다.
+	 * instance/create_roleBinding.ftl의 변수를 채운 후 restTemplateService로 rest 통신한다.
 	 *
 	 * @author Hyerin
 	 * @since 2018.07.30
@@ -299,16 +240,14 @@ public class KubernetesService {
 			e.printStackTrace();
 		}
 
-		HttpEntity<String> reqEntity = new HttpEntity<>(yml, httpHeaders);
-
-		restTemplate.exchange(envConfig.getCaasUrl() + "/apis/rbac.authorization.k8s.io/v1/namespaces/" + spaceName + "/rolebindings", HttpMethod.POST, reqEntity, Map.class);
+		restTemplateService.send(envConfig.getCaasUrl() + "/apis/rbac.authorization.k8s.io/v1/namespaces/" + spaceName + "/rolebindings", yml, HttpMethod.POST, Map.class);
 
 	}
 
 	/**
 	 * 생성된 user에게 부여할 secret을 만든다. secrete이름은 '유저명-token' 이다. role이름은
 	 * namespace명-role 이고, binding이름은 namespace명-role-binding 이다.
-	 * instance/create_role.ftl의 변수를 채운 후 restTemplate로 rest 통신한다.
+	 * instance/create_role.ftl의 변수를 채운 후 restTemplateService로 rest 통신한다.
 	 *
 	 * @author Hyerin
 	 * @since 2018.07.30
@@ -328,8 +267,8 @@ public class KubernetesService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		HttpEntity<String> reqEntity = new HttpEntity<>(yml, httpHeaders);
-		restTemplate.exchange(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/secrets", HttpMethod.POST, reqEntity, Map.class);
+
+		restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/secrets", yml, HttpMethod.POST, Map.class);
 		return userName + "-token";
 
 	}
@@ -346,18 +285,9 @@ public class KubernetesService {
 
 		logger.info("get Secret {}", userName);
 
-		HttpEntity<String> reqEntity = new HttpEntity<>(httpHeaders);
-
-		ResponseEntity<String> hihi = restTemplate.exchange( envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/secrets/" + userName, HttpMethod.GET, reqEntity, String.class);
+		JSONObject jsonObj = restTemplateService.send( envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/secrets/" + userName, HttpMethod.GET, JSONObject.class);
 
 		String token = null;
-		JSONParser jsonParser = new JSONParser();
-		JSONObject jsonObj = null;
-		try {
-			jsonObj = (JSONObject) jsonParser.parse(hihi.getBody());
-		} catch (org.json.simple.parser.ParseException e) {
-			e.printStackTrace();
-		}
 
 		jsonObj = (JSONObject) jsonObj.get("data");
 		token = jsonObj.get("token").toString();
@@ -380,9 +310,7 @@ public class KubernetesService {
 		// TODO kubernetes에 있는 namespace 삭제
 		boolean isSuccess = false;
 
-		HttpEntity<String> reqEntity = new HttpEntity<>(httpHeaders);
-		restTemplate.exchange(envConfig.getCaasUrl() + "/api/v1/namespaces/" + namespace, HttpMethod.DELETE, reqEntity,
-				Map.class);
+		restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + namespace, HttpMethod.DELETE,	String.class);
 		isSuccess = true;
 
 		logger.debug("Done to delete namespace in kubernetes.");
@@ -391,18 +319,16 @@ public class KubernetesService {
 	}
 
 	/**
-	 * Namespace가 존재하는지 확인한다. restTemplate으로 통신시, 있으면 200 OK, 없으면 404 Error를 뿜기 때문에
+	 * Namespace가 존재하는지 확인한다. restTemplateService으로 통신시, 있으면 200 OK, 없으면 404 Error를 뿜기 때문에
 	 * 에러가 생김 == 해당이름의 namespace가 없음이다.
 	 * 
 	 * @param namespace
 	 * @return
 	 */
 	public boolean existsNamespace(String namespace) {
-		// TODO namespace 존재 여부 확인 필요
 
-		HttpEntity<String> reqEntity = new HttpEntity<>(httpHeaders);
 		try {
-			restTemplate.exchange(envConfig.getCaasUrl() + "/api/v1/namespaces/" + namespace, HttpMethod.GET, reqEntity, Map.class);
+			restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + namespace, HttpMethod.GET, Map.class);
 		} catch (HttpClientErrorException e) {
 			e.getStatusCode();
 			return false;
@@ -413,7 +339,7 @@ public class KubernetesService {
 	/**
 	 * namespace에 quota를 재할당한다. 하위->상위 플랜 유효성 확인은 InstanceServiceImpl에서 대신 수행한다.
 	 * plan정보의 B -> i 로 바꾼 후에 instance/change_resource_quota.ftl의 변수를 채운 후
-	 * restTemplate로 rest 통신한다.
+	 * restTemplateService로 rest 통신한다.
 	 *
 	 * @author Hyerin
 	 * @author Hyungu Cho
@@ -435,12 +361,9 @@ public class KubernetesService {
 			e.printStackTrace();
 		}
 
-		HttpEntity<String> reqEntity = new HttpEntity<>(yml, httpHeaders);
 		// ResourceQuota Create-POST / Replace-PUT
-		ResponseEntity<Map> resEntity = restTemplate.exchange(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/resourcequotas/" + spaceName + "-resourcequota", HttpMethod.PUT, reqEntity, Map.class);
+		Map<String, Object> responseBody = restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/resourcequotas/" + spaceName + "-resourcequota", HttpMethod.PUT, Map.class);
 
-		// response body : YAML or JSON. 현재는 HttpHeader를 통해 JSON으로 강제한 상태임.
-		Map<String, Object> responseBody = resEntity.getBody();
 		if (null != responseBody)
 			logger.debug("Change ResourceQuota response body : {}", responseBody.toString());
 	}
