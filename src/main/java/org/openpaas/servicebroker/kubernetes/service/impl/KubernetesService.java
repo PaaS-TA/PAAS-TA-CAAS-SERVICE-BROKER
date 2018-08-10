@@ -142,7 +142,7 @@ public class KubernetesService {
 			e.printStackTrace();
 		}
 
-		restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/resourcequotas", yml, HttpMethod.POST, Map.class);
+		restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/resourcequotas", yml, HttpMethod.POST, String.class);
 
 	}
 
@@ -214,7 +214,7 @@ public class KubernetesService {
 			e.printStackTrace();
 		}
 
-		restTemplateService.send(envConfig.getCaasUrl() + "/apis/rbac.authorization.k8s.io/v1/namespaces/" + spaceName + "/roles", yml, HttpMethod.POST, Map.class);
+		restTemplateService.send(envConfig.getCaasUrl() + "/apis/rbac.authorization.k8s.io/v1/namespaces/" + spaceName + "/roles", yml, HttpMethod.POST, String.class);
 
 	}
 
@@ -240,7 +240,7 @@ public class KubernetesService {
 			e.printStackTrace();
 		}
 
-		restTemplateService.send(envConfig.getCaasUrl() + "/apis/rbac.authorization.k8s.io/v1/namespaces/" + spaceName + "/rolebindings", yml, HttpMethod.POST, Map.class);
+		restTemplateService.send(envConfig.getCaasUrl() + "/apis/rbac.authorization.k8s.io/v1/namespaces/" + spaceName + "/rolebindings", yml, HttpMethod.POST, String.class);
 
 	}
 
@@ -268,7 +268,7 @@ public class KubernetesService {
 			e.printStackTrace();
 		}
 
-		restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/secrets", yml, HttpMethod.POST, Map.class);
+		restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/secrets", yml, HttpMethod.POST, String.class);
 		return userName + "-token";
 
 	}
@@ -328,7 +328,7 @@ public class KubernetesService {
 	public boolean existsNamespace(String namespace) {
 
 		try {
-			restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + namespace, HttpMethod.GET, Map.class);
+			restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + namespace, HttpMethod.GET, String.class);
 		} catch (HttpClientErrorException e) {
 			e.getStatusCode();
 			return false;
@@ -362,9 +362,9 @@ public class KubernetesService {
 		}
 
 		// ResourceQuota Create-POST / Replace-PUT
-		Map<String, Object> responseBody = restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/resourcequotas/" + spaceName + "-resourcequota", HttpMethod.PUT, Map.class);
+		String responseBody = restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/resourcequotas/" + spaceName + "-resourcequota", HttpMethod.PUT, String.class);
 
 		if (null != responseBody)
-			logger.debug("Change ResourceQuota response body : {}", responseBody.toString());
+			logger.debug("Change ResourceQuota response body : {}", responseBody);
 	}
 }
