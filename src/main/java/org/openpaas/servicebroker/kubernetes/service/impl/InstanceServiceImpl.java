@@ -7,6 +7,7 @@ import org.openpaas.servicebroker.exception.ServiceInstanceExistsException;
 import org.openpaas.servicebroker.kubernetes.config.EnvConfig;
 import org.openpaas.servicebroker.kubernetes.model.JpaServiceInstance;
 import org.openpaas.servicebroker.kubernetes.repo.JpaServiceInstanceRepository;
+import org.openpaas.servicebroker.kubernetes.service.AdminTokenService;
 import org.openpaas.servicebroker.model.CreateServiceInstanceRequest;
 import org.openpaas.servicebroker.model.DeleteServiceInstanceRequest;
 import org.openpaas.servicebroker.model.Plan;
@@ -45,7 +46,7 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 	EnvConfig config;
 
 	@Autowired
-	SshService sshService;
+	AdminTokenService adminTokenService;
 
 	private static final Logger logger = LoggerFactory.getLogger(InstanceServiceImpl.class);
 
@@ -67,6 +68,9 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 	@Override
 	public JpaServiceInstance createServiceInstance(final CreateServiceInstanceRequest request) throws ServiceInstanceExistsException, ServiceBrokerException {
 		logger.info("Create Kubernetes service instance : {}", request.getServiceInstanceId());
+		
+		adminTokenService.checkToken();
+		
 		// 요청한 instance id를 이용해 해당 instance id가 있는지 확인
 		JpaServiceInstance findInstance = instanceRepository.findByServiceInstanceId(request.getServiceInstanceId());
 		// when
@@ -115,6 +119,9 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 	@Override
 	public ServiceInstance deleteServiceInstance(DeleteServiceInstanceRequest request) throws ServiceBrokerException {
 		logger.info("Delete Kubernetes service instance : {}", request.getServiceInstanceId());
+		
+		adminTokenService.checkToken();
+		
 		JpaServiceInstance instance = (JpaServiceInstance) getServiceInstance(request.getServiceInstanceId());
 		if (instance == null) // when
 			return null;
@@ -142,6 +149,10 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 	 */
 	@Override
 	public ServiceInstance updateServiceInstance(UpdateServiceInstanceRequest request) throws ServiceBrokerException {
+		logger.info("Update Kubernetes service instance : {}", request.getServiceInstanceId());
+		
+		adminTokenService.checkToken();
+		
 		JpaServiceInstance findInstance = instanceRepository.findByServiceInstanceId(request.getServiceInstanceId());
 		if (null == findInstance)
 			throw new ServiceBrokerException("Cannot find service instance id : " + request.getServiceInstanceId());

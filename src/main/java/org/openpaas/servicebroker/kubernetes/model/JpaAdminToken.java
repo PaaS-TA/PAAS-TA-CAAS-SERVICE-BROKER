@@ -17,6 +17,14 @@ public class JpaAdminToken {
 	@Column(name = "token_value", length=1000)
 	@Id
 	private String tokenValue;
+	
+	public JpaAdminToken() {
+		
+	}
+	
+	public JpaAdminToken(String tokenValue) {
+		this.tokenValue = tokenValue;
+	}
 
 	public String getTokenValue() {
 		return tokenValue;

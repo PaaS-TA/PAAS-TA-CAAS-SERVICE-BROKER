@@ -1,5 +1,6 @@
 package org.openpaas.servicebroker.kubernetes.service;
 
+import org.openpaas.servicebroker.kubernetes.model.JpaAdminToken;
 import org.openpaas.servicebroker.kubernetes.repo.JpaAdminTokenRepository;
 import org.openpaas.servicebroker.kubernetes.service.impl.SshService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,4 +35,16 @@ public class AdminTokenService {
 		return adminTokenRepository.findAll().get(0).equals(token);
 	}
 	
+	public void checkToken() {
+		
+		// 토큰이 존재하지 않을 때
+		if(!tokenExist()) {
+			setContext();
+			adminTokenRepository.save(new JpaAdminToken("token"));
+		}
+		
+		// 토큰이 존재할 때
+		tokenValidation("token");
+			
+	}
 }
