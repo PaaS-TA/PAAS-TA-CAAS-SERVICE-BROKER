@@ -61,7 +61,7 @@ public class SshService {
      * @param command the command
      * @return the string
      */
-    String executeSsh(String command) {
+    public String executeSsh(String command) {
         Session session = null;
         String result = RESULT_STATUS_FAIL;
 
