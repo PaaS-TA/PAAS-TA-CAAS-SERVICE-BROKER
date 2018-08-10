@@ -21,9 +21,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-
+@Service
 public class RestTemplateService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(RestTemplateService.class);
@@ -31,14 +32,13 @@ public class RestTemplateService {
 	@Autowired
 	RestTemplate restTemplate;
 	//서비스로 따로 빼셈
+	
+	@Autowired
+	EnvConfig envConfig;
 
 	@Autowired
 	HttpHeaders httpHeaders;
 	// 서비스로 빼셈 
-	
-	@Autowired
-	private EnvConfig envConfig;
-	//autowired는 mock으로 뺴면 됨
 	
 	/**
 	 * RestTemplate Bean 객체를 생성하는 메소드 (단, SSL은 무시) <br>
