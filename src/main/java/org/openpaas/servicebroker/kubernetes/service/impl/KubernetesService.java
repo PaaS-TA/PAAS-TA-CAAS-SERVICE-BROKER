@@ -306,8 +306,8 @@ public class KubernetesService {
 	 * @author Hyerin
 	 * @since 2018.07.30
 	 */
-	public boolean deleteNamespace(String namespace) {
-		logger.debug("Start to delete namespace in kubernetes.");
+	public void deleteNamespace(String namespace) {
+		logger.info("Start to delete namespace in kubernetes.");
 
 		// TODO kubernetes에 있는 namespace 삭제
 		boolean isSuccess = false;
@@ -315,9 +315,8 @@ public class KubernetesService {
 		restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + namespace, HttpMethod.DELETE,	String.class);
 		isSuccess = true;
 
-		logger.debug("Done to delete namespace in kubernetes.");
+		logger.info("Done to delete namespace in kubernetes.");
 
-		return isSuccess;
 	}
 
 	/**
