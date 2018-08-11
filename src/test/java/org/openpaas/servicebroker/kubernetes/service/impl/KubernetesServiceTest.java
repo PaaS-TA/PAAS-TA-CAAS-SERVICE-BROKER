@@ -86,6 +86,7 @@ public class KubernetesServiceTest {
     @Test
     public void testCreateNamespaceUser() throws KubernetesServiceException {
     	System.out.println(jpaServiceInstance.getServiceInstanceId());
+    	
         // 값을 세팅한다 (다른 서비스 호출한 것을 가짜로 대체한다)
         when(templateService.convert(createNamespaceYml, model)).thenReturn(createNamespaceYml);
         when(restTemplateService.send(envConfig.getCaasUrl(), createNamespaceYml, HttpMethod.POST, String.class)).thenReturn(createNamespaceYml);
@@ -108,6 +109,49 @@ public class KubernetesServiceTest {
 		assertEquals(TestConstants.JPA_SPACE_GUID, jpaServiceInstance.getSpaceGuid());
 		assertEquals(TestConstants.PARAM_KEY_OWNER_VALUE, jpaServiceInstance.getParameter(TestConstants.PARAM_KEY_OWNER));
 	
+    }
+    
+    @Test
+    public void testDeleteNamespace() {
+    	
+    	// 값을 세팅한다.
+    	when(restTemplateService.send(envConfig.getCaasUrl(), createNamespaceYml, HttpMethod.DELETE, String.class)).thenReturn(createNamespaceYml);
+    	
+    	// 실제로 테스트할 함수를 호출한다.
+    	kubernetesService.deleteNamespace(jpaServiceInstance.getCaasNamespace());
+    	
+    	// 결과 값이 맞는지 체크한다.
+    	// TODO : 결과 값이 없으면 어떻게 해야하지...?
+    }
+    
+    @Test
+    public void testChangeResourceQuota() throws KubernetesServiceException {
+    	
+    	// 값을 세팅한다.
+    	when(templateService.convert(createNamespaceYml, model)).thenReturn(createNamespaceYml);
+    	when(restTemplateService.send(envConfig.getCaasUrl(), createNamespaceYml, HttpMethod.PUT, String.class)).thenReturn(createNamespaceYml);
+    	
+    	// 실제로 테스트할 함수를 호출한다.
+    	kubernetesService.changeResourceQuota(jpaServiceInstance.getCaasAccountName(), PlanFixture.getPlanOne());
+    	
+    	// 결과 값이 맞는지 체크한다.
+    	// TODO : 결과 값이 없으면 어떻게 해야하지...?
+    	
+    }
+    
+    @Test
+    public void testChangeResourceQuotaNull() throws KubernetesServiceException {
+    	
+    	// 값을 세팅한다.
+    	when(templateService.convert(createNamespaceYml, model)).thenReturn(createNamespaceYml);
+    	when(restTemplateService.send(envConfig.getCaasUrl(), createNamespaceYml, HttpMethod.PUT, String.class)).thenReturn(null);
+    	
+    	// 실제로 테스트할 함수를 호출한다.
+    	kubernetesService.changeResourceQuota(jpaServiceInstance.getCaasAccountName(), PlanFixture.getPlanOne());
+    	
+    	// 결과 값이 맞는지 체크한다.
+    	// TODO : 결과 값이 없으면 어떻게 해야하지...?
+    	
     }
 
 }
