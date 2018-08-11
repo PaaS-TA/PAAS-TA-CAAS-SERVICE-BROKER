@@ -41,10 +41,15 @@ public class AdminTokenService {
 		if(!tokenExist()) {
 			setContext();
 			adminTokenRepository.save(new JpaAdminToken("token"));
+			return;
 		}
 		
 		// 토큰이 존재할 때
-		tokenValidation("token");
+		if(!tokenValidation("token")) {
+			setContext();
+			adminTokenRepository.save(new JpaAdminToken("token"));
+			return;
+		}
 			
 	}
 }
