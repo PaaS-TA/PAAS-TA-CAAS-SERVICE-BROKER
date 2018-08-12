@@ -11,6 +11,7 @@ import org.openpaas.servicebroker.kubernetes.service.AdminTokenService;
 import org.openpaas.servicebroker.model.CreateServiceInstanceRequest;
 import org.openpaas.servicebroker.model.DeleteServiceInstanceRequest;
 import org.openpaas.servicebroker.model.Plan;
+import org.openpaas.servicebroker.model.ServiceDefinition;
 import org.openpaas.servicebroker.model.ServiceInstance;
 import org.openpaas.servicebroker.model.UpdateServiceInstanceRequest;
 import org.openpaas.servicebroker.service.CatalogService;
@@ -19,9 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Service Instance를 관리하기 위한 Service 클래스이다.
@@ -73,7 +71,7 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 		
 		// 요청한 instance id를 이용해 해당 instance id가 있는지 확인
 		JpaServiceInstance findInstance = instanceRepository.findByServiceInstanceId(request.getServiceInstanceId());
-		// when
+		
 		JpaServiceInstance instance = (JpaServiceInstance) new JpaServiceInstance(request);
 		// new는 mock을 못함... ㅇㅁㅇ;; -> 별도의 method로 뺌
 		if (findInstance != null) {
@@ -99,13 +97,13 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 
 	/**
 	 * Service Instance 정보를 테이블에서 가져와 ServiceInstance 객체로 반환한다.
-	 * 
+	 * TODO : getOne으로 바꾸어도 테스트코드 돌아가는지 확인 (아마될것..?)
 	 * @param serviceInstanceId
 	 * @return
 	 */
 	@Override
 	public ServiceInstance getServiceInstance(String serviceInstanceId) {
-		return instanceRepository.getOne(serviceInstanceId);
+		return instanceRepository.findByServiceInstanceId(serviceInstanceId);
 	}
 
 	/**
@@ -124,14 +122,14 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 		
 		JpaServiceInstance instance = (JpaServiceInstance) getServiceInstance(request.getServiceInstanceId());
 		if (instance == null) // when
-			return null;
+			throw new ServiceBrokerException("instance doesn't exist in Database!!");
 
-		if (existsNamespace(instance.getCaasNamespace())) { // when
-			// kubernetesAdminServiceImpl.deleteNamespace( instance.getKubernetesNamespace()
-			// );
-			kubernetesService.deleteNamespace(instance.getCaasNamespace());
-			instanceRepository.delete(instance);
+		if (!existsNamespace(instance.getCaasNamespace())) { // when
+			throw new ServiceBrokerException("Namespace " + instance.getCaasNamespace() + " doesn't exist!");
 		}
+		
+		kubernetesService.deleteNamespace(instance.getCaasNamespace());
+		instanceRepository.delete(instance);
 
 		// unbind(delete binding information)는 구현하지 않기로 결정함.
 
@@ -181,15 +179,6 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 		return findInstance;
 	}
 
-	// /** Dashboard URL을 생성해 반환해준다.
-	// * @param spaceName
-	// * @param tokenName
-	// * @return
-	// */
-	// private String getDashboardUrl(String serviceInstanceId){
-	// return config.getDashboardUrl() + serviceInstanceId;
-	// }
-
 	/**
 	 * Namespace가 DB와 Kubernetes 양쪽에 모두 존재하는지 확인한다.
 	 * 
@@ -197,7 +186,7 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 	 * @return
 	 */
 	private boolean existsNamespace(String namespace) {
-		return kubernetesService.existsNamespace(namespace) || instanceRepository.existsByCaasNamespace(namespace);
+		return kubernetesService.existsNamespace(namespace);
 	}
 
 	/**
@@ -209,19 +198,17 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 	 */
 	private Plan getPlan(JpaServiceInstance instance) throws ServiceBrokerException {
 		logger.info("Get plan info. from Catalog service in this broker.");
-		final List<Plan> plans = catalog.getServiceDefinition(instance.getServiceDefinitionId()).getPlans();
+		ServiceDefinition serviceDefinition = catalog.getServiceDefinition(instance.getServiceDefinitionId());
+		final List<Plan> plans = serviceDefinition.getPlans();
 		Plan plan = null;
 		for (int size = plans.size(), i = 0; i < size; i++) {
 			if (plans.get(i).getId().equals(instance.getPlanId())) {
 				plan = plans.get(i);
-				break;
+				return plan;
 			}
 		}
 
-		if (null == plan)
-			throw new ServiceBrokerException("Cannot find plan using plan id into service instance info.");
-
-		return plan;
+		throw new ServiceBrokerException("Cannot find plan using plan id into service instance info.");
 	}
 
 }
