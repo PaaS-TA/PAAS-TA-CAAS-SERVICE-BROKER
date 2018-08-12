@@ -17,218 +17,269 @@ import java.util.Map;
 /**
  * Service Instance에 대한 Entity 모델 클래스 (JPA를 이용해서 사용) <br>
  * (Created by Hyerin on 2018-04-10. thanks to Mingu!)
+ * 
  * @author Hyerin
  * @author Hyungu Cho
  * @version 20180724
  */
-@JsonAutoDetect(
-    getterVisibility = JsonAutoDetect.Visibility.NONE
-)
+@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE)
 @Entity
 @Table(name = "service_instance")
 public class JpaServiceInstance extends ServiceInstance {
-    @JsonSerialize
-    @JsonProperty("service_id")
-    @Column(name = "service_definition_id")
-    private String serviceDefinitionId;
+	@JsonSerialize
+	@JsonProperty("service_id")
+	@Column(name = "service_definition_id")
+	private String serviceDefinitionId;
 
-    @JsonSerialize
-    @JsonProperty("organization_guid")
-    @Column(name = "organization_guid")
-    private String organizationGuid;
+	@JsonSerialize
+	@JsonProperty("organization_guid")
+	@Column(name = "organization_guid")
+	private String organizationGuid;
 
-    @JsonSerialize
-    @JsonProperty("space_guid")
-    @Column(name = "space_guid")
-    private String spaceGuid;
+	@JsonSerialize
+	@JsonProperty("space_guid")
+	@Column(name = "space_guid")
+	private String spaceGuid;
 
-    @JsonSerialize
-    @JsonProperty("caas_namespace")
-    @Column(name = "caas_namespace")
-    private String caasNamespace;
+	@JsonSerialize
+	@JsonProperty("caas_namespace")
+	@Column(name = "caas_namespace")
+	private String caasNamespace;
 
-    @JsonSerialize
-    @JsonProperty("caas_account_name")
-    @Column(name = "caas_account_name")
-    private String caasAccountName;
+	@JsonSerialize
+	@JsonProperty("caas_account_name")
+	@Column(name = "caas_account_name")
+	private String caasAccountName;
 
-    @JsonSerialize
-    @JsonProperty("caas_account_access_token")
-    @Column(name = "caas_account_access_token")
-    private String caasAccountAccessToken;
+	@JsonSerialize
+	@JsonProperty("caas_account_access_token")
+	@Column(name = "caas_account_access_token")
+	private String caasAccountAccessToken;
 
-    @JsonIgnore
-    @Transient
-    private Map<String, Object> parameters;
+	@JsonIgnore
+	@Transient
+	private Map<String, Object> parameters;
 
-    public JpaServiceInstance() {
-        super();                                // empty datum,
-        setParameters( new HashMap<>() );      // and empty params.
-    }
+	public JpaServiceInstance() {
+		super(); // empty datum,
+		setParameters(new HashMap<>()); // and empty params.
+	}
 
-    /**
-     * 본 클래스는 ServiceInstance 클래스를 확장하고 JPA 사용을 위해 별도의 attribute를 추가한 것이므로,
-     * ServiceInstance를 이용한 생성자는 되도록 사용하지 않아야 함.
-     * @param instance
-     */
-    @Deprecated
-    public JpaServiceInstance(ServiceInstance instance) {
-        super();
+	/**
+	 * 본 클래스는 ServiceInstance 클래스를 확장하고 JPA 사용을 위해 별도의 attribute를 추가한 것이므로,
+	 * ServiceInstance를 이용한 생성자는 되도록 사용하지 않아야 함.
+	 * 
+	 * @param instance
+	 */
+	@Deprecated
+	public JpaServiceInstance(ServiceInstance instance) {
+		super();
 
-        super.setServiceInstanceId( instance.getServiceInstanceId() );
-        super.setPlanId( instance.getPlanId() );
-        if (instance instanceof JpaServiceInstance) {
-            // default setting
-            setServiceDefinitionId( instance.getServiceDefinitionId() );
-            setOrganizationGuid( instance.getOrganizationGuid() );
-            setSpaceGuid( instance.getSpaceGuid() );
+		super.setServiceInstanceId(instance.getServiceInstanceId());
+		super.setPlanId(instance.getPlanId());
+		if (instance instanceof JpaServiceInstance) {
+			// default setting
+			setServiceDefinitionId(instance.getServiceDefinitionId());
+			setOrganizationGuid(instance.getOrganizationGuid());
+			setSpaceGuid(instance.getSpaceGuid());
 
-            // only JpaServiceInstance
-            setParameters( ( ( JpaServiceInstance ) instance ).getParameters() );
-            setAdditionalParameters( getParameters() );
-        }
-    }
+			// only JpaServiceInstance
+			setParameters(((JpaServiceInstance) instance).getParameters());
+			setAdditionalParameters(getParameters());
+		}
+	}
 
-    /**
-     * CreateServiceInstanceRequest가 들어왔을 경우의 생성자 (서비스 인스턴스 생성)
-     * @param request
-     */
-    public JpaServiceInstance(CreateServiceInstanceRequest request) {
-        // service (definition) id, plan id, org guid, space guid, service instance id
-        super(request);
+	/**
+	 * CreateServiceInstanceRequest가 들어왔을 경우의 생성자 (서비스 인스턴스 생성)
+	 * 
+	 * @param request
+	 */
+	public JpaServiceInstance(CreateServiceInstanceRequest request) {
+		// service (definition) id, plan id, org guid, space guid, service instance id
+		super(request);
 
-        // default setting
-        setServiceDefinitionId( request.getServiceDefinitionId() );
-        setPlanId( request.getPlanId() );
-        setOrganizationGuid( request.getOrganizationGuid() );
-        setSpaceGuid( request.getSpaceGuid() );
-        setServiceInstanceId( request.getServiceInstanceId() );
+		// default setting
+		setServiceDefinitionId(request.getServiceDefinitionId());
+		setPlanId(request.getPlanId());
+		setOrganizationGuid(request.getOrganizationGuid());
+		setSpaceGuid(request.getSpaceGuid());
+		setServiceInstanceId(request.getServiceInstanceId());
 
-        // only JpaServiceInstance
-        setParameters( request.getParameters() );
-        setAdditionalParameters( getParameters() );
-    }
+		// only JpaServiceInstance
+		setParameters(request.getParameters());
+		setAdditionalParameters(getParameters());
+	}
 
-    /**
-     * DeleteServiceInstanceRequest가 들어왔을 경우의 생성자 (서비스 인스턴스 삭제)
-     * @param request
-     */
-    public JpaServiceInstance(DeleteServiceInstanceRequest request) {
-        // service (definition) id, service instance id, plan id
-        super(request);
+	/**
+	 * DeleteServiceInstanceRequest가 들어왔을 경우의 생성자 (서비스 인스턴스 삭제)
+	 * 
+	 * @param request
+	 */
+	public JpaServiceInstance(DeleteServiceInstanceRequest request) {
+		// service (definition) id, service instance id, plan id
+		super(request);
 
-        setServiceDefinitionId( request.getServiceId() );
-        setServiceInstanceId( request.getServiceInstanceId() );
-        setPlanId( request.getPlanId() );
-    }
+		setServiceDefinitionId(request.getServiceId());
+		setServiceInstanceId(request.getServiceInstanceId());
+		setPlanId(request.getPlanId());
+	}
 
-    /**
-     * UpdateServiceInstanceRequest가 들어왔을 경우의 생성자 (서비스 인스턴스 수정)
-     * @param request
-     */
-    public JpaServiceInstance(UpdateServiceInstanceRequest request) {
-        // service (definition) id, service instance id, plan id
-        super(request);
+	/**
+	 * UpdateServiceInstanceRequest가 들어왔을 경우의 생성자 (서비스 인스턴스 수정)
+	 * 
+	 * @param request
+	 */
+	public JpaServiceInstance(UpdateServiceInstanceRequest request) {
+		// service (definition) id, service instance id, plan id
+		super(request);
 
-        setServiceDefinitionId( request.getServiceDefinitionId() );
-        setServiceInstanceId( request.getServiceInstanceId() );
-        setPlanId( request.getPlanId() );
+		setServiceDefinitionId(request.getServiceDefinitionId());
+		setServiceInstanceId(request.getServiceInstanceId());
+		setPlanId(request.getPlanId());
 
-        setParameters( request.getParameters() );
-        setAdditionalParameters( getParameters() );
-    }
+		setParameters(request.getParameters());
+		setAdditionalParameters(getParameters());
+	}
 
-    /**
-     * 서비스 인스턴스 생성/수정시 들어오는 파라미터가 있을 경우, 해당 파라미터를 설정해주기 위한 메소드.
-     * @param params
-     */
-    private void setAdditionalParameters(final Map<String, Object> params ) {
-        Object caasNamespace = params.get( "caas_namespace" );
-        Object caasAccountName = params.get( "caas_account_name" );
-        Object caasAccountAccessToken = params.get( "caas_account_access_token" );
+	/**
+	 * 서비스 인스턴스 생성/수정시 들어오는 파라미터가 있을 경우, 해당 파라미터를 설정해주기 위한 메소드.
+	 * 
+	 * @param params
+	 */
+	private void setAdditionalParameters(final Map<String, Object> params) {
+		Object caasNamespace = params.get("caas_namespace");
+		Object caasAccountName = params.get("caas_account_name");
+		Object caasAccountAccessToken = params.get("caas_account_access_token");
 
-        setCaasNamespace( null == caasNamespace? null : caasNamespace.toString() );
-        setCaasAccountName( null == caasAccountName? null : caasAccountName.toString() );
-        setCaasAccountAccessToken( null == caasAccountAccessToken? null : caasAccountAccessToken.toString() );
-    }
+		setCaasNamespace(null == caasNamespace ? null : caasNamespace.toString());
+		setCaasAccountName(null == caasAccountName ? null : caasAccountName.toString());
+		setCaasAccountAccessToken(null == caasAccountAccessToken ? null : caasAccountAccessToken.toString());
+	}
 
-    @Id
-    @Column(name = "service_instance_id" )
-    public String getServiceInstanceId() { return super.getServiceInstanceId(); }
-    @Override
-    public void setServiceInstanceId ( String serviceInstanceId ) { super.setServiceInstanceId( serviceInstanceId ); }
+	@Id
+	@Column(name = "service_instance_id")
+	public String getServiceInstanceId() {
+		return super.getServiceInstanceId();
+	}
 
-    public String getServiceDefinitionId() { return this.serviceDefinitionId; }
-    private void setServiceDefinitionId(String id) { this.serviceDefinitionId = id; }
+	@Override
+	public void setServiceInstanceId(String serviceInstanceId) {
+		super.setServiceInstanceId(serviceInstanceId);
+	}
 
-    @Column(name = "plan_id" )
-    public String getPlanId() { return super.getPlanId(); }
-    @Override
-    public void setPlanId ( String planId ) { super.setPlanId( planId ); }
+	public String getServiceDefinitionId() {
+		return this.serviceDefinitionId;
+	}
 
-    public String getOrganizationGuid() { return this.organizationGuid; }
-    private void setOrganizationGuid(String orgGuid) { this.organizationGuid = orgGuid; }
+	private void setServiceDefinitionId(String id) {
+		this.serviceDefinitionId = id;
+	}
 
-    public String getSpaceGuid() { return this.spaceGuid; }
-    private void setSpaceGuid(String spaceGuid) { this.spaceGuid = spaceGuid; };
+	@Column(name = "plan_id")
+	public String getPlanId() {
+		return super.getPlanId();
+	}
 
-    @Column(name = "dashboard_url" )
-    public String getDashboardUrl() { return super.getDashboardUrl(); }
-    private void setDashboardUrl(String dashboardUrl) { super.withDashboardUrl( dashboardUrl ); }
+	@Override
+	public void setPlanId(String planId) {
+		super.setPlanId(planId);
+	}
 
-    //// Under methods : Additional parameters on ServiceInstance ////
-    public String getCaasNamespace() { return caasNamespace; }
-    public void setCaasNamespace(String caasNamespace) { this.caasNamespace = caasNamespace; }
+	public String getOrganizationGuid() {
+		return this.organizationGuid;
+	}
 
-    public String getCaasAccountName () { return caasAccountName; }
-    public void setCaasAccountName ( String caasAccountName ) { this.caasAccountName = caasAccountName; }
+	private void setOrganizationGuid(String orgGuid) {
+		this.organizationGuid = orgGuid;
+	}
 
-    public String getCaasAccountAccessToken () { return caasAccountAccessToken; }
-    public void setCaasAccountAccessToken ( String caasAccountAccessToken ) { this.caasAccountAccessToken = caasAccountAccessToken; }
+	public String getSpaceGuid() {
+		return this.spaceGuid;
+	}
 
-    @Transient
-    public Map<String, Object> getParameters() { return parameters; }
-    @Transient
-    public void setParameters ( Map<String, Object> parameters ) {
-        if ( null == parameters )
-            this.parameters = new HashMap<>();
-        else
-            this.parameters = parameters;
-    }
+	private void setSpaceGuid(String spaceGuid) {
+		this.spaceGuid = spaceGuid;
+	};
 
-    public String getParameter(String key) {
-        if (null == key || "".equals( key ))
-            return null;
+	@Column(name = "dashboard_url")
+	public String getDashboardUrl() {
+		return super.getDashboardUrl();
+	}
 
-        if (getParameters().containsKey( key ))
-            return getParameters().get( key ).toString();
-        else
-            return null;
-    }
+	private void setDashboardUrl(String dashboardUrl) {
+		super.withDashboardUrl(dashboardUrl);
+	}
 
-    /**
-     * JpaServiceInstance의 동일성 비교를 위한 메소드. service instance id와 service definition id가 모두 일치할 경우,
-     * 동일한 객체로 인식하고 true를 반환한다.
-     * @param obj
-     * @return
-     */
-    @Override
-    public boolean equals ( Object obj ) {
-        if ( this == obj )
-            return true;
+	//// Under methods : Additional parameters on ServiceInstance ////
+	public String getCaasNamespace() {
+		return caasNamespace;
+	}
 
-        if ( false == obj instanceof JpaServiceInstance )
-            return false;
+	public void setCaasNamespace(String caasNamespace) {
+		this.caasNamespace = caasNamespace;
+	}
 
-        JpaServiceInstance other = ( JpaServiceInstance ) obj;
-        if ( this.getServiceInstanceId().equals( other.getServiceInstanceId() ) &&
-            this.getServiceDefinitionId().equals( other.getServiceDefinitionId() )
-        ) {
-            // Plan, account name, account token은 변경될 수 있는 값이므로,
-            // ID로 쓰일 수 있는 값들만으로 equals의 조건문을 구성할 것.
-            return true;
-        }
+	public String getCaasAccountName() {
+		return caasAccountName;
+	}
 
-        return false;
-    }
+	public void setCaasAccountName(String caasAccountName) {
+		this.caasAccountName = caasAccountName;
+	}
+
+	public String getCaasAccountAccessToken() {
+		return caasAccountAccessToken;
+	}
+
+	public void setCaasAccountAccessToken(String caasAccountAccessToken) {
+		this.caasAccountAccessToken = caasAccountAccessToken;
+	}
+
+	@Transient
+	public Map<String, Object> getParameters() {
+		return parameters;
+	}
+
+	@Transient
+	public void setParameters(Map<String, Object> parameters) {
+		if (null == parameters)
+			this.parameters = new HashMap<>();
+		else
+			this.parameters = parameters;
+	}
+
+	public String getParameter(String key) {
+		if (null == key || "".equals(key))
+			return null;
+
+		if (getParameters().containsKey(key))
+			return getParameters().get(key).toString();
+		else
+			return null;
+	}
+
+	/**
+	 * JpaServiceInstance의 동일성 비교를 위한 메소드. service instance id와 service definition
+	 * id가 모두 일치할 경우, 동일한 객체로 인식하고 true를 반환한다.
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (false == obj instanceof JpaServiceInstance)
+			return false;
+
+		JpaServiceInstance other = (JpaServiceInstance) obj;
+		if (this.getServiceInstanceId().equals(other.getServiceInstanceId()) && this.getServiceDefinitionId().equals(other.getServiceDefinitionId())) {
+			// Plan, account name, account token은 변경될 수 있는 값이므로,
+			// ID로 쓰일 수 있는 값들만으로 equals의 조건문을 구성할 것.
+			return true;
+		}
+
+		return false;
+	}
 }
