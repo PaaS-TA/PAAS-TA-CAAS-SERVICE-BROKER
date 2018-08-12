@@ -40,8 +40,8 @@ public class RequestFixture {
         ServiceDefinition service = ServiceFixture.getService();
 
         return new CreateServiceInstanceRequest(
-                service.getId(),
-                service.getPlans().get(0).getId(),
+                TestConstants.SERVICEDEFINITION_ID,
+                TestConstants.SERVICEDEFINITION_PLAN_ID,
                 TestConstants.ORG_GUID_001,
                 TestConstants.SPACE_GUID_001,
                 getParameters("001")
@@ -58,6 +58,19 @@ public class RequestFixture {
                 TestConstants.ORG_GUID_002,
                 TestConstants.SPACE_GUID_002,
                 getParameters("002")
+        );
+    }
+    
+    public static CreateServiceInstanceRequest getCreateServiceInstanceRequestHyerin() {
+
+        ServiceDefinition service = ServiceFixture.getService();
+
+        return new CreateServiceInstanceRequest(
+        		TestConstants.SERVICEDEFINITION_ID,
+        		TestConstants.SERVICEDEFINITION_PLAN_ID,
+                TestConstants.ORG_GUID_001,
+                TestConstants.SPACE_GUID_001,
+                getParameters("001")
         );
     }
 
@@ -80,14 +93,24 @@ public class RequestFixture {
                 service.getServiceDefinitionId(),
                 service.getPlanId());
     }
+    
+    public static DeleteServiceInstanceRequest getDeleteServiceInstanceRequest2() {
+
+        ServiceInstance service = ServiceInstanceFixture.getServiceInstance();
+
+        return new DeleteServiceInstanceRequest(
+        		TestConstants.SV_INSTANCE_ID_001,
+        		TestConstants.SERVICEDEFINITION_ID,
+                TestConstants.SERVICEDEFINITION_PLAN_ID);
+    }
 
     public static UpdateServiceInstanceRequest getUpdateServiceInstanceRequest() {
 
         ServiceInstance service = ServiceInstanceFixture.getServiceInstance();
-
+        
         return new UpdateServiceInstanceRequest(
-                service.getPlanId(),
-                service.getServiceDefinitionId());
+        		TestConstants.SERVICEDEFINITION_PLAN_ID,
+        		TestConstants.SERVICEDEFINITION_ID).withInstanceId(TestConstants.SV_INSTANCE_ID_001);
     }
 
     public static DeleteServiceInstanceBindingRequest getDeleteServiceInstanceBindingRequest() {
