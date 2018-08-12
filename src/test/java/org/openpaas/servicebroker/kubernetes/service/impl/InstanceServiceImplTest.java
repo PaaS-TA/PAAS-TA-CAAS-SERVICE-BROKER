@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openpaas.servicebroker.exception.ServiceBrokerException;
+import org.openpaas.servicebroker.exception.ServiceInstanceExistsException;
 import org.openpaas.servicebroker.kubernetes.config.EnvConfig;
 import org.openpaas.servicebroker.kubernetes.model.JpaServiceInstance;
 import org.openpaas.servicebroker.kubernetes.repo.JpaServiceInstanceRepository;
@@ -98,29 +99,125 @@ public class InstanceServiceImplTest {
 		
 	}
 	
+//	@Test
+//	public void testCreateServiceInstance() {
+//		
+//		// 값을 세팅한다.
+//		doNothing().when(adminTokenService).checkToken();
+//		when(instanceRepository.findByServiceInstanceId(request.getServiceInstanceId())).thenReturn(null);
+//		// 실제 코드를 호출한다.
+//		
+//		// 값을 비교한다.
+//		JpaServiceInstance findInstance;
+//		when(instanceRepository.findByServiceInstanceId(request.getServiceInstanceId())).thenReturn(null);
+//		logger.info("아 오 슈벙 {} ", jpaServiceInstance.toString());
+//		//JpaServiceInstance instance = (JpaServiceInstance) new JpaServiceInstance(request);
+//		logger.info("아 오 슈벙 {} ", jpaServiceInstance.toString());
+//		when(kubernetesService.existsNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(true);
+//		when(instanceRepository.existsByCaasNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(true);
+//		
+//		
+//	}
+	
+	/**
+	 * instanceService의
+	 * if ( findInstance == null ) 이지만
+	 * namespace가 실제로 존재할 때  통과
+	 * @throws ServiceBrokerException 
+	 * @throws ServiceInstanceExistsException 
+	 * */ 
+	@Test
+	public void testCreateServiceInstance() throws ServiceInstanceExistsException, ServiceBrokerException {
+		
+		// 값을 세팅한다.
+		request.withServiceInstanceId(TestConstants.SV_INSTANCE_ID_001);
+		
+		doNothing().when(adminTokenService).checkToken();
+		when(instanceRepository.findByServiceInstanceId(TestConstants.SV_INSTANCE_ID_001)).thenReturn(null);
+		when(kubernetesService.existsNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(true);
+		when(catalog.getServiceDefinition(jpaServiceInstance.getServiceDefinitionId())).thenReturn(ServiceFixture.getService());
+		when(kubernetesService.createNamespaceUser(jpaServiceInstance, PlanFixture.getPlanOne())).thenReturn(jpaServiceInstance);
+		when(instanceRepository.save(jpaServiceInstance)).thenReturn(jpaServiceInstance);
+		
+		
+		// 실제 코드를 호출한다.
+		serviceInstance.createServiceInstance(request);
+		
+		// 익셉션 처리를 해야한다.!		
+		
+	}
+	
+	/**
+	 * instanceService의
+	 * if ( findInstance == null ) 이지만
+	 * namespace가 실제로 존재할 때  통과
+	 * @throws ServiceBrokerException 
+	 * @throws ServiceInstanceExistsException 
+	 * */ 
+	@Test
+	public void testCreateServiceInstanceFindInstanceNullExistNamespace() throws ServiceInstanceExistsException, ServiceBrokerException {
+		
+		// 값을 세팅한다.
+		request.withServiceInstanceId(TestConstants.SV_INSTANCE_ID_001);
+		
+		doNothing().when(adminTokenService).checkToken();
+		when(instanceRepository.findByServiceInstanceId(TestConstants.SV_INSTANCE_ID_001)).thenReturn(null);
+		when(kubernetesService.existsNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(true);
+		
+		// 실제 코드를 호출한다.
+		serviceInstance.createServiceInstance(request);
+		
+		// 익셉션 처리를 해야한다.!		
+		
+	}
+	
 	/**
 	 * instanceService의
 	 * if ( findInstance != null ) 이 true일 때
+	 * findInstance 랑 instance 값이 싹다 같을 때
+	 * @throws ServiceBrokerException 
+	 * @throws ServiceInstanceExistsException 
 	 * */ 
-	@Test
-	public void testCreateServiceInstanceFindInstanceNull() {
-		
-		// 값을 세팅한다.
-		doNothing().when(adminTokenService).checkToken();
-		when(instanceRepository.findByServiceInstanceId(request.getServiceInstanceId())).thenReturn(null);
-		// 실제 코드를 호출한다.
-		
-		// 값을 비교한다.
-		JpaServiceInstance findInstance;
-		when(instanceRepository.findByServiceInstanceId(request.getServiceInstanceId())).thenReturn(null);
-		logger.info("아 오 슈벙 {} ", jpaServiceInstance.toString());
-		//JpaServiceInstance instance = (JpaServiceInstance) new JpaServiceInstance(request);
-		logger.info("아 오 슈벙 {} ", jpaServiceInstance.toString());
-		when(kubernetesService.existsNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(true);
-		when(instanceRepository.existsByCaasNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(true);
-		
-		
-	}
+//	@Test
+//	public void testCreateServiceInstanceFindInstanceNotNull() throws ServiceInstanceExistsException, ServiceBrokerException {
+//		
+//		// 값을 세팅한다.
+//		request.withServiceInstanceId(TestConstants.SV_INSTANCE_ID_001);
+//		
+//		doNothing().when(adminTokenService).checkToken();
+//		when(instanceRepository.findByServiceInstanceId(TestConstants.SV_INSTANCE_ID_001)).thenReturn(jpaServiceInstance);
+//		
+//		// 실제 코드를 호출한다.
+//		serviceInstance.createServiceInstance(request);
+//		
+//		// 값을 비교한다.		
+//		
+//	}
+	
+	/**
+	 * instanceService의
+	 * if ( findInstance != null ) 이 true일 때
+	 * findInstance 랑 instance 값이 다를 때 통과
+	 * @throws ServiceBrokerException 
+	 * @throws ServiceInstanceExistsException 
+	 * */ 
+//	@Test
+//	public void testCreateServiceInstanceFindInstanceNotNullDef() throws ServiceInstanceExistsException, ServiceBrokerException {
+//		
+//		// 값을 세팅한다.
+//		request.withServiceInstanceId(TestConstants.SV_INSTANCE_ID_001);
+//		jpaServiceInstanceDef.setServiceInstanceId(TestConstants.SV_INSTANCE_ID_002);
+//		
+//		doNothing().when(adminTokenService).checkToken();
+//		when(instanceRepository.findByServiceInstanceId(TestConstants.SV_INSTANCE_ID_001)).thenReturn(jpaServiceInstanceDef);
+//				
+//		
+//		// 실제 코드를 호출한다.
+//		serviceInstance.createServiceInstance(request);
+//		
+//		// 값을 비교한다.		
+//		
+//	}
 
 	
 	// TODO : 통과
