@@ -1,4 +1,4 @@
-package org.openpaas.servicebroker.kubernetes.service;
+package org.openpaas.servicebroker.test;
 
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openpaas.servicebroker.kubernetes.model.JpaAdminToken;
 import org.openpaas.servicebroker.kubernetes.repo.JpaAdminTokenRepository;
+import org.openpaas.servicebroker.kubernetes.service.AdminTokenService;
 import org.openpaas.servicebroker.kubernetes.service.impl.SshService;
 import org.springframework.test.context.junit4.SpringRunner;
 

@@ -65,16 +65,6 @@ public class PlanFixture {
                 costsMap.put("amount", amount);
                 costsMap.put("unit", "MONTHLY");
                 break;
-            case "C":
-                amount.put("usd", 10.0);
-                costsMap.put("amount", amount);
-                costsMap.put("unit", "MONTHLY");
-                break;
-            default:
-                amount.put("usd", 0.0);
-                costsMap.put("amount", amount);
-                costsMap.put("unit", "FREE");
-                break;
         }
 
         return Collections.singletonList(costsMap);
@@ -90,10 +80,7 @@ public class PlanFixture {
             return Arrays.asList("2 CPUs", "2GB Memory", "10GB Disk");
         } else if (planType.equals("B")) {
             return Arrays.asList("4 CPUs", "6GB Memory", "20GB Disk");
-        } else if (planType.equals("C")) {
-            return Arrays.asList("8 CPUs", "12GB Memory", "40GB Disk");
         }
-
         return Arrays.asList("2 CPUs", "2GB Memory", "10GB Disk");
     }
     

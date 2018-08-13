@@ -1,4 +1,4 @@
-package org.openpaas.servicebroker.kubernetes.service.impl;
+package org.openpaas.servicebroker.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -20,6 +20,9 @@ import org.openpaas.servicebroker.kubernetes.config.EnvConfig;
 import org.openpaas.servicebroker.kubernetes.model.JpaServiceInstance;
 import org.openpaas.servicebroker.kubernetes.repo.JpaServiceInstanceRepository;
 import org.openpaas.servicebroker.kubernetes.service.AdminTokenService;
+import org.openpaas.servicebroker.kubernetes.service.impl.CatalogServiceImpl;
+import org.openpaas.servicebroker.kubernetes.service.impl.InstanceServiceImpl;
+import org.openpaas.servicebroker.kubernetes.service.impl.KubernetesService;
 import org.openpaas.servicebroker.model.CreateServiceInstanceRequest;
 import org.openpaas.servicebroker.model.DeleteServiceInstanceRequest;
 import org.openpaas.servicebroker.model.ServiceInstance;

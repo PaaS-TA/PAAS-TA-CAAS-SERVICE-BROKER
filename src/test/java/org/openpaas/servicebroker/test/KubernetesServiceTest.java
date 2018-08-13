@@ -1,4 +1,4 @@
-package org.openpaas.servicebroker.kubernetes.service.impl;
+package org.openpaas.servicebroker.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -19,6 +19,7 @@ import org.openpaas.servicebroker.kubernetes.exception.KubernetesServiceExceptio
 import org.openpaas.servicebroker.kubernetes.model.JpaServiceInstance;
 import org.openpaas.servicebroker.kubernetes.service.RestTemplateService;
 import org.openpaas.servicebroker.kubernetes.service.TemplateService;
+import org.openpaas.servicebroker.kubernetes.service.impl.KubernetesService;
 import org.openpaas.servicebroker.model.CreateServiceInstanceRequest;
 import org.openpaas.servicebroker.model.fixture.PlanFixture;
 import org.openpaas.servicebroker.model.fixture.RequestFixture;

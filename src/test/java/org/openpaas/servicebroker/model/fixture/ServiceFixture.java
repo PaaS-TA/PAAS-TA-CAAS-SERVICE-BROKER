@@ -25,19 +25,6 @@ public class ServiceFixture {
                 false,
                 PlanFixture.getAllPlans());
     }
-    
-    /* Service Metadata */
-    private static Map<String,Object> getMetadata() {
-        // Service Metadata
-        Map<String,Object> metadata = new HashMap<String,Object>();
-        metadata.put("displayName", TestConstants.SERVICEDEFINITION_NAME);
-        metadata.put("imageUrl","imageUrl");
-        metadata.put("longDescription","longDescription");
-        metadata.put("providerDisplayName","providerDisplayName");
-        metadata.put("documentationUrl","documentationUrl");
-        metadata.put("supportUrl","supportUrl");
-        return metadata;
-    }
 
     public static List<ServiceDefinition> getCatalog() {
         List<ServiceDefinition> result = new ArrayList<>();
