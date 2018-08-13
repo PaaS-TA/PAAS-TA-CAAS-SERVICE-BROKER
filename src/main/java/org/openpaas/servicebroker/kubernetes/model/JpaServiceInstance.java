@@ -66,30 +66,6 @@ public class JpaServiceInstance extends ServiceInstance {
 	}
 
 	/**
-	 * 본 클래스는 ServiceInstance 클래스를 확장하고 JPA 사용을 위해 별도의 attribute를 추가한 것이므로,
-	 * ServiceInstance를 이용한 생성자는 되도록 사용하지 않아야 함.
-	 * 
-	 * @param instance
-	 */
-	@Deprecated
-	public JpaServiceInstance(ServiceInstance instance) {
-		super();
-
-		super.setServiceInstanceId(instance.getServiceInstanceId());
-		super.setPlanId(instance.getPlanId());
-		if (instance instanceof JpaServiceInstance) {
-			// default setting
-			setServiceDefinitionId(instance.getServiceDefinitionId());
-			setOrganizationGuid(instance.getOrganizationGuid());
-			setSpaceGuid(instance.getSpaceGuid());
-
-			// only JpaServiceInstance
-			setParameters(((JpaServiceInstance) instance).getParameters());
-			setAdditionalParameters(getParameters());
-		}
-	}
-
-	/**
 	 * CreateServiceInstanceRequest가 들어왔을 경우의 생성자 (서비스 인스턴스 생성)
 	 * 
 	 * @param request
