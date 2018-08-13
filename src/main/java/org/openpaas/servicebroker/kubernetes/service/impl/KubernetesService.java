@@ -1,24 +1,9 @@
 package org.openpaas.servicebroker.kubernetes.service.impl;
 
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
 import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.net.ssl.SSLContext;
-
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import org.openpaas.servicebroker.kubernetes.config.EnvConfig;
 import org.openpaas.servicebroker.kubernetes.exception.KubernetesServiceException;
@@ -29,14 +14,12 @@ import org.openpaas.servicebroker.model.Plan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 /**
  * 이 서비스 브로커에서 접근하는 Kubernetes에 대한 서비스를 위한 클래스이다.
@@ -243,35 +226,6 @@ public class KubernetesService {
 		}
 
 		restTemplateService.send(envConfig.getCaasUrl() + "/apis/rbac.authorization.k8s.io/v1/namespaces/" + spaceName + "/rolebindings", yml, HttpMethod.POST, String.class);
-
-	}
-
-	/**
-	 * 생성된 user에게 부여할 secret을 만든다. secrete이름은 '유저명-token' 이다. role이름은
-	 * namespace명-role 이고, binding이름은 namespace명-role-binding 이다.
-	 * instance/create_role.ftl의 변수를 채운 후 restTemplateService로 rest 통신한다.
-	 *
-	 * @author Hyerin
-	 * @since 2018.07.30
-	 */
-	@Deprecated
-	public String createSecret(String spaceName, String userName) {
-		logger.info("create Secret for {}", spaceName, userName);
-
-		Map<String, Object> model = new HashMap<>();
-		model.put("spaceName", spaceName);
-		model.put("userName", userName);
-		model.put("tokenName", userName + "-token");
-		String yml = null;
-		try {
-			yml = templateService.convert("instance/create_secret.ftl", model);
-		} catch (KubernetesServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/secrets", yml, HttpMethod.POST, String.class);
-		return userName + "-token";
 
 	}
 
