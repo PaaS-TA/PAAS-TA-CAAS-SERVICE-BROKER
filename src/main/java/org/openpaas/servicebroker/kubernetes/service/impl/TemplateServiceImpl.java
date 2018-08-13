@@ -25,8 +25,6 @@ public class TemplateServiceImpl implements TemplateService {
     
     private static final Logger logger = LoggerFactory.getLogger(TemplateServiceImpl.class);
 
-    private JdbcTemplate jdbcTemplate;
-
     private Configuration configuration;
 
     /**
