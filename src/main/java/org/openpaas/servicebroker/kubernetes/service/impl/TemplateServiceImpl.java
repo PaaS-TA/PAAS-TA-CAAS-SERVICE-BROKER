@@ -29,43 +29,6 @@ public class TemplateServiceImpl implements TemplateService {
 
     private Configuration configuration;
 
-    @Lazy
-    @Autowired
-    public TemplateServiceImpl(JdbcTemplate jdbcTemplate, Configuration configuration) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.configuration = configuration;
-
-        logger.info( "JDBC.JdbcTemplate : {}", this.jdbcTemplate.toString());
-        logger.info( "freemaker.Configuration : {}", this.configuration.toString());
-    }
-
-    /**
-     * Template 내용 중 일부를 입력받은 모델의 내용으로 치환하여 JDBC를 이용해 질의를 실행하는 메소드.
-     * 내부적으로는 FreeMarker를 사용함.
-     * @param templateName
-     * @param model
-     * @return
-     * @throws KubernetesServiceException
-     */
-    @Override
-    public boolean execute(String templateName, Map<String, Object> model) throws KubernetesServiceException {
-        try {
-            String sql = FreeMarkerTemplateUtils.processTemplateIntoString(configuration.getTemplate(templateName), model).replaceAll("\\n", " ");
-            logger.info("original sql {}",sql);
-            String[] commands = sql.split(";");
-            for(String command : commands){
-                logger.info("executing {}",command);
-                if(command.trim().length() > 0){
-                    jdbcTemplate.execute(command.trim());
-                }
-            }
-        } catch (Exception e) {
-            logger.error( "Occured unexpected exception...", e );
-            return false;
-        }
-        return true;
-    }
-
     /**
      * Template 내용 중 일부를 입력받은 모델의 내용으로 치환하여 YAML 문자열을 반환하는 클래스.
      * 내부적으로는 FreeMarker를 사용함.
