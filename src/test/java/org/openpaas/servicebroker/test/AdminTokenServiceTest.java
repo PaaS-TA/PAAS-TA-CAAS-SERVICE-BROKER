@@ -32,11 +32,15 @@ public class AdminTokenServiceTest {
 	private static JpaAdminToken adminToken;
 	private static List<JpaAdminToken> tokenList;
 	private static String tokenValue = "token-value";
+	private static JpaAdminToken adminTokenEmpty;
 	
 	@Before
 	public void setUp() throws Exception {
 		tokenList = new ArrayList<>();
 		adminToken = new JpaAdminToken(tokenValue);
+		adminTokenEmpty = new JpaAdminToken();
+		adminTokenEmpty.setTokenValue("def-value");
+		adminTokenEmpty.getTokenValue();
 	}
 
 	// 토큰이 존재하고 밸리데이션 통과
