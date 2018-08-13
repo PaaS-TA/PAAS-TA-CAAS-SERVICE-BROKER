@@ -167,8 +167,7 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 				Plan oldPlan = this.getPlan(findInstance);
 				Plan newPlan = this.getPlan(instance);
 				if (oldPlan.getWeight() > newPlan.getWeight())
-					throw new ServiceBrokerException("Cannot change lower plan. (current: " + oldPlan.getName()
-							+ " / new: " + newPlan.getName() + ")");
+					throw new ServiceBrokerException("Cannot change lower plan. (current: " + oldPlan.getName() + " / new: " + newPlan.getName() + ")");
 
 				findInstance.setPlanId(planId);
 				kubernetesService.changeResourceQuota(findInstance.getCaasNamespace(), newPlan);

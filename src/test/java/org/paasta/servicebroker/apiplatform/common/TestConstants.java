@@ -42,7 +42,7 @@ public class TestConstants {
     public static final String JPA_SPACE_GUID = SPACE_GUID_001;
     public static final String JPA_CAAS_NAMESPACE = "paas-" + SV_INSTANCE_ID_001 + "-caas";
     public static final String JPA_CAAS_ACCOUNT_NAME = PARAM_KEY_OWNER_VALUE + "-admin";
-    public static final String JPA_CAAS_ACCOUNT_ACCESS_TOKEN = JPA_CAAS_ACCOUNT_NAME + "qwert";
+    public static final String JPA_CAAS_ACCOUNT_ACCESS_TOKEN = JPA_ORGANIZTION_GUID + JPA_CAAS_ACCOUNT_NAME + "-qwert";
 
 
 }
