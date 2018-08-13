@@ -1,4 +1,4 @@
-package org.openpaas.servicebroker.kubernetes.service.impl;
+package org.openpaas.servicebroker.kubernetes.service;
 
 import com.jcraft.jsch.*;
 import org.slf4j.Logger;

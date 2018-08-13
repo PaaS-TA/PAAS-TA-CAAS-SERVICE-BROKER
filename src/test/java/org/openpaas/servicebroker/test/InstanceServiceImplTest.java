@@ -19,7 +19,7 @@ import org.openpaas.servicebroker.exception.ServiceInstanceExistsException;
 import org.openpaas.servicebroker.kubernetes.config.EnvConfig;
 import org.openpaas.servicebroker.kubernetes.model.JpaServiceInstance;
 import org.openpaas.servicebroker.kubernetes.repo.JpaServiceInstanceRepository;
-import org.openpaas.servicebroker.kubernetes.service.AdminTokenService;
+import org.openpaas.servicebroker.kubernetes.service.impl.AdminTokenService;
 import org.openpaas.servicebroker.kubernetes.service.impl.CatalogServiceImpl;
 import org.openpaas.servicebroker.kubernetes.service.impl.InstanceServiceImpl;
 import org.openpaas.servicebroker.kubernetes.service.impl.KubernetesService;

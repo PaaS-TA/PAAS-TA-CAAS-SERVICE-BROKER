@@ -1,8 +1,8 @@
-package org.openpaas.servicebroker.kubernetes.service;
+package org.openpaas.servicebroker.kubernetes.service.impl;
 
 import org.openpaas.servicebroker.kubernetes.model.JpaAdminToken;
 import org.openpaas.servicebroker.kubernetes.repo.JpaAdminTokenRepository;
-import org.openpaas.servicebroker.kubernetes.service.impl.SshService;
+import org.openpaas.servicebroker.kubernetes.service.SshService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
