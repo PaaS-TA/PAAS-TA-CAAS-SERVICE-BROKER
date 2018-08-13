@@ -65,7 +65,6 @@ public class KubernetesService {
 
 		createRole(spaceName, userName);
 		createRoleBinding(spaceName, userName);
-		// String tokenName = createSecret( spaceName, userName );
 
 		logger.info("work done!!! {}  {}", spaceName, userName);
 
@@ -227,31 +226,6 @@ public class KubernetesService {
 
 		restTemplateService.send(envConfig.getCaasUrl() + "/apis/rbac.authorization.k8s.io/v1/namespaces/" + spaceName + "/rolebindings", yml, HttpMethod.POST, String.class);
 
-	}
-
-	/**
-	 * user에게 부여된 secret token을 반환한다. token 값은 base64 인코딩 되어 있기 때문에, 디코드 하는 부분도 포함되어
-	 * 있다.
-	 *
-	 * @author Hyerin
-	 * @since 2018.07.30
-	 */
-	@Deprecated
-	public String getSecret(String spaceName, String userName) {
-
-		logger.info("get Secret {}", userName);
-
-		String jsonObj = restTemplateService.send( envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/secrets/" + userName, HttpMethod.GET, String.class);
-
-		JsonParser parser = new JsonParser();
-		JsonElement element = parser.parse(jsonObj);
-		element = element.getAsJsonObject().get("data");
-		String token = element.getAsJsonObject().get("token").toString();
-
-		Decoder decoder = Base64.getDecoder();
-		String decodeToken = new String(decoder.decode(token));
-
-		return decodeToken;
 	}
 
 	/**
