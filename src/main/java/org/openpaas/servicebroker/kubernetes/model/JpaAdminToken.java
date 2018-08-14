@@ -13,9 +13,14 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class JpaAdminToken {
 	
 	@JsonSerialize
+	@JsonProperty("token_name")
+	@Column(name = "token_name")
+	@Id
+	private String tokenName;
+	
+	@JsonSerialize
 	@JsonProperty("token_value")
 	@Column(name = "token_value", length=1000)
-	@Id
 	private String tokenValue;
 	
 	public JpaAdminToken() {
@@ -23,6 +28,7 @@ public class JpaAdminToken {
 	}
 	
 	public JpaAdminToken(String tokenValue) {
+		this.tokenName = "caas_admin";
 		this.tokenValue = tokenValue;
 	}
 

@@ -1,18 +1,17 @@
 package org.openpaas.servicebroker.test;
 
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
+import org.openpaas.servicebroker.kubernetes.config.EnvConfig;
 import org.openpaas.servicebroker.kubernetes.model.JpaAdminToken;
 import org.openpaas.servicebroker.kubernetes.repo.JpaAdminTokenRepository;
+import org.openpaas.servicebroker.kubernetes.service.RestTemplateService;
 import org.openpaas.servicebroker.kubernetes.service.SshService;
 import org.openpaas.servicebroker.kubernetes.service.impl.AdminTokenService;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -26,21 +25,34 @@ public class AdminTokenServiceTest {
 	@Mock
 	SshService sshService;
 	
+	@Mock
+	RestTemplateService restTemplateService;
+	
+    @Spy
+    private static EnvConfig envConfig;
+	
 	@InjectMocks
 	AdminTokenService adminTokenService;
 	
 	private static JpaAdminToken adminToken;
-	private static List<JpaAdminToken> tokenList;
 	private static String tokenValue = "token-value";
 	private static JpaAdminToken adminTokenEmpty;
+	private final String adminTokenId = "caas_admin";
 	
 	@Before
 	public void setUp() throws Exception {
-		tokenList = new ArrayList<>();
+		
 		adminToken = new JpaAdminToken(tokenValue);
 		adminTokenEmpty = new JpaAdminToken();
 		adminTokenEmpty.setTokenValue("def-value");
 		adminTokenEmpty.getTokenValue();
+		
+    	envConfig.setAdminToken(adminTokenId);
+    	envConfig.setCaasUrl("hihi");
+    	envConfig.setDashboardUrl("asdasdasdasd");
+		
+		
+		
 	}
 
 	// 토큰이 존재하고 밸리데이션 통과
@@ -48,8 +60,9 @@ public class AdminTokenServiceTest {
 	public void testCheckToken() {
 		
 		// 값을 세팅한다.
-		tokenList.add(adminToken);
-		when(adminTokenRepository.findAll()).thenReturn(tokenList);
+		when(envConfig.getAdminToken()).thenReturn(adminTokenId);
+		when(adminTokenRepository.exists(adminTokenId)).thenReturn(true);
+		when(restTemplateService.tokenValidation()).thenReturn(true);
 		
 		// 실제 함수를 호출한다.
 		adminTokenService.checkToken();
@@ -64,9 +77,10 @@ public class AdminTokenServiceTest {
 		public void testCheckTokenNoValidation() {
 			
 			// 값을 세팅한다.
-			tokenList.add(adminToken);
-			when(adminTokenRepository.findAll()).thenReturn(tokenList);
-			when(sshService.executeSsh("pwd")).thenReturn("yaho");
+			when(envConfig.getAdminToken()).thenReturn(adminTokenId);
+			when(adminTokenRepository.exists(envConfig.getAdminToken())).thenReturn(true);
+			when(restTemplateService.tokenValidation()).thenReturn(false);
+			when(sshService.executeSsh("pwd")).thenReturn("yaho");;
 			when(adminTokenRepository.save(adminToken)).thenReturn(adminToken);
 			
 			// 실제 함수를 호출한다.
@@ -82,7 +96,8 @@ public class AdminTokenServiceTest {
 	public void testCheckTokenNull() {
 		
 		// 값을 세팅한다.	
-		when(adminTokenRepository.findAll()).thenReturn(tokenList);
+		when(envConfig.getAdminToken()).thenReturn(adminTokenId);
+		when(adminTokenRepository.exists(adminTokenId)).thenReturn(false);
 		when(sshService.executeSsh("pwd")).thenReturn("yaho");
 		when(adminTokenRepository.save(adminToken)).thenReturn(adminToken);
 		

@@ -12,6 +12,7 @@ import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.openpaas.servicebroker.kubernetes.config.EnvConfig;
+import org.openpaas.servicebroker.kubernetes.repo.JpaAdminTokenRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -31,15 +33,16 @@ public class RestTemplateService {
 
 	@Autowired
 	RestTemplate restTemplate;
-	//서비스로 따로 빼셈
-	
-	@Autowired
-	EnvConfig envConfig;
 
 	@Autowired
-	HttpHeaders httpHeaders;
-	// 서비스로 빼셈 
+	EnvConfig envConfig;
 	
+	@Autowired
+	JpaAdminTokenRepository adminTokenRepository;
+	
+	HttpHeaders headers;
+
+		
 	/**
 	 * RestTemplate Bean 객체를 생성하는 메소드 (단, SSL은 무시) <br>
 	 * create restTemplate ignore ssl
@@ -65,19 +68,22 @@ public class RestTemplateService {
 		return restTemplate;
 	}
 
-	/**
-	 * httpHeaders 정보를 세팅한다.
-	 *
-	 * @author Hyerin
-	 * @since 2018.07.24
-	 */
-	@Bean
-	public HttpHeaders httpHeaders() {
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Authorization", "Bearer " + envConfig.getAdminToken());
+
+	public boolean tokenValidation() {
+		
+		headers = new HttpHeaders();
+		headers.add("Authorization", "Bearer " + adminTokenRepository.getOne(envConfig.getAdminToken()).getTokenValue());
 		headers.add("Accept", "application/json,application/yaml,text/html");
 		headers.add("Content-Type", "application/yaml;charset=UTF-8");
-		return headers;
+		HttpEntity<String> reqEntity = new HttpEntity<>(headers);
+		
+		try {
+			restTemplate.exchange(envConfig.getCaasUrl() + "/api/v1/nodes", HttpMethod.GET, reqEntity, String.class);
+		} catch (HttpStatusCodeException exception) {
+		    logger.info("Maybe token was changed. {} : {}", exception.getStatusCode().value(), exception.getMessage());
+		    return false;
+		}
+		return true;
 	}
 	
 	public <T> T send(String url, HttpMethod httpMethod, Class<T> responseType) {
@@ -85,11 +91,18 @@ public class RestTemplateService {
 	}
 	
 	public <T> T send(String url, String yml, HttpMethod httpMethod, Class<T> responseType) {
+		
+		headers = new HttpHeaders();
+		headers.add("Authorization", "Bearer " + envConfig.getAdminToken());
+		headers.add("Accept", "application/json,application/yaml,text/html");
+		headers.add("Content-Type", "application/yaml;charset=UTF-8");
+		
+		
 		HttpEntity<String> reqEntity;
 		if(yml == null) {  //null이면 
-			reqEntity = new HttpEntity<>(httpHeaders);
+			reqEntity = new HttpEntity<>(headers);
 		} else { // null이 아니면
-			reqEntity = new HttpEntity<>(yml, httpHeaders);
+			reqEntity = new HttpEntity<>(yml, headers);
 		}
 		ResponseEntity<T> resEntity = restTemplate.exchange(url, httpMethod, reqEntity, responseType);
 		if (reqEntity.getBody() != null) {
