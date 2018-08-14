@@ -16,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openpaas.servicebroker.exception.ServiceBrokerException;
 import org.openpaas.servicebroker.exception.ServiceInstanceExistsException;
-import org.openpaas.servicebroker.kubernetes.config.EnvConfig;
 import org.openpaas.servicebroker.kubernetes.model.JpaServiceInstance;
 import org.openpaas.servicebroker.kubernetes.repo.JpaServiceInstanceRepository;
 import org.openpaas.servicebroker.kubernetes.service.impl.AdminTokenService;
@@ -48,9 +47,6 @@ public class InstanceServiceImplTest {
 
 	@Mock
     KubernetesService kubernetesService;
-
-	@Mock
-    EnvConfig config;
     
 	@Mock
 	AdminTokenService adminTokenService;
@@ -62,12 +58,9 @@ public class InstanceServiceImplTest {
 	
 	public static JpaServiceInstance jpaServiceInstanceDef;
 
-//	@MockBean
-//	private static JpaServiceInstance newJpaServiceInstance;
 	private CreateServiceInstanceRequest request;
 	private static DeleteServiceInstanceRequest delRequest;
 	private static UpdateServiceInstanceRequest upRequest;
-	private static ServiceInstance instance;
 	
 	@Before
 	public void setUp() throws Exception {
