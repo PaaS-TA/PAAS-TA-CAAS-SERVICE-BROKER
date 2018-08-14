@@ -93,7 +93,7 @@ public class RestTemplateService {
 	public <T> T send(String url, String yml, HttpMethod httpMethod, Class<T> responseType) {
 		
 		headers = new HttpHeaders();
-		headers.add("Authorization", "Bearer " + envConfig.getAdminToken());
+		headers.add("Authorization", "Bearer " + adminTokenRepository.getOne(envConfig.getAdminToken()).getTokenValue());
 		headers.add("Accept", "application/json,application/yaml,text/html");
 		headers.add("Content-Type", "application/yaml;charset=UTF-8");
 		
