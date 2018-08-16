@@ -238,10 +238,8 @@ public class KubernetesService {
 		logger.info("Start to delete namespace in kubernetes.");
 
 		// TODO kubernetes에 있는 namespace 삭제
-		boolean isSuccess = false;
 
 		restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + namespace, HttpMethod.DELETE,	String.class);
-		isSuccess = true;
 
 		logger.info("Done to delete namespace in kubernetes.");
 
@@ -291,7 +289,7 @@ public class KubernetesService {
 		}
 
 		// ResourceQuota Create-POST / Replace-PUT
-		String responseBody = restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/resourcequotas/" + spaceName + "-resourcequota", HttpMethod.PUT, String.class);
+		String responseBody = restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/resourcequotas/" + spaceName + "-resourcequota", yml, HttpMethod.PUT, String.class);
 
 		if (null != responseBody)
 			logger.debug("Change ResourceQuota response body : {}", responseBody);
