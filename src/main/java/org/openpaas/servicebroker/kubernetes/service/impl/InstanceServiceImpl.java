@@ -72,7 +72,7 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 		JpaServiceInstance findInstance = instanceRepository.findByServiceInstanceId(request.getServiceInstanceId());
 		
 		JpaServiceInstance instance = (JpaServiceInstance) new JpaServiceInstance(request);
-		// new는 mock을 못함... ㅇㅁㅇ;; -> 별도의 method로 뺌
+		
 		if (findInstance != null) {
 			if (findInstance.equals(instance)) {
 				findInstance.setHttpStatusOK();
