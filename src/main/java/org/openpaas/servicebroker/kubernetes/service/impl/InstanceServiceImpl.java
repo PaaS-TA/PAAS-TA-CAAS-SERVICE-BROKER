@@ -55,8 +55,8 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 	 * <pre>
 	 *     1. Request parameters에서 Org GUID, Space GUID과 선택한 Plan의 이름(혹은 GUID)를 추출
 	 *     2. ServiceInstance 객체 생성 후 Request에서 추출한 데이터 사전 기입
-	 *     3. KubernetesAdminService를 통해 Namespace, ServiceAccount 생성
-	 *     4. KubernetesAdminService에서 생성된 Namespace, ServiceAccount
+	 *     3. KubernetesService를 통해 Namespace, ServiceAccount 생성
+	 *     4. KubernetesService에서 생성된 Namespace, ServiceAccount
 	 * </pre>
 	 * 
 	 * @param request
@@ -74,12 +74,17 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 		JpaServiceInstance instance = (JpaServiceInstance) new JpaServiceInstance(request);
 		
 		if (findInstance != null) {
-			if (findInstance.equals(instance)) {
-				findInstance.setHttpStatusOK();
-				return findInstance;
+			if (findInstance.getServiceInstanceId().equals(instance.getServiceInstanceId())) {
+				logger.info("ServiceInstance : {} OR OrgGuid : {} is exist.", request.getServiceInstanceId(), request.getOrganizationGuid());
+				throw new ServiceBrokerException("ServiceInstance already exists in your organization.");
 			} else {
 				throw new ServiceInstanceExistsException(instance);
 			}
+		}
+		
+		if(instanceRepository.existsByOrganizationGuid(instance.getOrganizationGuid())) {
+			logger.error("ServiceInstance already exists in your organization: OrganizationGuid : {}, spaceId : {}", request.getOrganizationGuid(), request.getSpaceGuid());
+			throw new ServiceBrokerException("ServiceInstance already exists in your organization.");
 		}
 
 		// kubernetes에 생성된 namespace가 있는지 확인한다.
@@ -119,12 +124,21 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 		
 		adminTokenService.checkToken();
 		
+		//JpaServiceInstance instance = null;
+		
 		JpaServiceInstance instance = (JpaServiceInstance) getServiceInstance(request.getServiceInstanceId());
-		if (instance == null) // when
-			throw new ServiceBrokerException("instance doesn't exist in Database!!");
-
-		if (!existsNamespace(instance.getCaasNamespace())) { // when
-			throw new ServiceBrokerException("Namespace " + instance.getCaasNamespace() + " doesn't exist!");
+		
+		// DB에 정보가 없을 때
+		if (instance == null) {
+			String spaceName = "paas-" + request.getServiceInstanceId() + "-caas";
+			logger.info("instance is not in DB. check existsNamespace {}", spaceName);
+			// 실제로 Namespace에도 없을 때 
+			if (!existsNamespace(spaceName)) {
+				logger.info("No more delete thing {}", spaceName);
+				return null;
+			}
+			kubernetesService.deleteNamespace(spaceName);
+			return null;
 		}
 		
 		kubernetesService.deleteNamespace(instance.getCaasNamespace());
@@ -178,7 +192,7 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 	}
 
 	/**
-	 * Namespace가 DB와 Kubernetes 양쪽에 모두 존재하는지 확인한다.
+	 * Namespace가 Kubernetes에 존재하는지 확인한다.
 	 * 
 	 * @param namespace
 	 * @return
