@@ -1,7 +1,5 @@
 package org.openpaas.servicebroker.kubernetes.service.impl;
 
-import java.util.Base64;
-import java.util.Base64.Decoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpStatusCodeException;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -59,7 +58,7 @@ public class KubernetesService {
 		String spaceName = createNamespace(instance.getServiceInstanceId());
 		this.createResourceQuota(spaceName, plan);
 		
-		String tmpString[] = instance.getParameter("userName").split("@");
+		String tmpString[] = instance.getParameter("owner").split("@");
 		String userName = (instance.getOrganizationGuid() + tmpString[0].replaceAll("([:.#$&!_\\(\\)`*%^~,\\<\\>\\[\\];+|-])+", "")).toLowerCase() + "-admin";
 		createUser(spaceName, userName);
 
@@ -256,8 +255,8 @@ public class KubernetesService {
 
 		try {
 			restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + namespace, HttpMethod.GET, String.class);
-		} catch (HttpClientErrorException e) {
-			e.getStatusCode();
+		} catch (HttpStatusCodeException exception) {
+			logger.info("can't find namespace {} {} ", exception.getStatusCode().value(), exception.getMessage());
 			return false;
 		}
 		return true;
