@@ -2,6 +2,7 @@ package org.openpaas.servicebroker.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -113,6 +114,8 @@ public class InstanceServiceImplTest {
 		
 	}
 	
+	
+	
 	/**
 	 * instanceService의
 	 * if ( findInstance == null ) 이지만
@@ -139,12 +142,36 @@ public class InstanceServiceImplTest {
 	
 	/**
 	 * instanceService의
+	 * if ( findInstance == null ) 이지만
+	 * org guid가 이미 존재 
+	 * @throws ServiceBrokerException 
+	 * @throws ServiceInstanceExistsException 
+	 * */ 
+	@Test(expected=ServiceBrokerException.class)
+	public void testCreateServiceInstanceFindInstanceNullExistOrg() throws ServiceInstanceExistsException, ServiceBrokerException {
+		
+		// 값을 세팅한다.
+		request.withServiceInstanceId(TestConstants.SV_INSTANCE_ID_001);
+		
+		doNothing().when(adminTokenService).checkToken();
+		when(instanceRepository.findByServiceInstanceId(TestConstants.SV_INSTANCE_ID_001)).thenReturn(null);
+		when(instanceRepository.existsByOrganizationGuid(TestConstants.ORG_GUID_001)).thenReturn(true);
+		
+		// 실제 코드를 호출한다.
+		serviceInstance.createServiceInstance(request);
+		
+		// 익셉션 처리를 해야한다.!		
+		
+	}
+	
+	/**
+	 * instanceService의
 	 * if ( findInstance != null ) 이 true일 때
 	 * findInstance 랑 instance 값이 싹다 같을 때
 	 * @throws ServiceBrokerException 
 	 * @throws ServiceInstanceExistsException 
 	 * */ 
-	@Test
+	@Test(expected=ServiceBrokerException.class)
 	public void testCreateServiceInstanceFindInstanceNotNull() throws ServiceInstanceExistsException, ServiceBrokerException {
 		
 		// 값을 세팅한다.
@@ -210,15 +237,54 @@ public class InstanceServiceImplTest {
 	 * instanceService의
 	 * if ( instance == null ) 이 true일 때
 	 * */ 
-	@Test(expected=ServiceBrokerException.class)
+	@Test
 	public void testDeleteServiceInstanceNull() throws ServiceBrokerException {
 		//값을 세팅한다.
 		doNothing().when(adminTokenService).checkToken();
-		when(instanceRepository.getOne(request.getServiceInstanceId())).thenReturn(null);
+		when(instanceRepository.findByServiceInstanceId(request.getServiceInstanceId())).thenReturn(null);
 
 		//실제로 테스트할 함수를 호출한다.
-		serviceInstance.deleteServiceInstance(delRequest);		
-		//얘는 오류를 뿜으니까 따로 값을 비교하지 않는다.
+		ServiceInstance instance = serviceInstance.deleteServiceInstance(delRequest);	
+		assertNull(instance);
+		
+	}
+	
+	/** 
+	 * instanceService의
+	 * if ( instance == null ) 이 true이고, 
+	 * if ( existsNamespace ) 가 false 일 때
+	 * */ 
+	@Test
+	public void testDeleteServiceInstanceNullExistFalse() throws ServiceBrokerException {
+		//값을 세팅한다.
+		doNothing().when(adminTokenService).checkToken();
+		when(instanceRepository.findByServiceInstanceId(request.getServiceInstanceId())).thenReturn(null);
+
+		when(kubernetesService.existsNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(false);
+		
+		//실제로 테스트할 함수를 호출한다.
+		ServiceInstance instance = serviceInstance.deleteServiceInstance(delRequest);	
+		assertNull(instance);
+		
+	}
+	
+	/**
+	 * instanceService의
+	 * if ( instance == null ) 이 true이고, 
+	 * if ( existsNamespace ) 가 true 일 때
+	 * */ 
+	@Test
+	public void testDeleteServiceInstanceNullExistTrue() throws ServiceBrokerException {
+		//값을 세팅한다.
+		doNothing().when(adminTokenService).checkToken();
+		when(instanceRepository.findByServiceInstanceId(request.getServiceInstanceId())).thenReturn(null);
+		
+		when(kubernetesService.existsNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(true);
+		doNothing().when(kubernetesService).deleteNamespace(TestConstants.JPA_CAAS_NAMESPACE);
+
+		//실제로 테스트할 함수를 호출한다.
+		ServiceInstance instance = serviceInstance.deleteServiceInstance(delRequest);	
+		assertNull(instance);
 		
 	}
 	
@@ -254,24 +320,6 @@ public class InstanceServiceImplTest {
 		assertEquals(TestConstants.JPA_SPACE_GUID, jpaServiceInstance.getSpaceGuid());
 		assertEquals(TestConstants.PARAM_KEY_OWNER_VALUE, jpaServiceInstance.getParameter(TestConstants.PARAM_KEY_OWNER));
 	}
-	
-	/** 통과
-	 * instanceService의
-	 * if ( instance == null )의 값 false 이고
-	 * if (existsNamespace( instance.getCaasNamespace() ))의 existsNamespace 의 ruturn인
-	 * kubernetesService.existsNamespace( namespace ) false 일 때 
-	 * @throws ServiceBrokerException 
-	 * */ 
-	@Test(expected=ServiceBrokerException.class)
-	public void testDeleteServiceNamespaceNotNull2() throws ServiceBrokerException {
-		doNothing().when(adminTokenService).checkToken();
-		when(instanceRepository.findByServiceInstanceId(TestConstants.SV_INSTANCE_ID_001)).thenReturn(jpaServiceInstance);
-		when(kubernetesService.existsNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(false);
-		
-		// 실제를 호출한다.
-		serviceInstance.deleteServiceInstance(delRequest);
-		
-		}
 	
 	@Test
 	public void testUpdateServiceInstance() throws Exception {
