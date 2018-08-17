@@ -1,8 +1,5 @@
 package org.paasta.servicebroker.apiplatform.common;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by user on 2017-09-12.
  */
@@ -12,7 +9,7 @@ public class TestConstants {
     public static final String Headers_KEY_API_VERSION = "X-Broker-Api-Version";
     public static final String Headers_KEY_AUTHORIZATION = "Authorization";
 
-    public static final String PARAM_KEY_OWNER = "userName";
+    public static final String PARAM_KEY_OWNER = "owner";
     public static final String PARAM_KEY_OWNER_VALUE = "testuser001";
 
     public static final String PARAM_SERVICE_TYPE_SHARED = "Shared";
