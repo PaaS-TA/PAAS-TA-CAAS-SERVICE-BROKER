@@ -15,6 +15,8 @@ import org.springframework.stereotype.Repository;
 public interface JpaServiceInstanceRepository extends JpaRepository<JpaServiceInstance, String>{
 
     JpaServiceInstance findByServiceInstanceId(String serviceInstanceId);
+    
+    boolean existsByOrganizationGuid(String organizationGuid);
 
     boolean existsByCaasNamespace(String kubernetesNamespace);
 }
