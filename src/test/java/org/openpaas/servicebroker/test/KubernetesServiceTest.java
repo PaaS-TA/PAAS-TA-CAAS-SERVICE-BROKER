@@ -57,7 +57,7 @@ public class KubernetesServiceTest {
 		
 		jpaServiceInstance = new JpaServiceInstance(request);
 		jpaServiceInstance.setServiceInstanceId(TestConstants.SV_INSTANCE_ID_001);
-		jpaServiceInstance.setCaasAccountAccessToken(TestConstants.JPA_CAAS_ACCOUNT_ACCESS_TOKEN);
+		jpaServiceInstance.setCaasAccountTokenName(TestConstants.JPA_CAAS_ACCOUNT_ACCESS_TOKEN);
 		jpaServiceInstance.setCaasAccountName(TestConstants.JPA_CAAS_ACCOUNT_NAME);
 		jpaServiceInstance.setCaasNamespace(TestConstants.JPA_CAAS_NAMESPACE);
 		Map<String,Object> jpaMap = new HashMap<>();

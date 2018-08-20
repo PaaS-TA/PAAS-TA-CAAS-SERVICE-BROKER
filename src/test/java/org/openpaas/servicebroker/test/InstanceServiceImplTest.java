@@ -77,7 +77,7 @@ public class InstanceServiceImplTest {
 		
 		jpaServiceInstance = new JpaServiceInstance(request);
 		jpaServiceInstance.setServiceInstanceId(TestConstants.SV_INSTANCE_ID_001);
-		jpaServiceInstance.setCaasAccountAccessToken(TestConstants.JPA_CAAS_ACCOUNT_ACCESS_TOKEN);
+		jpaServiceInstance.setCaasAccountTokenName(TestConstants.JPA_CAAS_ACCOUNT_ACCESS_TOKEN);
 		jpaServiceInstance.setCaasAccountName(TestConstants.JPA_CAAS_ACCOUNT_NAME);
 		jpaServiceInstance.setCaasNamespace(TestConstants.JPA_CAAS_NAMESPACE);
 		Map<String,Object> jpaMap = new HashMap<>();
@@ -223,7 +223,7 @@ public class InstanceServiceImplTest {
 		//결과 값이 맞는가 본다.
 		assertThat(instance).isNotNull();
 		assertEquals(jpaServiceInstance, instance);
-		assertEquals(TestConstants.JPA_CAAS_ACCOUNT_ACCESS_TOKEN, jpaServiceInstance.getCaasAccountAccessToken());
+		assertEquals(TestConstants.JPA_CAAS_ACCOUNT_ACCESS_TOKEN, jpaServiceInstance.getCaasAccountTokenName());
 		assertEquals(TestConstants.JPA_CAAS_ACCOUNT_NAME, jpaServiceInstance.getCaasAccountName());
 		assertEquals(TestConstants.JPA_CAAS_NAMESPACE, jpaServiceInstance.getCaasNamespace());
 		assertEquals(TestConstants.JPA_ORGANIZTION_GUID, jpaServiceInstance.getOrganizationGuid());
@@ -312,7 +312,7 @@ public class InstanceServiceImplTest {
 		serviceInstance.deleteServiceInstance(delRequest);	
 		
 		assertThat(jpaServiceInstance).isNotNull();
-		assertEquals(TestConstants.JPA_CAAS_ACCOUNT_ACCESS_TOKEN, jpaServiceInstance.getCaasAccountAccessToken());
+		assertEquals(TestConstants.JPA_CAAS_ACCOUNT_ACCESS_TOKEN, jpaServiceInstance.getCaasAccountTokenName());
 		assertEquals(TestConstants.JPA_CAAS_ACCOUNT_NAME, jpaServiceInstance.getCaasAccountName());
 		assertEquals(TestConstants.JPA_CAAS_NAMESPACE, jpaServiceInstance.getCaasNamespace());
 		assertEquals(TestConstants.JPA_ORGANIZTION_GUID, jpaServiceInstance.getOrganizationGuid());

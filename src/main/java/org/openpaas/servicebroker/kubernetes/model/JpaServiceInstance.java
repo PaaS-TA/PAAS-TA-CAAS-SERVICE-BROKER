@@ -52,9 +52,9 @@ public class JpaServiceInstance extends ServiceInstance {
 	private String caasAccountName;
 
 	@JsonSerialize
-	@JsonProperty("caas_account_access_token")
-	@Column(name = "caas_account_access_token")
-	private String caasAccountAccessToken;
+	@JsonProperty("caas_account_token_name")
+	@Column(name = "caas_account_token_name")
+	private String caasAccountTokenName;
 
 	@JsonIgnore
 	@Transient
@@ -129,7 +129,7 @@ public class JpaServiceInstance extends ServiceInstance {
 
 		setCaasNamespace(null == caasNamespace ? null : caasNamespace.toString());
 		setCaasAccountName(null == caasAccountName ? null : caasAccountName.toString());
-		setCaasAccountAccessToken(null == caasAccountAccessToken ? null : caasAccountAccessToken.toString());
+		setCaasAccountTokenName(null == caasAccountAccessToken ? null : caasAccountAccessToken.toString());
 	}
 
 	@Id
@@ -203,12 +203,12 @@ public class JpaServiceInstance extends ServiceInstance {
 		this.caasAccountName = caasAccountName;
 	}
 
-	public String getCaasAccountAccessToken() {
-		return caasAccountAccessToken;
+	public String getCaasAccountTokenName() {
+		return caasAccountTokenName;
 	}
 
-	public void setCaasAccountAccessToken(String caasAccountAccessToken) {
-		this.caasAccountAccessToken = caasAccountAccessToken;
+	public void setCaasAccountTokenName(String caasAccountTokenName) {
+		this.caasAccountTokenName = caasAccountTokenName;
 	}
 
 	@Transient

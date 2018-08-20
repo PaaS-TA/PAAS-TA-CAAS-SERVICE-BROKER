@@ -69,7 +69,7 @@ public class KubernetesService {
 		// DB저장을 위한 JPAServiceInstance 리턴
 		instance.setCaasNamespace(spaceName);
 		instance.setCaasAccountName(userName);
-		instance.setCaasAccountAccessToken(getToken(spaceName, userName));
+		instance.setCaasAccountTokenName(getToken(spaceName, userName));
 		return instance;
 
 	}
