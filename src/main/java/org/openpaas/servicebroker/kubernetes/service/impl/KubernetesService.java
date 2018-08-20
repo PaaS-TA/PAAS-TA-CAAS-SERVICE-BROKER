@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 
 import com.google.gson.JsonElement;
@@ -59,7 +58,7 @@ public class KubernetesService {
 		this.createResourceQuota(spaceName, plan);
 		
 		String tmpString[] = instance.getParameter("owner").split("@");
-		String userName = (instance.getOrganizationGuid() + tmpString[0].replaceAll("([:.#$&!_\\(\\)`*%^~,\\<\\>\\[\\];+|-])+", "")).toLowerCase() + "-admin";
+		String userName = (instance.getOrganizationGuid() + "-" + tmpString[0].replaceAll("([:.#$&!_\\(\\)`*%^~,\\<\\>\\[\\];+|-])+", "")).toLowerCase() + "-admin";
 		createUser(spaceName, userName);
 
 		createRole(spaceName, userName);

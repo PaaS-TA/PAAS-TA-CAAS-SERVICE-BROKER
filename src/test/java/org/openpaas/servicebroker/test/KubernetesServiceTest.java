@@ -80,7 +80,7 @@ public class KubernetesServiceTest {
         
         // TODO : 책임님꼐 여쭤봐야함    값을 못 받아오는데 ㅇㅁㅇ?
         when(envConfig.getCaasUrl()).thenReturn("hohohoho");
-        when(restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + TestConstants.JPA_CAAS_NAMESPACE + "/serviceaccounts/" + TestConstants.JPA_ORGANIZTION_GUID + TestConstants.JPA_CAAS_ACCOUNT_NAME, HttpMethod.GET, String.class)).thenReturn(token);
+        when(restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + TestConstants.JPA_CAAS_NAMESPACE + "/serviceaccounts/" + TestConstants.JPA_ORGANIZTION_GUID + "-" +TestConstants.JPA_CAAS_ACCOUNT_NAME, HttpMethod.GET, String.class)).thenReturn(token);
         // 실제로 테스트할 함수를 호출한다.
         JpaServiceInstance instance = kubernetesService.createNamespaceUser(jpaServiceInstance, PlanFixture.getPlanOne());
         
@@ -88,7 +88,7 @@ public class KubernetesServiceTest {
         assertThat(instance).isNotNull();
 		assertEquals(jpaServiceInstance, instance);
 		//assertEquals(TestConstants.JPA_CAAS_ACCOUNT_ACCESS_TOKEN, jpaServiceInstance.getCaasAccountAccessToken());
-		assertEquals(TestConstants.ORG_GUID_001 + TestConstants.JPA_CAAS_ACCOUNT_NAME, jpaServiceInstance.getCaasAccountName());
+		assertEquals(TestConstants.ORG_GUID_001 + "-" +TestConstants.JPA_CAAS_ACCOUNT_NAME, jpaServiceInstance.getCaasAccountName());
 		assertEquals(TestConstants.JPA_CAAS_NAMESPACE, jpaServiceInstance.getCaasNamespace());
 		assertEquals(TestConstants.JPA_ORGANIZTION_GUID, jpaServiceInstance.getOrganizationGuid());
 		assertEquals(TestConstants.JPA_SERVICE_DEFINITION_ID, jpaServiceInstance.getServiceDefinitionId());
