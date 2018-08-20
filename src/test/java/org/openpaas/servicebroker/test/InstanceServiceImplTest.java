@@ -81,7 +81,7 @@ public class InstanceServiceImplTest {
 		jpaServiceInstance.setCaasAccountName(TestConstants.JPA_CAAS_ACCOUNT_NAME);
 		jpaServiceInstance.setCaasNamespace(TestConstants.JPA_CAAS_NAMESPACE);
 		Map<String,Object> jpaMap = new HashMap<>();
-		jpaMap.put("userName", TestConstants.PARAM_KEY_OWNER_VALUE);
+		jpaMap.put(TestConstants.PARAM_KEY_OWNER, TestConstants.PARAM_KEY_OWNER_VALUE);
 		jpaServiceInstance.setParameters(jpaMap);
 		
 		jpaServiceInstanceDef = new JpaServiceInstance(RequestFixture.getCreateServiceInstanceRequest2());
