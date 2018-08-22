@@ -49,7 +49,6 @@ public class UserServiceTest {
 		user.getCaasNamespace();
 		user.getId();
 		user.getOrganizationGuid();
-		user.getRoleName();
 		user.getRoleSetCode();
 		user.getServiceInstanceId();
 		user.getSpaceGuid();
