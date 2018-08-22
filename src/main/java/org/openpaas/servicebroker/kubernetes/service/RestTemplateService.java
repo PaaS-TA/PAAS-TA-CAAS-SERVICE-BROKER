@@ -11,7 +11,7 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.openpaas.servicebroker.kubernetes.config.EnvConfig;
+import org.openpaas.servicebroker.kubernetes.model.User;
 import org.openpaas.servicebroker.kubernetes.repo.JpaAdminTokenRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,9 +33,9 @@ public class RestTemplateService {
 
 	@Autowired
 	RestTemplate restTemplate;
-
+	
 	@Autowired
-	EnvConfig envConfig;
+	PropertyService propertyService;
 	
 	@Autowired
 	JpaAdminTokenRepository adminTokenRepository;
@@ -72,13 +72,13 @@ public class RestTemplateService {
 	public boolean tokenValidation() {
 		
 		headers = new HttpHeaders();
-		headers.add("Authorization", "Bearer " + adminTokenRepository.getOne(envConfig.getAdminToken()).getTokenValue());
+		headers.add("Authorization", "Bearer " + adminTokenRepository.getOne(propertyService.getAdminToken()).getTokenValue());
 		headers.add("Accept", "application/json,application/yaml,text/html");
 		headers.add("Content-Type", "application/yaml;charset=UTF-8");
 		HttpEntity<String> reqEntity = new HttpEntity<>(headers);
 		
 		try {
-			restTemplate.exchange(envConfig.getCaasUrl() + "/api/v1/nodes", HttpMethod.GET, reqEntity, String.class);
+			restTemplate.exchange(propertyService.getCaasUrl() + "/api/v1/nodes", HttpMethod.GET, reqEntity, String.class);
 		} catch (HttpStatusCodeException exception) {
 		    logger.info("Maybe token was changed. {} : {}", exception.getStatusCode().value(), exception.getMessage());
 		    return false;
@@ -93,7 +93,7 @@ public class RestTemplateService {
 	public <T> T send(String url, String yml, HttpMethod httpMethod, Class<T> responseType) {
 		
 		headers = new HttpHeaders();
-		headers.add("Authorization", "Bearer " + adminTokenRepository.getOne(envConfig.getAdminToken()).getTokenValue());
+		headers.add("Authorization", "Bearer " + adminTokenRepository.getOne(propertyService.getAdminToken()).getTokenValue());
 		headers.add("Accept", "application/json,application/yaml,text/html");
 		headers.add("Content-Type", "application/yaml;charset=UTF-8");
 		
@@ -110,6 +110,18 @@ public class RestTemplateService {
         }
 		
 		return resEntity.getBody(); 
+	}
+	
+	public void requestUser(User user, HttpMethod httpMethod) throws HttpStatusCodeException{
+		
+		headers = new HttpHeaders();
+		headers.add("Accept", "application/json");
+		headers.add("Content-Type", "application/json;charset=UTF-8");
+		
+		HttpEntity<User> reqEntity = new HttpEntity<User>(user, headers);
+			
+		restTemplate.exchange(propertyService.getCommonUrl() + "/users", httpMethod, reqEntity, String.class);
+
 	}
 
 }
