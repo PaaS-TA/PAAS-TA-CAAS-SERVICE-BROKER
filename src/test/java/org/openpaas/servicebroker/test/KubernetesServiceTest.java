@@ -14,9 +14,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openpaas.servicebroker.kubernetes.config.EnvConfig;
 import org.openpaas.servicebroker.kubernetes.exception.KubernetesServiceException;
 import org.openpaas.servicebroker.kubernetes.model.JpaServiceInstance;
+import org.openpaas.servicebroker.kubernetes.service.PropertyService;
 import org.openpaas.servicebroker.kubernetes.service.RestTemplateService;
 import org.openpaas.servicebroker.kubernetes.service.TemplateService;
 import org.openpaas.servicebroker.kubernetes.service.impl.KubernetesService;
@@ -39,7 +39,7 @@ public class KubernetesServiceTest {
     private TemplateService templateService;
 
     @Spy
-    private static EnvConfig envConfig;
+    private static PropertyService propertyService;
     
     @Mock
     RestTemplateService restTemplateService;
@@ -69,18 +69,18 @@ public class KubernetesServiceTest {
     @Test
     public void testCreateNamespaceUser() throws KubernetesServiceException {
     	System.out.println(jpaServiceInstance.getServiceInstanceId());
-    	envConfig.setAdminToken(token);
-    	envConfig.setCaasUrl("hihi");
-    	envConfig.setDashboardUrl("asdasdasdasd");
+    	propertyService.setAdminToken(token);
+    	propertyService.setCaasUrl("hihi");
+    	propertyService.setDashboardUrl("asdasdasdasd");
     	
         // 값을 세팅한다 (다른 서비스 호출한 것을 가짜로 대체한다)
         when(templateService.convert(createNamespaceYml, model)).thenReturn(createNamespaceYml);
-        when(restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + TestConstants.JPA_CAAS_NAMESPACE, createNamespaceYml, HttpMethod.POST, String.class)).thenReturn(createNamespaceYml);
-        when(restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + TestConstants.JPA_CAAS_NAMESPACE, HttpMethod.POST, String.class)).thenReturn(createNamespaceYml);
+        when(restTemplateService.send(propertyService.getCaasUrl() + "/api/v1/namespaces/" + TestConstants.JPA_CAAS_NAMESPACE, createNamespaceYml, HttpMethod.POST, String.class)).thenReturn(createNamespaceYml);
+        when(restTemplateService.send(propertyService.getCaasUrl() + "/api/v1/namespaces/" + TestConstants.JPA_CAAS_NAMESPACE, HttpMethod.POST, String.class)).thenReturn(createNamespaceYml);
         
         // TODO : 책임님꼐 여쭤봐야함    값을 못 받아오는데 ㅇㅁㅇ?
-        when(envConfig.getCaasUrl()).thenReturn("hohohoho");
-        when(restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + TestConstants.JPA_CAAS_NAMESPACE + "/serviceaccounts/" + TestConstants.JPA_ORGANIZTION_GUID + "-" +TestConstants.JPA_CAAS_ACCOUNT_NAME, HttpMethod.GET, String.class)).thenReturn(token);
+        when(propertyService.getCaasUrl()).thenReturn("hohohoho");
+        when(restTemplateService.send(propertyService.getCaasUrl() + "/api/v1/namespaces/" + TestConstants.JPA_CAAS_NAMESPACE + "/serviceaccounts/" + TestConstants.JPA_ORGANIZTION_GUID + "-" +TestConstants.JPA_CAAS_ACCOUNT_NAME, HttpMethod.GET, String.class)).thenReturn(token);
         // 실제로 테스트할 함수를 호출한다.
         JpaServiceInstance instance = kubernetesService.createNamespaceUser(jpaServiceInstance, PlanFixture.getPlanOne());
         
@@ -101,7 +101,7 @@ public class KubernetesServiceTest {
     public void testDeleteNamespace() {
     	
     	// 값을 세팅한다.
-    	when(restTemplateService.send(envConfig.getCaasUrl(), createNamespaceYml, HttpMethod.DELETE, String.class)).thenReturn(createNamespaceYml);
+    	when(restTemplateService.send(propertyService.getCaasUrl(), createNamespaceYml, HttpMethod.DELETE, String.class)).thenReturn(createNamespaceYml);
     	
     	// 실제로 테스트할 함수를 호출한다.
     	kubernetesService.deleteNamespace(jpaServiceInstance.getCaasNamespace());
@@ -115,7 +115,7 @@ public class KubernetesServiceTest {
     	
     	// 값을 세팅한다.
     	when(templateService.convert(createNamespaceYml, model)).thenReturn(createNamespaceYml);
-    	when(restTemplateService.send(envConfig.getCaasUrl(), createNamespaceYml, HttpMethod.PUT, String.class)).thenReturn(createNamespaceYml);
+    	when(restTemplateService.send(propertyService.getCaasUrl(), createNamespaceYml, HttpMethod.PUT, String.class)).thenReturn(createNamespaceYml);
     	
     	// 실제로 테스트할 함수를 호출한다.
     	kubernetesService.changeResourceQuota(jpaServiceInstance.getCaasAccountName(), PlanFixture.getPlanOne());
@@ -130,7 +130,7 @@ public class KubernetesServiceTest {
     	
     	// 값을 세팅한다.
     	when(templateService.convert(createNamespaceYml, model)).thenReturn(createNamespaceYml);
-    	when(restTemplateService.send(envConfig.getCaasUrl(), createNamespaceYml, HttpMethod.PUT, String.class)).thenReturn(null);
+    	when(restTemplateService.send(propertyService.getCaasUrl(), createNamespaceYml, HttpMethod.PUT, String.class)).thenReturn(null);
     	
     	// 실제로 테스트할 함수를 호출한다.
     	kubernetesService.changeResourceQuota(jpaServiceInstance.getCaasAccountName(), PlanFixture.getPlanOne());

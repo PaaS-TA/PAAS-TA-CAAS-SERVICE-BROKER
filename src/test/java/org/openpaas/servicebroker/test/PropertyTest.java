@@ -1,8 +1,5 @@
 package org.openpaas.servicebroker.test;
 
-import static org.junit.Assert.*;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;

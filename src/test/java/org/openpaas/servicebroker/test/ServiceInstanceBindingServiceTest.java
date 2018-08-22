@@ -1,4 +1,4 @@
-package org.openpaas.servicebroker.test.rest;
+package org.openpaas.servicebroker.test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

@@ -8,9 +8,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.openpaas.servicebroker.kubernetes.config.EnvConfig;
 import org.openpaas.servicebroker.kubernetes.model.JpaAdminToken;
 import org.openpaas.servicebroker.kubernetes.repo.JpaAdminTokenRepository;
+import org.openpaas.servicebroker.kubernetes.service.PropertyService;
 import org.openpaas.servicebroker.kubernetes.service.RestTemplateService;
 import org.openpaas.servicebroker.kubernetes.service.SshService;
 import org.openpaas.servicebroker.kubernetes.service.impl.AdminTokenService;
@@ -29,7 +29,7 @@ public class AdminTokenServiceTest {
 	RestTemplateService restTemplateService;
 	
     @Spy
-    private static EnvConfig envConfig;
+    private static PropertyService propertyService;
 	
 	@InjectMocks
 	AdminTokenService adminTokenService;
@@ -47,9 +47,9 @@ public class AdminTokenServiceTest {
 		adminTokenEmpty.setTokenValue("def-value");
 		adminTokenEmpty.getTokenValue();
 		
-    	envConfig.setAdminToken(adminTokenId);
-    	envConfig.setCaasUrl("hihi");
-    	envConfig.setDashboardUrl("asdasdasdasd");
+		propertyService.setAdminToken(adminTokenId);
+		propertyService.setCaasUrl("hihi");
+		propertyService.setDashboardUrl("asdasdasdasd");
 		
 		
 		
@@ -60,7 +60,7 @@ public class AdminTokenServiceTest {
 	public void testCheckToken() {
 		
 		// 값을 세팅한다.
-		when(envConfig.getAdminToken()).thenReturn(adminTokenId);
+		when(propertyService.getAdminToken()).thenReturn(adminTokenId);
 		when(adminTokenRepository.exists(adminTokenId)).thenReturn(true);
 		when(restTemplateService.tokenValidation()).thenReturn(true);
 		
@@ -77,8 +77,8 @@ public class AdminTokenServiceTest {
 		public void testCheckTokenNoValidation() {
 			
 			// 값을 세팅한다.
-			when(envConfig.getAdminToken()).thenReturn(adminTokenId);
-			when(adminTokenRepository.exists(envConfig.getAdminToken())).thenReturn(true);
+			when(propertyService.getAdminToken()).thenReturn(adminTokenId);
+			when(adminTokenRepository.exists(propertyService.getAdminToken())).thenReturn(true);
 			when(restTemplateService.tokenValidation()).thenReturn(false);
 			when(sshService.executeSsh("pwd")).thenReturn("yaho");;
 			when(adminTokenRepository.save(adminToken)).thenReturn(adminToken);
@@ -96,7 +96,7 @@ public class AdminTokenServiceTest {
 	public void testCheckTokenNull() {
 		
 		// 값을 세팅한다.	
-		when(envConfig.getAdminToken()).thenReturn(adminTokenId);
+		when(propertyService.getAdminToken()).thenReturn(adminTokenId);
 		when(adminTokenRepository.exists(adminTokenId)).thenReturn(false);
 		when(sshService.executeSsh("pwd")).thenReturn("yaho");
 		when(adminTokenRepository.save(adminToken)).thenReturn(adminToken);

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
@@ -17,13 +18,14 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openpaas.servicebroker.exception.ServiceBrokerException;
 import org.openpaas.servicebroker.exception.ServiceInstanceExistsException;
-import org.openpaas.servicebroker.kubernetes.config.EnvConfig;
 import org.openpaas.servicebroker.kubernetes.model.JpaServiceInstance;
 import org.openpaas.servicebroker.kubernetes.repo.JpaServiceInstanceRepository;
+import org.openpaas.servicebroker.kubernetes.service.PropertyService;
 import org.openpaas.servicebroker.kubernetes.service.impl.AdminTokenService;
 import org.openpaas.servicebroker.kubernetes.service.impl.CatalogServiceImpl;
 import org.openpaas.servicebroker.kubernetes.service.impl.InstanceServiceImpl;
 import org.openpaas.servicebroker.kubernetes.service.impl.KubernetesService;
+import org.openpaas.servicebroker.kubernetes.service.impl.UserService;
 import org.openpaas.servicebroker.model.CreateServiceInstanceRequest;
 import org.openpaas.servicebroker.model.DeleteServiceInstanceRequest;
 import org.openpaas.servicebroker.model.ServiceInstance;
@@ -34,6 +36,7 @@ import org.openpaas.servicebroker.model.fixture.ServiceFixture;
 import org.paasta.servicebroker.apiplatform.common.TestConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpMethod;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -54,7 +57,10 @@ public class InstanceServiceImplTest {
 	AdminTokenService adminTokenService;
 	
 	@Mock
-	EnvConfig config;
+	PropertyService propertyService;
+	
+	@Mock
+	UserService userService;
 	
 	@InjectMocks
 	InstanceServiceImpl serviceInstance;
@@ -105,6 +111,62 @@ public class InstanceServiceImplTest {
 		when(catalog.getServiceDefinition(jpaServiceInstance.getServiceDefinitionId())).thenReturn(ServiceFixture.getService());
 		when(kubernetesService.createNamespaceUser(jpaServiceInstance, PlanFixture.getPlanOne())).thenReturn(jpaServiceInstance);
 		when(instanceRepository.save(jpaServiceInstance)).thenReturn(jpaServiceInstance);
+		doNothing().when(userService).request(jpaServiceInstance, HttpMethod.POST);
+		//when(propertyService.getDashboardUrl(jpaServiceInstance.getServiceInstanceId())).thenReturn(TestConstants.DASHBOARD_URL);
+		//when(inspectionProjectService.deleteProject(gTestResultJobModel)).thenThrow(Exception.class);
+		
+		// 실제 코드를 호출한다.
+		JpaServiceInstance result = serviceInstance.createServiceInstance(request);
+		
+		// 값을 비교해야함.		
+		
+	}
+	
+	/**
+	 * kubernetes namespace잘 만들고, DB 저장이 실패할 경우
+	 * @throws ServiceBrokerException 
+	 * @throws ServiceInstanceExistsException 
+	 * */ 
+	@Test(expected=ServiceBrokerException.class)
+	public void testCreateServiceInstanceFailSave() throws ServiceInstanceExistsException, ServiceBrokerException {
+		
+		// 값을 세팅한다.
+		request.withServiceInstanceId(TestConstants.SV_INSTANCE_ID_001);
+		
+		doNothing().when(adminTokenService).checkToken();
+		when(instanceRepository.findByServiceInstanceId(TestConstants.SV_INSTANCE_ID_001)).thenReturn(null);
+		when(kubernetesService.existsNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(true);
+		when(catalog.getServiceDefinition(jpaServiceInstance.getServiceDefinitionId())).thenReturn(ServiceFixture.getService());
+		when(kubernetesService.createNamespaceUser(jpaServiceInstance, PlanFixture.getPlanOne())).thenReturn(jpaServiceInstance);
+		when(instanceRepository.save(jpaServiceInstance)).thenReturn(jpaServiceInstance);
+		doThrow(ServiceBrokerException.class).when(userService).request(jpaServiceInstance, HttpMethod.POST);
+		//when(inspectionProjectService.deleteProject(gTestResultJobModel)).thenThrow(Exception.class);
+		
+		// 실제 코드를 호출한다.
+		JpaServiceInstance result = serviceInstance.createServiceInstance(request);
+		
+		// 값을 비교해야함.		
+		
+	}
+	
+	/**
+	 * kubernetes namespace잘 만들고, DB 저장성공 후 common DB에 저장 실패한 경우
+	 * @throws ServiceBrokerException 
+	 * @throws ServiceInstanceExistsException 
+	 * */ 
+	@Test
+	public void testCreateServiceInstanceFailSend() throws ServiceInstanceExistsException, ServiceBrokerException {
+		
+		// 값을 세팅한다.
+		request.withServiceInstanceId(TestConstants.SV_INSTANCE_ID_001);
+		
+		doNothing().when(adminTokenService).checkToken();
+		when(instanceRepository.findByServiceInstanceId(TestConstants.SV_INSTANCE_ID_001)).thenReturn(null);
+		when(kubernetesService.existsNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(true);
+		when(catalog.getServiceDefinition(jpaServiceInstance.getServiceDefinitionId())).thenReturn(ServiceFixture.getService());
+		when(kubernetesService.createNamespaceUser(jpaServiceInstance, PlanFixture.getPlanOne())).thenReturn(jpaServiceInstance);
+		when(instanceRepository.save(jpaServiceInstance)).thenReturn(jpaServiceInstance);
+		doNothing().when(userService).request(jpaServiceInstance, HttpMethod.POST);
 		//when(inspectionProjectService.deleteProject(gTestResultJobModel)).thenThrow(Exception.class);
 		
 		// 실제 코드를 호출한다.
