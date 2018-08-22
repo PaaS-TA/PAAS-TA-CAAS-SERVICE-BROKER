@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
- * The type Property service.
+ * Property 변수를 담은 서비스 클래스
+ * @author Hyerin
+ * @since 2018.08.22
+ * @version 20180822
  */
 @Service
 public class PropertyService {
@@ -23,6 +26,9 @@ public class PropertyService {
     
     @Value("${caas.cluster.user.password}")
     private String caasClusterUserPassword;
+    
+    @Value("${caas.cluster.command}")
+    private String caasClusterCommand;
 	
     @Value("${dashboard.url}")
     private String dashboardUrl;
@@ -67,8 +73,17 @@ public class PropertyService {
 	public void setCaasClusterUserPassword(String caasClusterUserPassword) {
 		this.caasClusterUserPassword = caasClusterUserPassword;
 	}
+	
 
-    public String getCaasUrl() {
+    public String getCaasClusterCommand() {
+		return caasClusterCommand;
+	}
+
+	public void setCaasClusterCommand(String caasClusterCommand) {
+		this.caasClusterCommand = caasClusterCommand;
+	}
+
+	public String getCaasUrl() {
         return caasUrl;
     }
 

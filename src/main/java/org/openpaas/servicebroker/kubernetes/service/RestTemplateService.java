@@ -26,6 +26,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * RestTemplate를 관리하는 서비스 클래스
+ * 크게 3가지의 통신으로 나뉜다.
+ * 1. token Validation을 위한 메소드
+ * 2. kuber api와 통신하기 위한 메소드
+ * 3. common DB에 저장하기 위해 common-api와통신하는 메소드
+ * @author Hyerin
+ * @since 2018.08.22
+ * @version 20180822
+ */
 @Service
 public class RestTemplateService {
 	
@@ -69,6 +79,13 @@ public class RestTemplateService {
 	}
 
 
+	/**
+	 * broker DB에 저장된 token값이 유효한지 확인하기 위한 메소드
+	 * kuber의 get /nodes를 찔러서 확인한다. (node가 없는 kuber는 없을 것이라 가정했기 때문)
+	 *
+	 * @author Hyerin
+	 * @since 2018.08.22
+	 */
 	public boolean tokenValidation() {
 		
 		headers = new HttpHeaders();
@@ -90,6 +107,12 @@ public class RestTemplateService {
 		return send(url, null, httpMethod, responseType);
 	}
 	
+	/**
+	 * kuber api와 통신하기 위한 메소드
+	 * get의 경우 body가 필요 없기 때문에 yml로 get,delete의 유무판별하여 body를 넣고 안넣고를 정함.
+	 * @author Hyerin
+	 * @since 2018.08.22
+	 */
 	public <T> T send(String url, String yml, HttpMethod httpMethod, Class<T> responseType) {
 		
 		headers = new HttpHeaders();
@@ -112,6 +135,12 @@ public class RestTemplateService {
 		return resEntity.getBody(); 
 	}
 	
+	/**
+	 * common-api와 통신하기 위한 메소드
+	 * common DB에 저장하는 형식(User)에 필요한 파라미터만 채워서 보내준다. 
+	 * @author Hyerin
+	 * @since 2018.08.22
+	 */
 	public void requestUser(User user, HttpMethod httpMethod) throws HttpStatusCodeException{
 		
 		headers = new HttpHeaders();

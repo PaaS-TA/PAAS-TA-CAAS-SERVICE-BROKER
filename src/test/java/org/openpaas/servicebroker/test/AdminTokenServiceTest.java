@@ -63,6 +63,7 @@ public class AdminTokenServiceTest {
 		when(propertyService.getAdminToken()).thenReturn(adminTokenId);
 		when(adminTokenRepository.exists(adminTokenId)).thenReturn(true);
 		when(restTemplateService.tokenValidation()).thenReturn(true);
+		when(propertyService.getCaasClusterCommand()).thenReturn("pwd");
 		
 		// 실제 함수를 호출한다.
 		adminTokenService.checkToken();
@@ -81,6 +82,7 @@ public class AdminTokenServiceTest {
 			when(adminTokenRepository.exists(propertyService.getAdminToken())).thenReturn(true);
 			when(restTemplateService.tokenValidation()).thenReturn(false);
 			when(sshService.executeSsh("pwd")).thenReturn("yaho");;
+			when(propertyService.getCaasClusterCommand()).thenReturn("pwd");
 			when(adminTokenRepository.save(adminToken)).thenReturn(adminToken);
 			
 			// 실제 함수를 호출한다.
@@ -98,6 +100,7 @@ public class AdminTokenServiceTest {
 		// 값을 세팅한다.	
 		when(propertyService.getAdminToken()).thenReturn(adminTokenId);
 		when(adminTokenRepository.exists(adminTokenId)).thenReturn(false);
+		when(propertyService.getCaasClusterCommand()).thenReturn("pwd");
 		when(sshService.executeSsh("pwd")).thenReturn("yaho");
 		when(adminTokenRepository.save(adminToken)).thenReturn(adminToken);
 		

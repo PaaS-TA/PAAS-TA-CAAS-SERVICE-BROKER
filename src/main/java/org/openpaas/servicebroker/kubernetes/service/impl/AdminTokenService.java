@@ -9,6 +9,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Admin token에 관한 서비스 
+ * @author Hyerin
+ * @since 2018.08.22
+ * @version 20180822
+ */
 @Service
 public class AdminTokenService {
 	
@@ -26,20 +32,32 @@ public class AdminTokenService {
 	@Autowired
 	RestTemplateService restTemplateService;
 	
+	/**
+	 * broker DB에 token이 없을 경우, ssh통신으로 set-context 명령어 호출 
+	 * 반환값음 없다.
+	 * @author Hyerin
+	 * @since 2018.08.22
+	 * @version 20180822
+	 */
 	public void setContext() {
 		logger.info("execute ssh command to caas master server to set admin token");
-		sshService.executeSsh("pwd");
+		sshService.executeSsh(propertyService.getCaasClusterCommand());
 	}
 	
 	private boolean tokenExist() {
 		return adminTokenRepository.exists(propertyService.getAdminToken());
 	}
 	
-	//이거 수정해야 함.
 	public boolean tokenValidation() {
 		return restTemplateService.tokenValidation();
 	}
 	
+	/**
+	 * 토큰의 존재유무, 값의 확인을 위한 함수
+	 * @author Hyerin
+	 * @since 2018.08.22
+	 * @version 20180822
+	 */
 	public void checkToken() {
 		logger.info("token check");
 		
