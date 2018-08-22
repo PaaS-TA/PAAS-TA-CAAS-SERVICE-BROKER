@@ -3,9 +3,9 @@ package org.openpaas.servicebroker.kubernetes.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.openpaas.servicebroker.kubernetes.config.EnvConfig;
 import org.openpaas.servicebroker.kubernetes.exception.KubernetesServiceException;
 import org.openpaas.servicebroker.kubernetes.model.JpaServiceInstance;
+import org.openpaas.servicebroker.kubernetes.service.PropertyService;
 import org.openpaas.servicebroker.kubernetes.service.RestTemplateService;
 import org.openpaas.servicebroker.kubernetes.service.TemplateService;
 import org.openpaas.servicebroker.model.Plan;
@@ -36,7 +36,7 @@ public class KubernetesService {
 	private TemplateService templateService;
 
 	@Autowired
-	private EnvConfig envConfig;
+	private PropertyService propertyService;
 
 	@Autowired
 	private RestTemplateService restTemplateService;
@@ -96,7 +96,7 @@ public class KubernetesService {
 		}
 		logger.debug("Here is your yml file!!! {}", yml);
 
-		restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces", yml, HttpMethod.POST, String.class);
+		restTemplateService.send(propertyService.getCaasUrl() + "/api/v1/namespaces", yml, HttpMethod.POST, String.class);
 
 		return spaceName;
 	}
@@ -124,7 +124,7 @@ public class KubernetesService {
 			e.printStackTrace();
 		}
 
-		restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/resourcequotas", yml, HttpMethod.POST, String.class);
+		restTemplateService.send(propertyService.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/resourcequotas", yml, HttpMethod.POST, String.class);
 
 	}
 
@@ -150,7 +150,7 @@ public class KubernetesService {
 			e.printStackTrace();
 		}
 
-		restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/serviceaccounts", yml, HttpMethod.POST, String.class);
+		restTemplateService.send(propertyService.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/serviceaccounts", yml, HttpMethod.POST, String.class);
 		logger.info("created Account~~ {}", userName);
 		
 	}
@@ -164,7 +164,7 @@ public class KubernetesService {
 	 */
 	public String getToken(String spaceName, String userName) {
 		
-		String jsonObj = restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/serviceaccounts/" + userName, HttpMethod.GET, String.class);
+		String jsonObj = restTemplateService.send(propertyService.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/serviceaccounts/" + userName, HttpMethod.GET, String.class);
 		JsonParser parser = new JsonParser();
 		JsonElement element = parser.parse(jsonObj);
 		element = element.getAsJsonObject().get("secrets");
@@ -196,7 +196,7 @@ public class KubernetesService {
 			e.printStackTrace();
 		}
 
-		restTemplateService.send(envConfig.getCaasUrl() + "/apis/rbac.authorization.k8s.io/v1/namespaces/" + spaceName + "/roles", yml, HttpMethod.POST, String.class);
+		restTemplateService.send(propertyService.getCaasUrl() + "/apis/rbac.authorization.k8s.io/v1/namespaces/" + spaceName + "/roles", yml, HttpMethod.POST, String.class);
 
 	}
 
@@ -222,7 +222,7 @@ public class KubernetesService {
 			e.printStackTrace();
 		}
 
-		restTemplateService.send(envConfig.getCaasUrl() + "/apis/rbac.authorization.k8s.io/v1/namespaces/" + spaceName + "/rolebindings", yml, HttpMethod.POST, String.class);
+		restTemplateService.send(propertyService.getCaasUrl() + "/apis/rbac.authorization.k8s.io/v1/namespaces/" + spaceName + "/rolebindings", yml, HttpMethod.POST, String.class);
 
 	}
 
@@ -237,7 +237,7 @@ public class KubernetesService {
 
 		// TODO kubernetes에 있는 namespace 삭제
 
-		restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + namespace, HttpMethod.DELETE,	String.class);
+		restTemplateService.send(propertyService.getCaasUrl() + "/api/v1/namespaces/" + namespace, HttpMethod.DELETE,	String.class);
 
 		logger.info("Done to delete namespace in kubernetes.");
 
@@ -253,7 +253,7 @@ public class KubernetesService {
 	public boolean existsNamespace(String namespace) {
 
 		try {
-			restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + namespace, HttpMethod.GET, String.class);
+			restTemplateService.send(propertyService.getCaasUrl() + "/api/v1/namespaces/" + namespace, HttpMethod.GET, String.class);
 		} catch (HttpStatusCodeException exception) {
 			logger.info("can't find namespace {} {} ", exception.getStatusCode().value(), exception.getMessage());
 			return false;
@@ -287,7 +287,7 @@ public class KubernetesService {
 		}
 
 		// ResourceQuota Create-POST / Replace-PUT
-		String responseBody = restTemplateService.send(envConfig.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/resourcequotas/" + spaceName + "-resourcequota", yml, HttpMethod.PUT, String.class);
+		String responseBody = restTemplateService.send(propertyService.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/resourcequotas/" + spaceName + "-resourcequota", yml, HttpMethod.PUT, String.class);
 
 		if (null != responseBody)
 			logger.debug("Change ResourceQuota response body : {}", responseBody);
