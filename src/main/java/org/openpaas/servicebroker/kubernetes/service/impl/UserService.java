@@ -34,7 +34,6 @@ public class UserService {
 	private User convert(JpaServiceInstance jpaInstance) {
 		User user = new User();
 		BeanUtils.copyProperties(jpaInstance, user);
-		user.setUserId(jpaInstance.getParameter("owner"));
 		user.setId(null);
 		return user;
 	}
