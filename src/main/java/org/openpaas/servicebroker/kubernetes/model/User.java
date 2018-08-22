@@ -1,6 +1,12 @@
 package org.openpaas.servicebroker.kubernetes.model;
 
-
+/**
+ * common DB에 저장하기 위한 REST 통신용 모델
+ * roleName, roleSetCode는 상의하에 결정하는 것
+ * @author Hyerin
+ * @since 2018.08.22
+ * @version 20180822
+ */
 public class User {
 	
     private String id;
@@ -84,16 +90,8 @@ public class User {
 		return roleName;
 	}
 
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
-
 	public String getRoleSetCode() {
 		return roleSetCode;
-	}
-
-	public void setRoleSetCode(String roleSetCode) {
-		this.roleSetCode = roleSetCode;
 	}
 
 	public String getUserId() {
