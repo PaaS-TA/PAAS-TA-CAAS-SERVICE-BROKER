@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.openpaas.servicebroker.exception.ServiceBrokerException;
 import org.openpaas.servicebroker.exception.ServiceInstanceExistsException;
-import org.openpaas.servicebroker.kubernetes.config.EnvConfig;
 import org.openpaas.servicebroker.kubernetes.model.JpaServiceInstance;
 import org.openpaas.servicebroker.kubernetes.repo.JpaServiceInstanceRepository;
+import org.openpaas.servicebroker.kubernetes.service.PropertyService;
 import org.openpaas.servicebroker.model.CreateServiceInstanceRequest;
 import org.openpaas.servicebroker.model.DeleteServiceInstanceRequest;
 import org.openpaas.servicebroker.model.Plan;
@@ -18,6 +18,7 @@ import org.openpaas.servicebroker.service.ServiceInstanceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
 /**
@@ -40,10 +41,13 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 	KubernetesService kubernetesService;
 
 	@Autowired
-	EnvConfig config;
+	PropertyService propertyService;
 
 	@Autowired
 	AdminTokenService adminTokenService;
+	
+	@Autowired
+	UserService userService;
 
 	private static final Logger logger = LoggerFactory.getLogger(InstanceServiceImpl.class);
 
@@ -92,9 +96,19 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 			throw new ServiceBrokerException("Already exists namespace to given same name.");
 
 		kubernetesService.createNamespaceUser(instance, getPlan(instance));
-		instance.withDashboardUrl(config.getDashboardUrl(instance.getServiceInstanceId()));
+		instance.withDashboardUrl(propertyService.getDashboardUrl(instance.getServiceInstanceId()));
 
-		instanceRepository.save(instance);
+		try {
+			logger.info("Save data broker DB");
+			instanceRepository.save(instance);
+			logger.info("Save data common DB");
+			userService.request(instance, HttpMethod.POST);
+		} catch(Exception exception) {
+			logger.error("somthing wrong! rollback will be execute.");
+			kubernetesService.deleteNamespace(instance.getCaasNamespace());
+			instanceRepository.delete(instance);
+			throw new ServiceBrokerException("Please check your broker DB or common DB!!");
+		}
 
 		return instance;
 	}
@@ -143,6 +157,7 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 		
 		kubernetesService.deleteNamespace(instance.getCaasNamespace());
 		instanceRepository.delete(instance);
+		userService.request(instance, HttpMethod.DELETE);
 
 		// unbind(delete binding information)는 구현하지 않기로 결정함.
 
