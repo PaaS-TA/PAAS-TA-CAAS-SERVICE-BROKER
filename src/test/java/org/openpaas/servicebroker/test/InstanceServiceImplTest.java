@@ -86,6 +86,7 @@ public class InstanceServiceImplTest {
 		jpaServiceInstance.setCaasAccountTokenName(TestConstants.JPA_CAAS_ACCOUNT_ACCESS_TOKEN);
 		jpaServiceInstance.setCaasAccountName(TestConstants.JPA_CAAS_ACCOUNT_NAME);
 		jpaServiceInstance.setCaasNamespace(TestConstants.JPA_CAAS_NAMESPACE);
+		jpaServiceInstance.setUserId(TestConstants.PARAM_KEY_OWNER_VALUE);
 		Map<String,Object> jpaMap = new HashMap<>();
 		jpaMap.put(TestConstants.PARAM_KEY_OWNER, TestConstants.PARAM_KEY_OWNER_VALUE);
 		jpaServiceInstance.setParameters(jpaMap);
@@ -292,6 +293,7 @@ public class InstanceServiceImplTest {
 		assertEquals(TestConstants.JPA_SERVICE_DEFINITION_ID, jpaServiceInstance.getServiceDefinitionId());
 		assertEquals(TestConstants.JPA_SPACE_GUID, jpaServiceInstance.getSpaceGuid());
 		assertEquals(TestConstants.PARAM_KEY_OWNER_VALUE, jpaServiceInstance.getParameter(TestConstants.PARAM_KEY_OWNER));
+		assertEquals(TestConstants.PARAM_KEY_OWNER_VALUE, jpaServiceInstance.getUserId());
 		
 	}
 	

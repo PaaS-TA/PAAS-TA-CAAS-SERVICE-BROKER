@@ -55,6 +55,11 @@ public class JpaServiceInstance extends ServiceInstance {
 	@JsonProperty("caas_account_token_name")
 	@Column(name = "caas_account_token_name")
 	private String caasAccountTokenName;
+	
+	@JsonSerialize
+	@JsonProperty("user_id")
+	@Column(name = "user_id")
+	private String userId;
 
 	@JsonIgnore
 	@Transient
@@ -209,6 +214,14 @@ public class JpaServiceInstance extends ServiceInstance {
 
 	public void setCaasAccountTokenName(String caasAccountTokenName) {
 		this.caasAccountTokenName = caasAccountTokenName;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	@Transient
