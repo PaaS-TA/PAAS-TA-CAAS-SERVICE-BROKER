@@ -170,8 +170,9 @@ public class KubernetesService {
 		JsonElement element = parser.parse(jsonObj);
 		element = element.getAsJsonObject().get("secrets");
 		element = element.getAsJsonArray().get(0);
-		String token = element.getAsJsonObject().get("name").toString();
-
+		String token = element.getAsJsonObject().get("name").getAsString();
+		
+		logger.info("왜 따옴표 붙냐? {} ",  token);
 		return token;
 	}
 
