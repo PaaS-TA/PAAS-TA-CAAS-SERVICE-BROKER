@@ -172,7 +172,6 @@ public class KubernetesService {
 		element = element.getAsJsonArray().get(0);
 		String token = element.getAsJsonObject().get("name").getAsString();
 		
-		logger.info("왜 따옴표 붙냐? {} ",  token);
 		return token;
 	}
 
