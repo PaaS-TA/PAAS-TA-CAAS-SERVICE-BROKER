@@ -56,13 +56,14 @@ public class KubernetesService {
 
 		String spaceName = createNamespace(instance.getServiceInstanceId());
 		this.createResourceQuota(spaceName, plan);
+		this.createLimitRange(spaceName);
 		
 		String tmpString[] = instance.getParameter("owner").split("@");
 		String userName = (instance.getOrganizationGuid() + "-" + tmpString[0].replaceAll("([:.#$&!_\\(\\)`*%^~,\\<\\>\\[\\];+|-])+", "")).toLowerCase() + "-admin";
-		createUser(spaceName, userName);
+		this.createUser(spaceName, userName);
 
-		createRole(spaceName, userName);
-		createRoleBinding(spaceName, userName);
+		this.createRole(spaceName, userName);
+		this.createRoleBinding(spaceName, userName);
 
 		logger.info("work done!!! {}  {}", spaceName, userName);
 
@@ -128,6 +129,30 @@ public class KubernetesService {
 		restTemplateService.send(propertyService.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/resourcequotas", yml, HttpMethod.POST, String.class);
 
 	}
+	
+	/**
+	 * namespace에 limit range를 할당한다. range는 plan 정보의 25프로 정도로 실행한다. plan정보의 B -> i 로 바꾼 후에
+	 * instance/create_limit_range.ftl의 변수를 채운 후 restTemplateService로 rest 통신한다.
+	 *
+	 * @author Hyerin
+	 * @since 2018.09.03
+	 */
+	public void createLimitRange(String spaceName) {
+		logger.info("createUser Limit Range ~~ space : {}   {}", spaceName);
+
+		Map<String, Object> model = new HashMap<>();
+		model.put("rangeName", spaceName + "-limitrange");
+		String yml = null;
+		try {
+			yml = templateService.convert("instance/create_limit_range.ftl", model);
+		} catch (KubernetesServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		restTemplateService.send(propertyService.getCaasUrl() + "/api/v1/namespaces/" + spaceName + "/limitranges", yml, HttpMethod.POST, String.class);
+
+	}
 
 	/**
 	 * parameter에 넘어온 userName 값으로 생선된 namespace의 관리자 계정을 생성한다. user명은 web 등에서
@@ -187,7 +212,6 @@ public class KubernetesService {
 
 		Map<String, Object> model = new HashMap<>();
 		model.put("spaceName", spaceName);
-		model.put("userName", userName);
 		model.put("roleName", spaceName + "-role");
 		String yml = null;
 		try {
