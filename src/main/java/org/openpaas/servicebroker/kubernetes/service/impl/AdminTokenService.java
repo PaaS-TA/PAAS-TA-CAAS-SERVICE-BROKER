@@ -1,5 +1,7 @@
 package org.openpaas.servicebroker.kubernetes.service.impl;
 
+import java.io.IOException;
+
 import org.openpaas.servicebroker.kubernetes.repo.JpaAdminTokenRepository;
 import org.openpaas.servicebroker.kubernetes.service.PropertyService;
 import org.openpaas.servicebroker.kubernetes.service.RestTemplateService;
@@ -42,6 +44,16 @@ public class AdminTokenService {
 	public void setContext() {
 		logger.info("execute ssh command to caas master server to set admin token");
 		sshService.executeSsh(propertyService.getCaasClusterCommand());
+		String[] cmd = new String[1];
+		cmd[0] = "sh";
+		cmd[0] = propertyService.getCaasClusterCommand();
+		
+		try {
+			Process p = Runtime.getRuntime().exec(cmd);
+		} catch (IOException e) {
+			logger.error("Something Wrong!!");
+			e.printStackTrace();
+		}
 	}
 	
 	private boolean tokenExist() {
