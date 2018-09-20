@@ -148,8 +148,15 @@ public class RestTemplateService {
 		headers.add("Content-Type", "application/json;charset=UTF-8");
 		
 		HttpEntity<User> reqEntity = new HttpEntity<User>(user, headers);
-			
-		restTemplate.exchange(propertyService.getCommonUrl() + "/users", httpMethod, reqEntity, String.class);
+		
+		System.out.println("아이디? " + user.getServiceInstanceId());
+		if(HttpMethod.POST.equals(httpMethod)) {
+			System.out.println("생성?");
+			restTemplate.exchange(propertyService.getCommonUrl() + "/users", httpMethod, reqEntity, String.class);
+		} else {
+			System.out.println("삭제 ㅇㅇ");
+			restTemplate.exchange(propertyService.getCommonUrl() + "/users/serviceInstanceId/" + user.getServiceInstanceId(), httpMethod, reqEntity, String.class);
+		}
 
 	}
 
