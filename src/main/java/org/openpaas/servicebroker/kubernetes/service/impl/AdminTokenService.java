@@ -2,10 +2,10 @@ package org.openpaas.servicebroker.kubernetes.service.impl;
 
 import java.io.IOException;
 
+import org.openpaas.servicebroker.kubernetes.model.Constants;
 import org.openpaas.servicebroker.kubernetes.repo.JpaAdminTokenRepository;
 import org.openpaas.servicebroker.kubernetes.service.PropertyService;
 import org.openpaas.servicebroker.kubernetes.service.RestTemplateService;
-import org.openpaas.servicebroker.kubernetes.service.SshService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +26,6 @@ public class AdminTokenService {
 	JpaAdminTokenRepository adminTokenRepository;
 	
 	@Autowired
-	SshService sshService;
-	
-	@Autowired
 	PropertyService propertyService;	
 	
 	@Autowired
@@ -43,7 +40,6 @@ public class AdminTokenService {
 	 */
 	public void setContext() {
 		logger.info("execute ssh command to caas master server to set admin token");
-		sshService.executeSsh(propertyService.getCaasClusterCommand());
 		String[] cmd = new String[1];
 		cmd[0] = "sh";
 		cmd[0] = propertyService.getCaasClusterCommand();
@@ -57,7 +53,7 @@ public class AdminTokenService {
 	}
 	
 	private boolean tokenExist() {
-		return adminTokenRepository.exists(propertyService.getAdminToken());
+		return adminTokenRepository.exists(Constants.TOKEN_KEY);
 	}
 	
 	public boolean tokenValidation() {

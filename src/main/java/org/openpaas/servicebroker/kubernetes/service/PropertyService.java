@@ -15,18 +15,6 @@ public class PropertyService {
     /**
      * The caas master host url.
      */
-    @Value("${caas.cluster.url}")
-    private String caasClusterUrl;
-    
-    @Value("${caas.cluster.port}")
-    private int caasClusterPort;
-    
-    @Value("${caas.cluster.user.name}")
-    private String caasClusterUserName;
-    
-    @Value("${caas.cluster.user.password}")
-    private String caasClusterUserPassword;
-    
     @Value("${caas.cluster.command}")
     private String caasClusterCommand;
 	
@@ -35,45 +23,9 @@ public class PropertyService {
     
     @Value("${caas.url}")
     private String caasUrl;
-    
-    @Value("${caas.admin-token}")
-    private String adminToken;
-    
+       
     @Value("${caas.common.url}")
     private String commonUrl;
-
-	public String getCaasClusterUrl() {
-		return caasClusterUrl;
-	}
-
-	public void setCaasClusterUrl(String caasClusterUrl) {
-		this.caasClusterUrl = caasClusterUrl;
-	}
-
-	public int getCaasClusterPort() {
-		return caasClusterPort;
-	}
-
-	public void setCaasClusterPort(int caasClusterPort) {
-		this.caasClusterPort = caasClusterPort;
-	}
-
-	public String getCaasClusterUserName() {
-		return caasClusterUserName;
-	}
-
-	public void setCaasClusterUserName(String caasClusterUserName) {
-		this.caasClusterUserName = caasClusterUserName;
-	}
-
-	public String getCaasClusterUserPassword() {
-		return caasClusterUserPassword;
-	}
-
-	public void setCaasClusterUserPassword(String caasClusterUserPassword) {
-		this.caasClusterUserPassword = caasClusterUserPassword;
-	}
-	
 
     public String getCaasClusterCommand() {
 		return caasClusterCommand;
@@ -89,14 +41,6 @@ public class PropertyService {
 
     public void setCaasUrl(String caasUrl) {
         this.caasUrl = caasUrl;
-    }
-
-    public String getAdminToken() {
-        return adminToken;
-    }
-
-    public void setAdminToken(String adminToken) {
-        this.adminToken = adminToken;
     }
 
     public String getDashboardUrl(String serviceInstanceId) {
