@@ -69,7 +69,6 @@ public class KubernetesServiceTest {
     @Test
     public void testCreateNamespaceUser() throws KubernetesServiceException {
     	System.out.println(jpaServiceInstance.getServiceInstanceId());
-    	propertyService.setAdminToken(token);
     	propertyService.setCaasUrl("hihi");
     	propertyService.setDashboardUrl("asdasdasdasd");
     	

@@ -24,7 +24,7 @@ public class JpaAdminToken {
 	@JsonProperty("token_name")
 	@Column(name = "token_name")
 	@Id
-	private final String tokenName = "caas_admin";
+	private final String tokenName = Constants.TOKEN_KEY;
 	
 	@JsonSerialize
 	@JsonProperty("token_value")

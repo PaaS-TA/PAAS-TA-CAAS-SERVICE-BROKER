@@ -11,6 +11,7 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.openpaas.servicebroker.kubernetes.model.Constants;
 import org.openpaas.servicebroker.kubernetes.model.User;
 import org.openpaas.servicebroker.kubernetes.repo.JpaAdminTokenRepository;
 import org.slf4j.Logger;
@@ -89,7 +90,7 @@ public class RestTemplateService {
 	public boolean tokenValidation() {
 		
 		headers = new HttpHeaders();
-		headers.add("Authorization", "Bearer " + adminTokenRepository.getOne(propertyService.getAdminToken()).getTokenValue());
+		headers.add("Authorization", "Bearer " + adminTokenRepository.getOne(Constants.TOKEN_KEY).getTokenValue());
 		headers.add("Accept", "application/json,application/yaml,text/html");
 		headers.add("Content-Type", "application/yaml;charset=UTF-8");
 		HttpEntity<String> reqEntity = new HttpEntity<>(headers);
@@ -116,7 +117,7 @@ public class RestTemplateService {
 	public <T> T send(String url, String yml, HttpMethod httpMethod, Class<T> responseType) {
 		
 		headers = new HttpHeaders();
-		headers.add("Authorization", "Bearer " + adminTokenRepository.getOne(propertyService.getAdminToken()).getTokenValue());
+		headers.add("Authorization", "Bearer " + adminTokenRepository.getOne(Constants.TOKEN_KEY).getTokenValue());
 		headers.add("Accept", "application/json,application/yaml,text/html");
 		headers.add("Content-Type", "application/yaml;charset=UTF-8");
 		
@@ -149,12 +150,11 @@ public class RestTemplateService {
 		
 		HttpEntity<User> reqEntity = new HttpEntity<User>(user, headers);
 		
-		System.out.println("아이디? " + user.getServiceInstanceId());
 		if(HttpMethod.POST.equals(httpMethod)) {
-			System.out.println("생성?");
+			logger.info("Send User Save Request to Common API");
 			restTemplate.exchange(propertyService.getCommonUrl() + "/users", httpMethod, reqEntity, String.class);
 		} else {
-			System.out.println("삭제 ㅇㅇ");
+			logger.info("Send User Delete Request to Common API");
 			restTemplate.exchange(propertyService.getCommonUrl() + "/users/serviceInstanceId/" + user.getServiceInstanceId(), httpMethod, reqEntity, String.class);
 		}
 
