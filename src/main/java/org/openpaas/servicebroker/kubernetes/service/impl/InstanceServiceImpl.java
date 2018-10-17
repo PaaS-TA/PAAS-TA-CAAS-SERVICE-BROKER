@@ -102,7 +102,7 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 			logger.info("Save data broker DB");
 			instanceRepository.save(instance);
 			logger.info("Save data common DB");
-			userService.request(instance, HttpMethod.POST);
+			userService.request(instance, getPlan(instance), HttpMethod.POST);
 		} catch(Exception exception) {
 			logger.error("somthing wrong! rollback will be execute.");
 			kubernetesService.deleteNamespace(instance.getCaasNamespace());
@@ -199,8 +199,24 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 
 				findInstance.setPlanId(planId);
 				kubernetesService.changeResourceQuota(findInstance.getCaasNamespace(), newPlan);
+				
+				// ---------------------------------------------------------------------------- 추가
+				try {
+					logger.info("Save data broker DB");
+					instanceRepository.save(findInstance);
+					logger.info("Save data common DB");
+					userService.request(instance, newPlan, HttpMethod.PUT);
+				} catch(Exception exception) {
+					logger.error("somthing wrong! update rollback will be execute.");
+					kubernetesService.changeResourceQuota(findInstance.getCaasNamespace(), oldPlan);
+					findInstance.setPlanId(oldPlan.getId());
+					instanceRepository.save(findInstance);
+					throw new ServiceBrokerException("Please check your Network state");
+				}
+				// ---------------------------------------------------------------------------- 추가 끝
 			}
-			instanceRepository.save(findInstance);
+//			instanceRepository.save(findInstance);			
+			
 		}
 
 		return findInstance;

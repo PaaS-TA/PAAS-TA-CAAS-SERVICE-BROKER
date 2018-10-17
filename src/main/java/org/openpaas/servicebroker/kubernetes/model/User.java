@@ -26,6 +26,10 @@ public class User {
     private String spaceGuid;
 
     private String roleSetCode = "RS0001";
+    
+    private String planName;
+    
+    private String planDescription;
         
     
 	public String getId() {
@@ -94,6 +98,22 @@ public class User {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+	
+	public String getPlanName() {
+		return planName;
+	}
+
+	public void setPlanName(String planName) {
+		this.planName = planName;
+	}
+
+	public String getPlanDescription() {
+		return planDescription;
+	}
+
+	public void setPlanDescription(String planDescription) {
+		this.planDescription = planDescription;
 	}
 
 }

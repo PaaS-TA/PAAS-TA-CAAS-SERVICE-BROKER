@@ -3,6 +3,7 @@ package org.openpaas.servicebroker.kubernetes.service.impl;
 import org.openpaas.servicebroker.kubernetes.model.JpaServiceInstance;
 import org.openpaas.servicebroker.kubernetes.model.User;
 import org.openpaas.servicebroker.kubernetes.service.RestTemplateService;
+import org.openpaas.servicebroker.model.Plan;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -21,7 +22,11 @@ public class UserService {
 	RestTemplateService restTemplateService;
 	
 	public void request(JpaServiceInstance jpaInstance, HttpMethod httpMethod) {
-		restTemplateService.requestUser(convert(jpaInstance), httpMethod);
+		request(jpaInstance, null, httpMethod);
+	}
+	
+	public void request(JpaServiceInstance jpaInstance, Plan plan, HttpMethod httpMethod) {
+		restTemplateService.requestUser(convert(jpaInstance, plan), httpMethod);
 	}
 
 	/**
@@ -31,10 +36,14 @@ public class UserService {
 	 * @since 2018.08.22
 	 * @version 20180822
 	 */
-	private User convert(JpaServiceInstance jpaInstance) {
+	private User convert(JpaServiceInstance jpaInstance, Plan plan) {
 		User user = new User();
 		BeanUtils.copyProperties(jpaInstance, user);
 		user.setId(null);
+		if(plan != null) {
+			user.setPlanName(plan.getName());
+			user.setPlanDescription(plan.getDescription());
+		}
 		return user;
 	}
 }
