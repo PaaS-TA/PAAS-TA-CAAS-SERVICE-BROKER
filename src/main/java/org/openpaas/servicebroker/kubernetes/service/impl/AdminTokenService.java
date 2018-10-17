@@ -1,6 +1,8 @@
 package org.openpaas.servicebroker.kubernetes.service.impl;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import org.openpaas.servicebroker.kubernetes.model.Constants;
 import org.openpaas.servicebroker.kubernetes.repo.JpaAdminTokenRepository;
@@ -42,13 +44,26 @@ public class AdminTokenService {
 		int count = 0;
 		boolean existToken = false;
 		logger.info("execute ssh command to caas master server to set admin token");
-		String[] cmd = new String[1];
-		cmd[0] = "sh";
-		cmd[0] = propertyService.getCaasClusterCommand();
+		String[] cmd = {"/bin/bash","-c",""};
+		cmd[2] = "sudo " + propertyService.getCaasClusterCommand();
+		Process p = null;
+		logger.info("command check {}", propertyService.getCaasClusterCommand());
 		
 		try {
-			Process p = Runtime.getRuntime().exec(cmd);
-			p.destroy();
+			p = Runtime.getRuntime().exec(cmd);
+		    String line;
+		    BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+		    while ((line = input.readLine()) != null) {
+		        logger.info("{}", line);
+		        // required true
+		        if(line.equals("exit 0")) {
+		        	logger.info("end of script ");
+		        	input.close();
+		        	break;
+		        }
+		    }  
+		    p.destroy();
+			
 		} catch (IOException e) {
 			logger.error("Something Wrong!!");
 			e.printStackTrace();
@@ -56,7 +71,7 @@ public class AdminTokenService {
 		
 		// token값 DB 동기화를 기다린다. 10초 기다려서 안되면 일단 로그찍고 넘어간다.
 		while(!existToken) {
-			logger.info("waiting token.......");
+			logger.info("waiting token.......{}", existToken);
 			existToken = tokenExist();
 			try {
 				Thread.sleep(1000);
@@ -70,7 +85,7 @@ public class AdminTokenService {
 				return;
 			}
 		}
-		
+			
 	}
 	
 	private boolean tokenExist() {
