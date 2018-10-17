@@ -46,10 +46,21 @@ public class AdminTokenService {
 		
 		try {
 			Process p = Runtime.getRuntime().exec(cmd);
+			p.destroy();
 		} catch (IOException e) {
 			logger.error("Something Wrong!!");
 			e.printStackTrace();
 		}
+		
+		while(!tokenValidation()) {
+			logger.info("waiting token.......");
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				logger.info("InterruptedException occured.");
+			}
+		}
+		
 	}
 	
 	private boolean tokenExist() {
