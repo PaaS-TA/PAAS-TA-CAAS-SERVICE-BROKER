@@ -39,6 +39,7 @@ public class AdminTokenService {
 	 * @version 20180822
 	 */
 	public void setContext() {
+		int count = 0;
 		logger.info("execute ssh command to caas master server to set admin token");
 		String[] cmd = new String[1];
 		cmd[0] = "sh";
@@ -52,12 +53,19 @@ public class AdminTokenService {
 			e.printStackTrace();
 		}
 		
+		// token값 DB 동기화를 기다린다. 10초 기다려서 안되면 일단 로그찍고 넘어간다.
 		while(!tokenValidation()) {
 			logger.info("waiting token.......");
 			try {
 				Thread.sleep(1000);
+				count++;
 			} catch (InterruptedException e) {
 				logger.info("InterruptedException occured.");
+			}
+			
+			if(count == 10) {
+				logger.error("Check your kubernetes maseter IP or Network status");
+				return;
 			}
 		}
 		
