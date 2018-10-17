@@ -54,7 +54,7 @@ public class AdminTokenService {
 		}
 		
 		// token값 DB 동기화를 기다린다. 10초 기다려서 안되면 일단 로그찍고 넘어간다.
-		while(!tokenValidation()) {
+		while(!tokenExist()) {
 			logger.info("waiting token.......");
 			try {
 				Thread.sleep(1000);
