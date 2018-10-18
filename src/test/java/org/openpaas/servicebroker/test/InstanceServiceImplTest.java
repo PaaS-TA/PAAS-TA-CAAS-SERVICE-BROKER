@@ -17,8 +17,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openpaas.servicebroker.caas.model.JpaServiceInstance;
+import org.openpaas.servicebroker.caas.model.User;
 import org.openpaas.servicebroker.caas.repo.JpaServiceInstanceRepository;
 import org.openpaas.servicebroker.caas.service.PropertyService;
+import org.openpaas.servicebroker.caas.service.RestTemplateService;
 import org.openpaas.servicebroker.caas.service.impl.AdminTokenService;
 import org.openpaas.servicebroker.caas.service.impl.CatalogServiceImpl;
 import org.openpaas.servicebroker.caas.service.impl.InstanceServiceImpl;
@@ -28,6 +30,7 @@ import org.openpaas.servicebroker.exception.ServiceBrokerException;
 import org.openpaas.servicebroker.exception.ServiceInstanceExistsException;
 import org.openpaas.servicebroker.model.CreateServiceInstanceRequest;
 import org.openpaas.servicebroker.model.DeleteServiceInstanceRequest;
+import org.openpaas.servicebroker.model.Plan;
 import org.openpaas.servicebroker.model.ServiceInstance;
 import org.openpaas.servicebroker.model.UpdateServiceInstanceRequest;
 import org.openpaas.servicebroker.model.fixture.PlanFixture;
@@ -37,6 +40,7 @@ import org.paasta.servicebroker.apiplatform.common.TestConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
+import org.springframework.web.client.HttpStatusCodeException;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -62,6 +66,9 @@ public class InstanceServiceImplTest {
 	@Mock
 	UserService userService;
 	
+	@Mock
+	RestTemplateService restTemplateService;
+	
 	@InjectMocks
 	InstanceServiceImpl serviceInstance;
 	
@@ -72,6 +79,8 @@ public class InstanceServiceImplTest {
 	private CreateServiceInstanceRequest request;
 	private static DeleteServiceInstanceRequest delRequest;
 	private static UpdateServiceInstanceRequest upRequest;
+	private static Plan plan;
+	private static User user;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -92,6 +101,8 @@ public class InstanceServiceImplTest {
 		jpaServiceInstance.setParameters(jpaMap);
 		
 		jpaServiceInstanceDef = new JpaServiceInstance(RequestFixture.getCreateServiceInstanceRequest2());
+		
+		plan = new Plan("test", "Micro", "Test-desc");
 		
 	}
 	
@@ -123,32 +134,34 @@ public class InstanceServiceImplTest {
 		
 	}
 	
-	/**
-	 * kubernetes namespace잘 만들고, DB 저장이 실패할 경우
-	 * @throws ServiceBrokerException 
-	 * @throws ServiceInstanceExistsException 
-	 * */ 
-	@Test(expected=ServiceBrokerException.class)
-	public void testCreateServiceInstanceFailSave() throws ServiceInstanceExistsException, ServiceBrokerException {
-		
-		// 값을 세팅한다.
-		request.withServiceInstanceId(TestConstants.SV_INSTANCE_ID_001);
-		
-		doNothing().when(adminTokenService).checkToken();
-		when(instanceRepository.findByServiceInstanceId(TestConstants.SV_INSTANCE_ID_001)).thenReturn(null);
-		when(kubernetesService.existsNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(true);
-		when(catalog.getServiceDefinition(jpaServiceInstance.getServiceDefinitionId())).thenReturn(ServiceFixture.getService());
-		when(kubernetesService.createNamespaceUser(jpaServiceInstance, PlanFixture.getPlanOne())).thenReturn(jpaServiceInstance);
-		when(instanceRepository.save(jpaServiceInstance)).thenReturn(jpaServiceInstance);
-		doThrow(ServiceBrokerException.class).when(userService).request(jpaServiceInstance, HttpMethod.POST);
-		//when(inspectionProjectService.deleteProject(gTestResultJobModel)).thenThrow(Exception.class);
-		
-		// 실제 코드를 호출한다.
-		JpaServiceInstance result = serviceInstance.createServiceInstance(request);
-		
-		// 값을 비교해야함.		
-		
-	}
+//	/**
+//	 * kubernetes namespace잘 만들고, DB 저장이 실패할 경우
+//	 * @throws ServiceBrokerException 
+//	 * @throws ServiceInstanceExistsException 
+//	 * */ 
+//	@Test(expected=HttpStatusCodeException.class)
+//	public void testCreateServiceInstanceFailSave() throws ServiceInstanceExistsException, ServiceBrokerException, HttpStatusCodeException {
+//		
+//		// 값을 세팅한다.
+//		request.withServiceInstanceId(TestConstants.SV_INSTANCE_ID_001);
+//		
+//		doNothing().when(adminTokenService).checkToken();
+//		when(instanceRepository.findByServiceInstanceId(TestConstants.SV_INSTANCE_ID_001)).thenReturn(null);
+//		when(kubernetesService.existsNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(true);
+//		when(catalog.getServiceDefinition(jpaServiceInstance.getServiceDefinitionId())).thenReturn(ServiceFixture.getService());
+//		when(kubernetesService.createNamespaceUser(jpaServiceInstance, PlanFixture.getPlanOne())).thenReturn(jpaServiceInstance);
+//		when(instanceRepository.save(jpaServiceInstance)).thenReturn(jpaServiceInstance);
+//		doNothing().when(userService).request(jpaServiceInstance, plan, HttpMethod.POST);
+//		when(userService.convert(jpaServiceInstance, plan)).thenReturn(user);
+//		doThrow(HttpStatusCodeException.class).when(restTemplateService).requestUser(user, HttpMethod.POST);
+////		doThrow(HttpStatusCodeException.class).when(userService).request(jpaServiceInstance, plan, HttpMethod.POST); //HttpStatusCodeException
+//		//userService.request(instance, getPlan(instance), HttpMethod.POST);
+//		// 실제 코드를 호출한다.
+//		JpaServiceInstance result = serviceInstance.createServiceInstance(request);
+//		
+//		// 값을 비교해야함.		
+//		
+//	}
 	
 	/**
 	 * kubernetes namespace잘 만들고, DB 저장성공 후 common DB에 저장 실패한 경우
