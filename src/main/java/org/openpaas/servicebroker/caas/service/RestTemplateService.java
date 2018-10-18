@@ -1,4 +1,4 @@
-package org.openpaas.servicebroker.kubernetes.service;
+package org.openpaas.servicebroker.caas.service;
 
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -11,9 +11,9 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.openpaas.servicebroker.kubernetes.model.Constants;
-import org.openpaas.servicebroker.kubernetes.model.User;
-import org.openpaas.servicebroker.kubernetes.repo.JpaAdminTokenRepository;
+import org.openpaas.servicebroker.caas.model.Constants;
+import org.openpaas.servicebroker.caas.model.User;
+import org.openpaas.servicebroker.caas.repo.JpaAdminTokenRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

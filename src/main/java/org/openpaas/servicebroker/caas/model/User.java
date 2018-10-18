@@ -1,4 +1,4 @@
-package org.openpaas.servicebroker.kubernetes.model;
+package org.openpaas.servicebroker.caas.model;
 
 /**
  * common DB에 저장하기 위한 REST 통신용 모델

@@ -1,13 +1,13 @@
-package org.openpaas.servicebroker.kubernetes.service.impl;
+package org.openpaas.servicebroker.caas.service.impl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import org.openpaas.servicebroker.kubernetes.model.Constants;
-import org.openpaas.servicebroker.kubernetes.repo.JpaAdminTokenRepository;
-import org.openpaas.servicebroker.kubernetes.service.PropertyService;
-import org.openpaas.servicebroker.kubernetes.service.RestTemplateService;
+import org.openpaas.servicebroker.caas.model.Constants;
+import org.openpaas.servicebroker.caas.repo.JpaAdminTokenRepository;
+import org.openpaas.servicebroker.caas.service.PropertyService;
+import org.openpaas.servicebroker.caas.service.RestTemplateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

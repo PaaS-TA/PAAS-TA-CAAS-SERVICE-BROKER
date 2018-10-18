@@ -1,4 +1,4 @@
-package org.openpaas.servicebroker.kubernetes.config;
+package org.openpaas.servicebroker.caas.config;
 
 import java.util.Arrays;
 import java.util.Collections;

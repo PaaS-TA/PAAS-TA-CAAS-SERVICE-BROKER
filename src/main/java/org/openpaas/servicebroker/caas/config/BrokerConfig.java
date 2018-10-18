@@ -1,4 +1,4 @@
-package org.openpaas.servicebroker.kubernetes.config;
+package org.openpaas.servicebroker.caas.config;
 
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -20,8 +20,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  */
 @Configuration
 @ComponentScan(basePackages = { "org.openpaas.servicebroker" })
-@EnableJpaRepositories("org.openpaas.servicebroker.kubernetes.repo")
-@EntityScan(value = "org.openpaas.servicebroker.kubernetes.model")
+@EnableJpaRepositories("org.openpaas.servicebroker.caas.repo")
+@EntityScan(value = "org.openpaas.servicebroker.caas.model")
 public class BrokerConfig {
 
     @Bean

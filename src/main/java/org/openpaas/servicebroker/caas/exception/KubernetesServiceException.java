@@ -1,4 +1,4 @@
-package org.openpaas.servicebroker.kubernetes.exception;
+package org.openpaas.servicebroker.caas.exception;
 
 import org.openpaas.servicebroker.exception.ServiceBrokerException;
 

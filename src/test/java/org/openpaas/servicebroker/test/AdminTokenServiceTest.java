@@ -8,12 +8,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.openpaas.servicebroker.kubernetes.model.Constants;
-import org.openpaas.servicebroker.kubernetes.model.JpaAdminToken;
-import org.openpaas.servicebroker.kubernetes.repo.JpaAdminTokenRepository;
-import org.openpaas.servicebroker.kubernetes.service.PropertyService;
-import org.openpaas.servicebroker.kubernetes.service.RestTemplateService;
-import org.openpaas.servicebroker.kubernetes.service.impl.AdminTokenService;
+import org.openpaas.servicebroker.caas.model.Constants;
+import org.openpaas.servicebroker.caas.model.JpaAdminToken;
+import org.openpaas.servicebroker.caas.repo.JpaAdminTokenRepository;
+import org.openpaas.servicebroker.caas.service.PropertyService;
+import org.openpaas.servicebroker.caas.service.RestTemplateService;
+import org.openpaas.servicebroker.caas.service.impl.AdminTokenService;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)

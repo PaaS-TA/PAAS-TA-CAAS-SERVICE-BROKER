@@ -1,8 +1,8 @@
-package org.openpaas.servicebroker.kubernetes.service.impl;
+package org.openpaas.servicebroker.caas.service.impl;
 
-import org.openpaas.servicebroker.kubernetes.model.JpaServiceInstance;
-import org.openpaas.servicebroker.kubernetes.model.User;
-import org.openpaas.servicebroker.kubernetes.service.RestTemplateService;
+import org.openpaas.servicebroker.caas.model.JpaServiceInstance;
+import org.openpaas.servicebroker.caas.model.User;
+import org.openpaas.servicebroker.caas.service.RestTemplateService;
 import org.openpaas.servicebroker.model.Plan;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

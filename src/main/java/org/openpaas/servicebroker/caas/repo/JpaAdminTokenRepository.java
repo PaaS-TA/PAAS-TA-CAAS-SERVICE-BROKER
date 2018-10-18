@@ -1,6 +1,6 @@
-package org.openpaas.servicebroker.kubernetes.repo;
+package org.openpaas.servicebroker.caas.repo;
 
-import org.openpaas.servicebroker.kubernetes.model.JpaAdminToken;
+import org.openpaas.servicebroker.caas.model.JpaAdminToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

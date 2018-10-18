@@ -1,4 +1,4 @@
-package org.openpaas.servicebroker.kubernetes.config;
+package org.openpaas.servicebroker.caas.config;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

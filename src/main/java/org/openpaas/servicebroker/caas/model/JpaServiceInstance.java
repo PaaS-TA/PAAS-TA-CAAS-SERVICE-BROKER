@@ -1,4 +1,4 @@
-package org.openpaas.servicebroker.kubernetes.model;
+package org.openpaas.servicebroker.caas.model;
 
 import javax.persistence.*;
 

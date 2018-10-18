@@ -1,6 +1,6 @@
-package org.openpaas.servicebroker.kubernetes.repo;
+package org.openpaas.servicebroker.caas.repo;
 
-import org.openpaas.servicebroker.kubernetes.model.JpaServiceInstance;
+import org.openpaas.servicebroker.caas.model.JpaServiceInstance;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

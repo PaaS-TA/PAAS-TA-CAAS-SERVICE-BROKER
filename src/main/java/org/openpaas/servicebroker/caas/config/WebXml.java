@@ -1,4 +1,4 @@
-package org.openpaas.servicebroker.kubernetes.config;
+package org.openpaas.servicebroker.caas.config;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;

@@ -1,4 +1,4 @@
-package org.openpaas.servicebroker.kubernetes.service.impl;
+package org.openpaas.servicebroker.caas.service.impl;
 
 import org.openpaas.servicebroker.exception.ServiceBrokerException;
 import org.openpaas.servicebroker.exception.ServiceInstanceBindingExistsException;

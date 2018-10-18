@@ -1,4 +1,4 @@
-package org.openpaas.servicebroker.kubernetes.service.impl;
+package org.openpaas.servicebroker.caas.service.impl;
 
 import java.util.HashMap;
 import java.util.Map;

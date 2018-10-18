@@ -1,3 +1,0 @@
---ALTER SYSTEM SET RESOURCE_LIMIT = true;
---COMMIT;
-CREATE DATABASE default charset utf8 IF NOT EXISTS kubernetes;

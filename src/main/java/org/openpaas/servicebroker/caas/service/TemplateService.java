@@ -1,8 +1,8 @@
-package org.openpaas.servicebroker.kubernetes.service;
+package org.openpaas.servicebroker.caas.service;
 
 import java.util.Map;
 
-import org.openpaas.servicebroker.kubernetes.exception.KubernetesServiceException;
+import org.openpaas.servicebroker.caas.exception.KubernetesServiceException;
 
 /**
  * Template 파일의 변수 부분을 치환 후 내용을 완성하여, 해당 내용을 특정한 프로세스에 의해 실행하거나

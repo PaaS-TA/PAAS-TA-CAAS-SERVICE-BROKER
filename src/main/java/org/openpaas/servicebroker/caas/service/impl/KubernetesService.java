@@ -1,13 +1,13 @@
-package org.openpaas.servicebroker.kubernetes.service.impl;
+package org.openpaas.servicebroker.caas.service.impl;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.openpaas.servicebroker.kubernetes.exception.KubernetesServiceException;
-import org.openpaas.servicebroker.kubernetes.model.JpaServiceInstance;
-import org.openpaas.servicebroker.kubernetes.service.PropertyService;
-import org.openpaas.servicebroker.kubernetes.service.RestTemplateService;
-import org.openpaas.servicebroker.kubernetes.service.TemplateService;
+import org.openpaas.servicebroker.caas.exception.KubernetesServiceException;
+import org.openpaas.servicebroker.caas.model.JpaServiceInstance;
+import org.openpaas.servicebroker.caas.service.PropertyService;
+import org.openpaas.servicebroker.caas.service.RestTemplateService;
+import org.openpaas.servicebroker.caas.service.TemplateService;
 import org.openpaas.servicebroker.model.Plan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

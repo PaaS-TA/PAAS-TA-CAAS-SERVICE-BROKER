@@ -1,12 +1,12 @@
-package org.openpaas.servicebroker.kubernetes.service.impl;
+package org.openpaas.servicebroker.caas.service.impl;
 
 import java.util.List;
 
+import org.openpaas.servicebroker.caas.model.JpaServiceInstance;
+import org.openpaas.servicebroker.caas.repo.JpaServiceInstanceRepository;
+import org.openpaas.servicebroker.caas.service.PropertyService;
 import org.openpaas.servicebroker.exception.ServiceBrokerException;
 import org.openpaas.servicebroker.exception.ServiceInstanceExistsException;
-import org.openpaas.servicebroker.kubernetes.model.JpaServiceInstance;
-import org.openpaas.servicebroker.kubernetes.repo.JpaServiceInstanceRepository;
-import org.openpaas.servicebroker.kubernetes.service.PropertyService;
 import org.openpaas.servicebroker.model.CreateServiceInstanceRequest;
 import org.openpaas.servicebroker.model.DeleteServiceInstanceRequest;
 import org.openpaas.servicebroker.model.Plan;

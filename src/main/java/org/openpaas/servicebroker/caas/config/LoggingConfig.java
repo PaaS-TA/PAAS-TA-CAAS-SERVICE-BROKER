@@ -1,4 +1,4 @@
-package org.openpaas.servicebroker.kubernetes.config;
+package org.openpaas.servicebroker.caas.config;
 
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;

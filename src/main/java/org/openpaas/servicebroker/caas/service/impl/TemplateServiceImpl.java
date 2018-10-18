@@ -1,9 +1,9 @@
-package org.openpaas.servicebroker.kubernetes.service.impl;
+package org.openpaas.servicebroker.caas.service.impl;
 
 import java.util.Map;
 
-import org.openpaas.servicebroker.kubernetes.exception.KubernetesServiceException;
-import org.openpaas.servicebroker.kubernetes.service.TemplateService;
+import org.openpaas.servicebroker.caas.exception.KubernetesServiceException;
+import org.openpaas.servicebroker.caas.service.TemplateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

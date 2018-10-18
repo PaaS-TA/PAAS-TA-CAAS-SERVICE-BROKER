@@ -6,10 +6,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openpaas.servicebroker.kubernetes.model.JpaServiceInstance;
-import org.openpaas.servicebroker.kubernetes.model.User;
-import org.openpaas.servicebroker.kubernetes.service.RestTemplateService;
-import org.openpaas.servicebroker.kubernetes.service.impl.UserService;
+import org.openpaas.servicebroker.caas.model.JpaServiceInstance;
+import org.openpaas.servicebroker.caas.model.User;
+import org.openpaas.servicebroker.caas.service.RestTemplateService;
+import org.openpaas.servicebroker.caas.service.impl.UserService;
 import org.paasta.servicebroker.apiplatform.common.TestConstants;
 import org.springframework.http.HttpMethod;
 

@@ -1,4 +1,4 @@
-package org.openpaas.servicebroker.kubernetes.service;
+package org.openpaas.servicebroker.caas.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
