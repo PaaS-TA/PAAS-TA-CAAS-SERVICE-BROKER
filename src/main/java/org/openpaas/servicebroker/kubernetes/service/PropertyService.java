@@ -17,6 +17,9 @@ public class PropertyService {
      */
     @Value("${caas.cluster.command}")
     private String caasClusterCommand;
+    
+	@Value("${caas.cluster.exit-code}")
+    private String caasClusterExitCode;
 	
     @Value("${dashboard.url}")
     private String dashboardUrl;
@@ -33,6 +36,14 @@ public class PropertyService {
 
 	public void setCaasClusterCommand(String caasClusterCommand) {
 		this.caasClusterCommand = caasClusterCommand;
+	}
+
+    public String getCaasClusterExitCode() {
+		return caasClusterExitCode;
+	}
+
+	public void setCaasClusterExitCode(String caasClusterExitCode) {
+		this.caasClusterExitCode = caasClusterExitCode;
 	}
 
 	public String getCaasUrl() {

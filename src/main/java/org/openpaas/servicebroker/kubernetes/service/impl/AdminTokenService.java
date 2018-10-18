@@ -56,7 +56,7 @@ public class AdminTokenService {
 		    while ((line = input.readLine()) != null) {
 		        logger.info("{}", line);
 		        // required true
-		        if(line.equals("exit 0")) {
+		        if(line.equals(propertyService.getCaasClusterExitCode())) {
 		        	logger.info("end of script ");
 		        	input.close();
 		        	break;
