@@ -232,14 +232,14 @@ public class CatalogConfig {
                 costsMap.put("unit", "FREE");
                 break;
             case "B":
-                amount.put("usd", 5.0);
+                amount.put("usd", 0.0);
                 costsMap.put("amount", amount);
-                costsMap.put("unit", "MONTHLY");
+                costsMap.put("unit", "FREE");
                 break;
             case "C":
-                amount.put("usd", 10.0);
+                amount.put("usd", 0.0);
                 costsMap.put("amount", amount);
-                costsMap.put("unit", "MONTHLY");
+                costsMap.put("unit", "FREE");
                 break;
             default:
                 amount.put("usd", 0.0);
