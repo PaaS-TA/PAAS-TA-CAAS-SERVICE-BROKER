@@ -258,13 +258,13 @@ public class CatalogConfig {
      */
     private List<String> getBullets(String planType) {
         if (planType.equals("A")) {
-            return Arrays.asList("2 CPUs", "2GB Memory");
+            return Arrays.asList(SERVICEDEFINITION_PLAN1_DESC);
         } else if (planType.equals("B")) {
-            return Arrays.asList("4 CPUs", "6GB Memory");
+            return Arrays.asList(SERVICEDEFINITION_PLAN2_DESC);
         } else if (planType.equals("C")) {
-            return Arrays.asList("8 CPUs", "12GB Memory");
+            return Arrays.asList(SERVICEDEFINITION_PLAN3_DESC);
         }
 
-        return Arrays.asList("2 CPUs", "2GB Memory");
+        return Arrays.asList(SERVICEDEFINITION_PLAN1_DESC);
     }
 }
