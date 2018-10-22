@@ -155,7 +155,7 @@ public class RestTemplateService {
 			restTemplate.exchange(propertyService.getCommonUrl() + "/users", httpMethod, reqEntity, String.class);
 		} else if (HttpMethod.PUT.equals(httpMethod)){
 			logger.info("Send User Update Request to Common API");
-			restTemplate.exchange(propertyService.getCommonUrl() + "/users" + user.getServiceInstanceId(), httpMethod, reqEntity, String.class);
+			restTemplate.exchange(propertyService.getCommonUrl() + "/users/serviceInstanceId/" + user.getServiceInstanceId(), httpMethod, reqEntity, String.class);
 		}else {
 			logger.info("Send User Delete Request to Common API");
 			restTemplate.exchange(propertyService.getCommonUrl() + "/users/serviceInstanceId/" + user.getServiceInstanceId(), httpMethod, reqEntity, String.class);

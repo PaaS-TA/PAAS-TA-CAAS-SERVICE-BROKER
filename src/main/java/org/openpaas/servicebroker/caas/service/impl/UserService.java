@@ -22,7 +22,7 @@ public class UserService {
 	RestTemplateService restTemplateService;
 	
 	public void request(JpaServiceInstance jpaInstance, HttpMethod httpMethod) {
-		request(jpaInstance, null, httpMethod);
+		this.request(jpaInstance, null, httpMethod);
 	}
 	
 	public void request(JpaServiceInstance jpaInstance, Plan plan, HttpMethod httpMethod) {
@@ -36,7 +36,7 @@ public class UserService {
 	 * @since 2018.08.22
 	 * @version 20180822
 	 */
-	private User convert(JpaServiceInstance jpaInstance, Plan plan) {
+	public User convert(JpaServiceInstance jpaInstance, Plan plan) {
 		User user = new User();
 		BeanUtils.copyProperties(jpaInstance, user);
 		user.setId(null);
