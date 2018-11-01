@@ -81,7 +81,7 @@ public class AdminTokenService {
 			}
 			
 			if(count == 10) {
-				logger.error("Check your kubernetes maseter IP or Network status");
+				logger.error("Check your CaaS maseter Node IP or Network status");
 				return;
 			}
 		}
