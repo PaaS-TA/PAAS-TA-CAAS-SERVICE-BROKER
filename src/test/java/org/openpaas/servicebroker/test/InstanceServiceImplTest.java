@@ -24,7 +24,7 @@ import org.openpaas.servicebroker.caas.service.RestTemplateService;
 import org.openpaas.servicebroker.caas.service.impl.AdminTokenService;
 import org.openpaas.servicebroker.caas.service.impl.CatalogServiceImpl;
 import org.openpaas.servicebroker.caas.service.impl.InstanceServiceImpl;
-import org.openpaas.servicebroker.caas.service.impl.KubernetesService;
+import org.openpaas.servicebroker.caas.service.impl.CaasService;
 import org.openpaas.servicebroker.caas.service.impl.UserService;
 import org.openpaas.servicebroker.exception.ServiceBrokerException;
 import org.openpaas.servicebroker.exception.ServiceInstanceExistsException;
@@ -55,7 +55,7 @@ public class InstanceServiceImplTest {
     private JpaServiceInstanceRepository instanceRepository;
 
 	@Mock
-    KubernetesService kubernetesService;
+    CaasService caasService;
     
 	@Mock
 	AdminTokenService adminTokenService;
@@ -119,9 +119,9 @@ public class InstanceServiceImplTest {
 		
 		doNothing().when(adminTokenService).checkToken();
 		when(instanceRepository.findByServiceInstanceId(TestConstants.SV_INSTANCE_ID_001)).thenReturn(null);
-		when(kubernetesService.existsNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(true);
+		when(caasService.existsNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(true);
 		when(catalog.getServiceDefinition(jpaServiceInstance.getServiceDefinitionId())).thenReturn(ServiceFixture.getService());
-		when(kubernetesService.createNamespaceUser(jpaServiceInstance, PlanFixture.getPlanOne())).thenReturn(jpaServiceInstance);
+		when(caasService.createNamespaceUser(jpaServiceInstance, PlanFixture.getPlanOne())).thenReturn(jpaServiceInstance);
 		when(instanceRepository.save(jpaServiceInstance)).thenReturn(jpaServiceInstance);
 		doNothing().when(userService).request(jpaServiceInstance, HttpMethod.POST);
 		//when(propertyService.getDashboardUrl(jpaServiceInstance.getServiceInstanceId())).thenReturn(TestConstants.DASHBOARD_URL);
@@ -147,9 +147,9 @@ public class InstanceServiceImplTest {
 //		
 //		doNothing().when(adminTokenService).checkToken();
 //		when(instanceRepository.findByServiceInstanceId(TestConstants.SV_INSTANCE_ID_001)).thenReturn(null);
-//		when(kubernetesService.existsNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(true);
+//		when(caasService.existsNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(true);
 //		when(catalog.getServiceDefinition(jpaServiceInstance.getServiceDefinitionId())).thenReturn(ServiceFixture.getService());
-//		when(kubernetesService.createNamespaceUser(jpaServiceInstance, PlanFixture.getPlanOne())).thenReturn(jpaServiceInstance);
+//		when(caasService.createNamespaceUser(jpaServiceInstance, PlanFixture.getPlanOne())).thenReturn(jpaServiceInstance);
 //		when(instanceRepository.save(jpaServiceInstance)).thenReturn(jpaServiceInstance);
 //		doNothing().when(userService).request(jpaServiceInstance, plan, HttpMethod.POST);
 //		when(userService.convert(jpaServiceInstance, plan)).thenReturn(user);
@@ -176,9 +176,9 @@ public class InstanceServiceImplTest {
 		
 		doNothing().when(adminTokenService).checkToken();
 		when(instanceRepository.findByServiceInstanceId(TestConstants.SV_INSTANCE_ID_001)).thenReturn(null);
-		when(kubernetesService.existsNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(true);
+		when(caasService.existsNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(true);
 		when(catalog.getServiceDefinition(jpaServiceInstance.getServiceDefinitionId())).thenReturn(ServiceFixture.getService());
-		when(kubernetesService.createNamespaceUser(jpaServiceInstance, PlanFixture.getPlanOne())).thenReturn(jpaServiceInstance);
+		when(caasService.createNamespaceUser(jpaServiceInstance, PlanFixture.getPlanOne())).thenReturn(jpaServiceInstance);
 		when(instanceRepository.save(jpaServiceInstance)).thenReturn(jpaServiceInstance);
 		doNothing().when(userService).request(jpaServiceInstance, HttpMethod.POST);
 		//when(inspectionProjectService.deleteProject(gTestResultJobModel)).thenThrow(Exception.class);
@@ -207,7 +207,7 @@ public class InstanceServiceImplTest {
 		
 		doNothing().when(adminTokenService).checkToken();
 		when(instanceRepository.findByServiceInstanceId(TestConstants.SV_INSTANCE_ID_001)).thenReturn(null);
-		when(kubernetesService.existsNamespace(TestConstants.SV_INSTANCE_ID_001)).thenReturn(true);
+		when(caasService.existsNamespace(TestConstants.SV_INSTANCE_ID_001)).thenReturn(true);
 		
 		// 실제 코드를 호출한다.
 		serviceInstance.createServiceInstance(request);
@@ -337,7 +337,7 @@ public class InstanceServiceImplTest {
 		doNothing().when(adminTokenService).checkToken();
 		when(instanceRepository.findByServiceInstanceId(request.getServiceInstanceId())).thenReturn(null);
 
-		when(kubernetesService.existsNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(false);
+		when(caasService.existsNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(false);
 		
 		//실제로 테스트할 함수를 호출한다.
 		ServiceInstance instance = serviceInstance.deleteServiceInstance(delRequest);	
@@ -356,8 +356,8 @@ public class InstanceServiceImplTest {
 		doNothing().when(adminTokenService).checkToken();
 		when(instanceRepository.findByServiceInstanceId(request.getServiceInstanceId())).thenReturn(null);
 		
-		when(kubernetesService.existsNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(true);
-		doNothing().when(kubernetesService).deleteNamespace(TestConstants.JPA_CAAS_NAMESPACE);
+		when(caasService.existsNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(true);
+		doNothing().when(caasService).deleteNamespace(TestConstants.JPA_CAAS_NAMESPACE);
 
 		//실제로 테스트할 함수를 호출한다.
 		ServiceInstance instance = serviceInstance.deleteServiceInstance(delRequest);	
@@ -369,7 +369,7 @@ public class InstanceServiceImplTest {
 	 * instanceService의
 	 * if ( instance == null )의 값 false 이고
 	 * if (existsNamespace( instance.getCaasNamespace() ))의 existsNamespace 의 return인
-	 * kubernetesService.existsNamespace( namespace ) 가 true일 때 
+	 * caasService.existsNamespace( namespace ) 가 true일 때 
 	 * @throws ServiceBrokerException 
 	 * */ 
 	@Test
@@ -379,9 +379,9 @@ public class InstanceServiceImplTest {
 		request.setServiceDefinitionId(jpaServiceInstance.getServiceDefinitionId());
 		doNothing().when(adminTokenService).checkToken();
 		when(instanceRepository.findByServiceInstanceId(TestConstants.SV_INSTANCE_ID_001)).thenReturn(jpaServiceInstance);
-		when(kubernetesService.existsNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(true);
+		when(caasService.existsNamespace(TestConstants.JPA_CAAS_NAMESPACE)).thenReturn(true);
 		
-		doNothing().when(kubernetesService).deleteNamespace(TestConstants.JPA_CAAS_NAMESPACE);
+		doNothing().when(caasService).deleteNamespace(TestConstants.JPA_CAAS_NAMESPACE);
 		doNothing().when(instanceRepository).delete(jpaServiceInstance);
 		
 		

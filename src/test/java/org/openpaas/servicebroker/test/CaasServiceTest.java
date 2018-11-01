@@ -19,7 +19,7 @@ import org.openpaas.servicebroker.caas.model.JpaServiceInstance;
 import org.openpaas.servicebroker.caas.service.PropertyService;
 import org.openpaas.servicebroker.caas.service.RestTemplateService;
 import org.openpaas.servicebroker.caas.service.TemplateService;
-import org.openpaas.servicebroker.caas.service.impl.KubernetesService;
+import org.openpaas.servicebroker.caas.service.impl.CaasService;
 import org.openpaas.servicebroker.model.CreateServiceInstanceRequest;
 import org.openpaas.servicebroker.model.fixture.PlanFixture;
 import org.openpaas.servicebroker.model.fixture.RequestFixture;
@@ -27,7 +27,7 @@ import org.paasta.servicebroker.apiplatform.common.TestConstants;
 import org.springframework.http.HttpMethod;
 
 @RunWith(MockitoJUnitRunner.class)
-public class KubernetesServiceTest {
+public class CaasServiceTest {
     
     private static String createNamespaceYml = "instance/create_namespace.ftl";
     
@@ -45,7 +45,7 @@ public class KubernetesServiceTest {
     RestTemplateService restTemplateService;
     
     @InjectMocks
-    KubernetesService kubernetesService;
+    CaasService caasService;
     
     private static JpaServiceInstance jpaServiceInstance;
 	private static CreateServiceInstanceRequest request;
@@ -81,7 +81,7 @@ public class KubernetesServiceTest {
         when(propertyService.getCaasUrl()).thenReturn("hohohoho");
         when(restTemplateService.send(propertyService.getCaasUrl() + "/api/v1/namespaces/" + TestConstants.JPA_CAAS_NAMESPACE + "/serviceaccounts/" + TestConstants.JPA_ORGANIZTION_GUID + "-" +TestConstants.JPA_CAAS_ACCOUNT_NAME, HttpMethod.GET, String.class)).thenReturn(token);
         // 실제로 테스트할 함수를 호출한다.
-        JpaServiceInstance instance = kubernetesService.createNamespaceUser(jpaServiceInstance, PlanFixture.getPlanOne());
+        JpaServiceInstance instance = caasService.createNamespaceUser(jpaServiceInstance, PlanFixture.getPlanOne());
         
         // 결과 값이 맞는지 체크한다.
         assertThat(instance).isNotNull();
@@ -103,7 +103,7 @@ public class KubernetesServiceTest {
     	when(restTemplateService.send(propertyService.getCaasUrl(), createNamespaceYml, HttpMethod.DELETE, String.class)).thenReturn(createNamespaceYml);
     	
     	// 실제로 테스트할 함수를 호출한다.
-    	kubernetesService.deleteNamespace(jpaServiceInstance.getCaasNamespace());
+    	caasService.deleteNamespace(jpaServiceInstance.getCaasNamespace());
     	
     	// 결과 값이 맞는지 체크한다.
     	// TODO : 결과 값이 없으면 어떻게 해야하지...?
@@ -117,7 +117,7 @@ public class KubernetesServiceTest {
     	when(restTemplateService.send(propertyService.getCaasUrl(), createNamespaceYml, HttpMethod.PUT, String.class)).thenReturn(createNamespaceYml);
     	
     	// 실제로 테스트할 함수를 호출한다.
-    	kubernetesService.changeResourceQuota(jpaServiceInstance.getCaasAccountName(), PlanFixture.getPlanOne());
+    	caasService.changeResourceQuota(jpaServiceInstance.getCaasAccountName(), PlanFixture.getPlanOne());
     	
     	// 결과 값이 맞는지 체크한다.
     	// TODO : 결과 값이 없으면 어떻게 해야하지...?
@@ -132,7 +132,7 @@ public class KubernetesServiceTest {
     	when(restTemplateService.send(propertyService.getCaasUrl(), createNamespaceYml, HttpMethod.PUT, String.class)).thenReturn(null);
     	
     	// 실제로 테스트할 함수를 호출한다.
-    	kubernetesService.changeResourceQuota(jpaServiceInstance.getCaasAccountName(), PlanFixture.getPlanOne());
+    	caasService.changeResourceQuota(jpaServiceInstance.getCaasAccountName(), PlanFixture.getPlanOne());
     	
     	// 결과 값이 맞는지 체크한다.
     	// TODO : 결과 값이 없으면 어떻게 해야하지...?

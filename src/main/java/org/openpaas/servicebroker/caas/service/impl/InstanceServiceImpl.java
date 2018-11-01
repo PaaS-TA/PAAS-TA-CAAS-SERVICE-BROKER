@@ -38,7 +38,7 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 	private JpaServiceInstanceRepository instanceRepository;
 
 	@Autowired
-	KubernetesService kubernetesService;
+	CaasService caasService;
 
 	@Autowired
 	PropertyService propertyService;
@@ -91,11 +91,11 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 			throw new ServiceBrokerException("ServiceInstance already exists in your organization.");
 		}
 
-		// kubernetes에 생성된 namespace가 있는지 확인한다.
+		// CaaS에 생성된 namespace가 있는지 확인한다.
 		if (existsNamespace(instance.getServiceInstanceId()))
 			throw new ServiceBrokerException("Already exists namespace to given same name.");
 
-		kubernetesService.createNamespaceUser(instance, getPlan(instance));
+		caasService.createNamespaceUser(instance, getPlan(instance));
 		instance.withDashboardUrl(propertyService.getDashboardUrl(instance.getServiceInstanceId()));
 
 		try {
@@ -105,7 +105,7 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 			userService.request(instance, getPlan(instance), HttpMethod.POST);
 		} catch(Exception exception) {
 			logger.error("somthing wrong! rollback will be execute.");
-			kubernetesService.deleteNamespace(instance.getCaasNamespace());
+			caasService.deleteNamespace(instance.getCaasNamespace());
 			instanceRepository.delete(instance);
 			throw new ServiceBrokerException("Please check your broker DB or common DB!!");
 		}
@@ -126,7 +126,7 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 
 	/**
 	 * 외부에서의 요청으로 전달받은 service instance id 등을 비교하여 Service Instance ID 정보를 찾은 다음,
-	 * kubernetes의 namespace의 삭제와 service instance 정보를 차례대로 삭제한다.
+	 * CaaS의 namespace의 삭제와 service instance 정보를 차례대로 삭제한다.
 	 * 
 	 * @param request
 	 * @return
@@ -151,11 +151,11 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 				logger.info("No more delete thing {}", spaceName);
 				return null;
 			}
-			kubernetesService.deleteNamespace(spaceName);
+			caasService.deleteNamespace(spaceName);
 			return null;
 		}
 		
-		kubernetesService.deleteNamespace(instance.getCaasNamespace());
+		caasService.deleteNamespace(instance.getCaasNamespace());
 		instanceRepository.delete(instance);
 		userService.request(instance, HttpMethod.DELETE);
 
@@ -198,7 +198,7 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 					throw new ServiceBrokerException("Cannot change lower plan. (current: " + oldPlan.getName() + " / new: " + newPlan.getName() + ")");
 
 				findInstance.setPlanId(planId);
-				kubernetesService.changeResourceQuota(findInstance.getCaasNamespace(), newPlan);
+				caasService.changeResourceQuota(findInstance.getCaasNamespace(), newPlan);
 				
 				// ---------------------------------------------------------------------------- 추가
 				try {
@@ -208,7 +208,7 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 					userService.request(instance, newPlan, HttpMethod.PUT);
 				} catch(Exception exception) {
 					logger.error("somthing wrong! update rollback will be execute.");
-					kubernetesService.changeResourceQuota(findInstance.getCaasNamespace(), oldPlan);
+					caasService.changeResourceQuota(findInstance.getCaasNamespace(), oldPlan);
 					findInstance.setPlanId(oldPlan.getId());
 					instanceRepository.save(findInstance);
 					throw new ServiceBrokerException("Please check your Network state");
@@ -229,7 +229,7 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 	 * @return
 	 */
 	private boolean existsNamespace(String namespace) {
-		return kubernetesService.existsNamespace(namespace);
+		return caasService.existsNamespace(namespace);
 	}
 
 	/**

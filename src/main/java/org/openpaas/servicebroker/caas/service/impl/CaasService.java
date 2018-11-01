@@ -20,7 +20,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 /**
- * 이 서비스 브로커에서 접근하는 Kubernetes에 대한 서비스를 위한 클래스이다.
+ * 이 서비스 브로커에서 접근하는 CaaS에 대한 서비스를 위한 클래스이다.
  *
  * @author hyerin
  * @author Hyungu Cho
@@ -28,9 +28,9 @@ import com.google.gson.JsonParser;
  * @version 20180801
  */
 @Service
-public class KubernetesService {
+public class CaasService {
 
-	private static final Logger logger = LoggerFactory.getLogger(KubernetesService.class);
+	private static final Logger logger = LoggerFactory.getLogger(CaasService.class);
 
 	@Autowired
 	private TemplateService templateService;
@@ -156,7 +156,7 @@ public class KubernetesService {
 
 	/**
 	 * parameter에 넘어온 userName 값으로 생선된 namespace의 관리자 계정을 생성한다. user명은 web 등에서
-	 * kubernetes 명명규칙에 맞는 변수가 넘어왔다고 가정한다. instance/create_account.ftl의 변수를 채운 후
+	 * CaaS 명명규칙에 맞는 변수가 넘어왔다고 가정한다. instance/create_account.ftl의 변수를 채운 후
 	 * restTemplateService로 rest 통신한다.
 	 *
 	 * @author Hyerin
@@ -258,13 +258,9 @@ public class KubernetesService {
 	 * @since 2018.07.30
 	 */
 	public void deleteNamespace(String namespace) {
-		logger.info("Start to delete namespace in kubernetes.");
-
-		// TODO kubernetes에 있는 namespace 삭제
-
+		logger.info("Start to delete namespace in CaaS.");
 		restTemplateService.send(propertyService.getCaasUrl() + "/api/v1/namespaces/" + namespace, HttpMethod.DELETE,	String.class);
-
-		logger.info("Done to delete namespace in kubernetes.");
+		logger.info("Done to delete namespace in CaaS.");
 
 	}
 

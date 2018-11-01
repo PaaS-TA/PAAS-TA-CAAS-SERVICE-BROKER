@@ -198,8 +198,8 @@ public class CatalogConfig {
         sdMetadata.put("longDescription", "Shared Kubernetes service. New service creates new namespace(non-existed)," +
             " new a service account in namespace, and binding role for service account");
         sdMetadata.put("providerDisplayName", "CNCF Kubernetes");
-        sdMetadata.put("documentationUrl", "https://kubernetes.io");
-        sdMetadata.put("supportUrl", "https://kubernetes.io");
+        sdMetadata.put("documentationUrl", "https://caas.io");
+        sdMetadata.put("supportUrl", "https://caas.io");
         return sdMetadata;
     }
 
