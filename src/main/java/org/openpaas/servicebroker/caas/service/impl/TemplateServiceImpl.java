@@ -2,7 +2,7 @@ package org.openpaas.servicebroker.caas.service.impl;
 
 import java.util.Map;
 
-import org.openpaas.servicebroker.caas.exception.CaaSException;
+import org.openpaas.servicebroker.caas.exception.CaasException;
 import org.openpaas.servicebroker.caas.service.TemplateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,10 +39,10 @@ public class TemplateServiceImpl implements TemplateService {
      * @param templateName
      * @param model
      * @return
-     * @throws CaaSException
+     * @throws CaasException
      */
     @Override
-    public String convert(String templateName, Map<String, Object> model) throws CaaSException {
+    public String convert(String templateName, Map<String, Object> model) throws CaasException {
         String yml;
         try {
             yml = FreeMarkerTemplateUtils.processTemplateIntoString(configuration.getTemplate(templateName), model);

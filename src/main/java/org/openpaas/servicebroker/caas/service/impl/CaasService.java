@@ -3,7 +3,7 @@ package org.openpaas.servicebroker.caas.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.openpaas.servicebroker.caas.exception.CaaSException;
+import org.openpaas.servicebroker.caas.exception.CaasException;
 import org.openpaas.servicebroker.caas.model.JpaServiceInstance;
 import org.openpaas.servicebroker.caas.service.PropertyService;
 import org.openpaas.servicebroker.caas.service.RestTemplateService;
@@ -92,7 +92,7 @@ public class CaasService {
 		String yml = null;
 		try {
 			yml = templateService.convert("instance/create_namespace.ftl", model);
-		} catch (CaaSException e) {
+		} catch (CaasException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -121,7 +121,7 @@ public class CaasService {
 		String yml = null;
 		try {
 			yml = templateService.convert("instance/create_resource_quota.ftl", model);
-		} catch (CaaSException e) {
+		} catch (CaasException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -145,7 +145,7 @@ public class CaasService {
 		String yml = null;
 		try {
 			yml = templateService.convert("instance/create_limit_range.ftl", model);
-		} catch (CaaSException e) {
+		} catch (CaasException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -171,7 +171,7 @@ public class CaasService {
 		String yml = null;
 		try {
 			yml = templateService.convert("instance/create_account.ftl", model);
-		} catch (CaaSException e) {
+		} catch (CaasException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -216,7 +216,7 @@ public class CaasService {
 		String yml = null;
 		try {
 			yml = templateService.convert("instance/create_role.ftl", model);
-		} catch (CaaSException e) {
+		} catch (CaasException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -242,7 +242,7 @@ public class CaasService {
 		String yml = null;
 		try {
 			yml = templateService.convert("instance/create_roleBinding.ftl", model);
-		} catch (CaaSException e) {
+		} catch (CaasException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -302,7 +302,7 @@ public class CaasService {
 		String yml = null;
 		try {
 			yml = templateService.convert("instance/create_resource_quota.ftl", model);
-		} catch (CaaSException e) {
+		} catch (CaasException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

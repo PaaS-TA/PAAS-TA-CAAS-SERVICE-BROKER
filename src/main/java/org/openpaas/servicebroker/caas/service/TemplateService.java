@@ -2,7 +2,7 @@ package org.openpaas.servicebroker.caas.service;
 
 import java.util.Map;
 
-import org.openpaas.servicebroker.caas.exception.CaaSException;
+import org.openpaas.servicebroker.caas.exception.CaasException;
 
 /**
  * Template 파일의 변수 부분을 치환 후 내용을 완성하여, 해당 내용을 특정한 프로세스에 의해 실행하거나
@@ -18,8 +18,8 @@ public interface TemplateService {
      * @param templateName
      * @param model
      * @return
-     * @throws CaaSException
+     * @throws CaasException
      */
-    public String convert(String templateName, Map<String, Object> model) throws CaaSException;
+    public String convert(String templateName, Map<String, Object> model) throws CaasException;
     
 }

@@ -14,7 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openpaas.servicebroker.caas.exception.CaaSException;
+import org.openpaas.servicebroker.caas.exception.CaasException;
 import org.openpaas.servicebroker.caas.model.JpaServiceInstance;
 import org.openpaas.servicebroker.caas.service.PropertyService;
 import org.openpaas.servicebroker.caas.service.RestTemplateService;
@@ -67,7 +67,7 @@ public class CaasServiceTest {
 	}
 
     @Test
-    public void testCreateNamespaceUser() throws CaaSException {
+    public void testCreateNamespaceUser() throws CaasException {
     	System.out.println(jpaServiceInstance.getServiceInstanceId());
     	propertyService.setCaasUrl("hihi");
     	propertyService.setDashboardUrl("asdasdasdasd");
@@ -110,7 +110,7 @@ public class CaasServiceTest {
     }
     
     @Test
-    public void testChangeResourceQuota() throws CaaSException {
+    public void testChangeResourceQuota() throws CaasException {
     	
     	// 값을 세팅한다.
     	when(templateService.convert(createNamespaceYml, model)).thenReturn(createNamespaceYml);
@@ -125,7 +125,7 @@ public class CaasServiceTest {
     }
     
     @Test
-    public void testChangeResourceQuotaNull() throws CaaSException {
+    public void testChangeResourceQuotaNull() throws CaasException {
     	
     	// 값을 세팅한다.
     	when(templateService.convert(createNamespaceYml, model)).thenReturn(createNamespaceYml);

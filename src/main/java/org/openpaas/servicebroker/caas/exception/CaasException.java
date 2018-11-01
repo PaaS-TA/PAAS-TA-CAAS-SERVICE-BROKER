@@ -8,19 +8,19 @@ import org.openpaas.servicebroker.exception.ServiceBrokerException;
  * @author Hyungu Cho
  * @version 20180724
  */
-public class CaaSException extends ServiceBrokerException {
+public class CaasException extends ServiceBrokerException {
 
     private static final long serialVersionUID = 4604824405877022727L;
 
-    public CaaSException(String message) {
+    public CaasException(String message) {
         super(message);
     }
     
-    public CaaSException(String message, Throwable cause) {
+    public CaasException(String message, Throwable cause) {
         super(message, cause);
     }
     
-    public CaaSException(Throwable cause) {
+    public CaasException(Throwable cause) {
     	super(cause);
     }
 }
