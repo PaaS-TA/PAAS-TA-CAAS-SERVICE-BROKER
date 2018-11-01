@@ -35,11 +35,12 @@ public class AdminTokenServiceTest {
 	private static JpaAdminToken adminToken;
 	private static String tokenValue = "token-value";
 	private static JpaAdminToken adminTokenEmpty;
-	private final String adminTokenId = Constants.TOKEN_KEY;
+	private String adminTokenId;
 	
 	@Before
 	public void setUp() throws Exception {
 		
+		adminTokenId = Constants.TOKEN_KEY;
 		adminToken = new JpaAdminToken(tokenValue);
 		adminTokenEmpty = new JpaAdminToken();
 		adminTokenEmpty.setTokenValue("def-value");
