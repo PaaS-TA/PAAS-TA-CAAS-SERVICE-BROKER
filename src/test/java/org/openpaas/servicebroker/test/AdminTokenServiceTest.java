@@ -1,5 +1,6 @@
 package org.openpaas.servicebroker.test;
 
+import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
@@ -34,7 +35,7 @@ public class AdminTokenServiceTest {
 	private static JpaAdminToken adminToken;
 	private static String tokenValue = "token-value";
 	private static JpaAdminToken adminTokenEmpty;
-	private final String adminTokenId = "caas_admin";
+	private final String adminTokenId = Constants.TOKEN_KEY;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -46,8 +47,6 @@ public class AdminTokenServiceTest {
 		
 		propertyService.setCaasUrl("hihi");
 		propertyService.setDashboardUrl("asdasdasdasd");
-		
-		
 		
 	}
 
