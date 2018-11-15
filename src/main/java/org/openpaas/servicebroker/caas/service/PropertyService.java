@@ -35,8 +35,8 @@ public class PropertyService {
     
     @Value("${caas.common.password}")
     private String commonPassword;
-    
-    @Value("${caas.role-set-code}")
+
+    @Value("${roleSet.administratorCode}")
     private String roleSetCode;
 
     public String getCaasClusterCommand() {
