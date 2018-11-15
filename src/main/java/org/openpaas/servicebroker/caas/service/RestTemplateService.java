@@ -11,6 +11,9 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import java.util.Base64;
+import java.util.Base64.Encoder;
+
 import org.openpaas.servicebroker.caas.model.Constants;
 import org.openpaas.servicebroker.caas.model.User;
 import org.openpaas.servicebroker.caas.repo.JpaAdminTokenRepository;
@@ -147,6 +150,7 @@ public class RestTemplateService {
 		headers = new HttpHeaders();
 		headers.add("Accept", "application/json");
 		headers.add("Content-Type", "application/json;charset=UTF-8");
+		headers.add("authorization", "Basic " + createAuthKey());
 		
 		HttpEntity<User> reqEntity = new HttpEntity<User>(user, headers);
 		
@@ -163,4 +167,9 @@ public class RestTemplateService {
 
 	}
 
+	private String createAuthKey() {
+		String primitiveKey = propertyService.getCommonId() + ":" + propertyService.getCommonPassword();
+		Encoder encoder = Base64.getEncoder();
+		return encoder.encodeToString(primitiveKey.getBytes());
+	}
 }

@@ -30,6 +30,12 @@ public class PropertyService {
     @Value("${caas.common.url}")
     private String commonUrl;
     
+    @Value("${caas.common.id}")
+    private String commonId;
+    
+    @Value("${caas.common.password}")
+    private String commonPassword;
+    
     @Value("${caas.role-set-code}")
     private String roleSetCode;
 
@@ -57,7 +63,23 @@ public class PropertyService {
         this.caasUrl = caasUrl;
     }
 
-    public String getDashboardUrl(String serviceInstanceId) {
+    public String getCommonId() {
+		return commonId;
+	}
+
+	public void setCommonId(String commonId) {
+		this.commonId = commonId;
+	}
+
+	public String getCommonPassword() {
+		return commonPassword;
+	}
+
+	public void setCommonPassword(String commonPassword) {
+		this.commonPassword = commonPassword;
+	}
+
+	public String getDashboardUrl(String serviceInstanceId) {
         return dashboardUrl + serviceInstanceId;
     }
 
