@@ -168,6 +168,7 @@ public class RestTemplateService {
 	}
 
 	private String createAuthKey() {
+		logger.info("createAuthKey() start!!!");
 		String primitiveKey = propertyService.getCommonId() + ":" + propertyService.getCommonPassword();
 		Encoder encoder = Base64.getEncoder();
 		return encoder.encodeToString(primitiveKey.getBytes());

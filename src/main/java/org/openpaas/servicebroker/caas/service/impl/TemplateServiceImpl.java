@@ -46,7 +46,6 @@ public class TemplateServiceImpl implements TemplateService {
         String yml;
         try {
             yml = FreeMarkerTemplateUtils.processTemplateIntoString(configuration.getTemplate(templateName), model);
-            logger.info("original yml {}",yml);
         } catch (Exception e) {
             logger.error( "Occured unexpected exception...", e );
             return null;
