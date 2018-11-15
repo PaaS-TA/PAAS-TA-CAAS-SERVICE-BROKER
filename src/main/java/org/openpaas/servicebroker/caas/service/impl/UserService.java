@@ -2,6 +2,7 @@ package org.openpaas.servicebroker.caas.service.impl;
 
 import org.openpaas.servicebroker.caas.model.JpaServiceInstance;
 import org.openpaas.servicebroker.caas.model.User;
+import org.openpaas.servicebroker.caas.service.PropertyService;
 import org.openpaas.servicebroker.caas.service.RestTemplateService;
 import org.openpaas.servicebroker.model.Plan;
 import org.springframework.beans.BeanUtils;
@@ -20,6 +21,9 @@ public class UserService {
 	
 	@Autowired
 	RestTemplateService restTemplateService;
+	
+	@Autowired
+	PropertyService propertyService;
 	
 	public void request(JpaServiceInstance jpaInstance, HttpMethod httpMethod) {
 		this.request(jpaInstance, null, httpMethod);
@@ -41,6 +45,7 @@ public class UserService {
 		BeanUtils.copyProperties(jpaInstance, user);
 		user.setId(null);
 		if(plan != null) {
+			user.setRoleSetCode(propertyService.getRoleSetCode());
 			user.setPlanName(plan.getName());
 			user.setPlanDescription(plan.getDescription());
 		}

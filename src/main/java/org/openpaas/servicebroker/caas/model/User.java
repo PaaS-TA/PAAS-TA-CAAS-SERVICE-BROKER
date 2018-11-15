@@ -25,7 +25,7 @@ public class User {
 
     private String spaceGuid;
 
-    private String roleSetCode = "RS0001";
+    private String roleSetCode;
     
     private String planName;
     
@@ -90,6 +90,10 @@ public class User {
 
 	public String getRoleSetCode() {
 		return roleSetCode;
+	}
+	
+	public void setRoleSetCode(String roleSetCode) {
+		this.roleSetCode = roleSetCode;
 	}
 
 	public String getUserId() {

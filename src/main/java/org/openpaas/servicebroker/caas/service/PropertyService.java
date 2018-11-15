@@ -29,6 +29,9 @@ public class PropertyService {
        
     @Value("${caas.common.url}")
     private String commonUrl;
+    
+    @Value("${caas.role-set-code}")
+    private String roleSetCode;
 
     public String getCaasClusterCommand() {
 		return caasClusterCommand;
@@ -68,6 +71,14 @@ public class PropertyService {
 
 	public void setCommonUrl(String commonUrl) {
 		this.commonUrl = commonUrl;
+	}
+
+	public String getRoleSetCode() {
+		return roleSetCode;
+	}
+
+	public void setRoleSetCode(String roleSetCode) {
+		this.roleSetCode = roleSetCode;
 	}
 
 }
