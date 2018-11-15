@@ -1,5 +1,7 @@
 package org.openpaas.servicebroker.test;
 
+import static org.mockito.Mockito.when;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,8 +10,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openpaas.servicebroker.caas.model.JpaServiceInstance;
 import org.openpaas.servicebroker.caas.model.User;
+import org.openpaas.servicebroker.caas.service.PropertyService;
 import org.openpaas.servicebroker.caas.service.RestTemplateService;
 import org.openpaas.servicebroker.caas.service.impl.UserService;
+import org.openpaas.servicebroker.model.Plan;
 import org.paasta.servicebroker.apiplatform.common.TestConstants;
 import org.springframework.http.HttpMethod;
 
@@ -19,11 +23,15 @@ public class UserServiceTest {
 	@Mock
 	RestTemplateService restTemplateService;
 	
+	@Mock
+	PropertyService propertyService;
+	
 	@InjectMocks
 	UserService userService;
 	
 	private static JpaServiceInstance jpaServiceInstance;
 	private User user = new User();
+	private Plan plan;
 	
 	@Before
     public void setup() {
@@ -43,6 +51,9 @@ public class UserServiceTest {
 		user.setServiceInstanceId("instance_id");
 		user.setSpaceGuid("space_guid");
 		user.setUserId("user@user.com");
+		user.setRoleSetCode(TestConstants.ROLE_SET_CODE);
+		user.setPlanName(TestConstants.PLAN_NAME);
+		user.setPlanDescription(TestConstants.PLAN_DESC);
 		
 		user.getCaasAccountName();
 		user.getCaasAccountTokenName();
@@ -53,6 +64,23 @@ public class UserServiceTest {
 		user.getServiceInstanceId();
 		user.getSpaceGuid();
 		user.getUserId();
+		user.getRoleSetCode();
+		user.getPlanName();
+		user.getPlanDescription();
+		
+		plan = new Plan("a5213929-885f-414a-801f-c66ddb5e48f1", "Small", "4 CPUs, 6GB Memory");
+		
+	}
+	
+	@Test
+	public void TestRequestNullPost() {
+		
+		//when 서술
+		
+		//실제 테스트할 함수 호출
+		userService.request(jpaServiceInstance, HttpMethod.POST);
+		
+		//실제 결과 값 비교
 		
 	}
 	
@@ -60,9 +88,10 @@ public class UserServiceTest {
 	public void TestRequestPost() {
 		
 		//when 서술
+		when(propertyService.getRoleSetCode()).thenReturn(TestConstants.ROLE_SET_CODE);
 		
 		//실제 테스트할 함수 호출
-		userService.request(jpaServiceInstance, HttpMethod.POST);
+		userService.request(jpaServiceInstance, plan, HttpMethod.POST);
 		
 		//실제 결과 값 비교
 		

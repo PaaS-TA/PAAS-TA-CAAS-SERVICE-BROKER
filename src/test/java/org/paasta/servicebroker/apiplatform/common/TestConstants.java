@@ -30,6 +30,9 @@ public class TestConstants {
     public static final String SV_INSTANCE_ID_002 = "sv_instance_id_002";
 
     public static final String DASHBOARD_URL = "http://test-dashboardurl";
+    public static final String ROLE_SET_CODE = "RS0001";
+    public static final String PLAN_NAME = "Small";
+    public static final String PLAN_DESC = "4 CPUs, 6GB Memory";
 
 
     public static final String BINDING_ID = "service_instance_binding_id";
