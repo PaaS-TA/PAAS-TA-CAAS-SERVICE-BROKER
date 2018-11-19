@@ -42,7 +42,7 @@ jar {
     manifest {
         attributes  'Title': 'CaaS Broker', 'Version': version, 'Main-Class': mainClassName
     }
-    baseName = 'caas-service-broker'
+    baseName = 'paas-ta-caas-broker'
     archiveName "${baseName}.jar"
     version = "" // omit the version from the war file name
     dependsOn configurations.runtime
