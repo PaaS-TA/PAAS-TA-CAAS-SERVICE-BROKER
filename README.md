@@ -1,41 +1,25 @@
-﻿CaaS Service broker for PaaS-TA
-==================
-CaaS 서비스 브로커는 CaaS 서비스를 파스-타(PaaS-TA) 서비스로 제공합니다.
+﻿# PAAS-TA-CAAS-SERVICE-BROKER
+PaaS-TA 에서 제공하는 Container 서비스 브로커로 클라우드 컨트롤러와 서비스 브로커간의 v2 서비스 API 를 제공합니다.
 
-이 서비스 브로커는 CaaS 서비스 중 쿠버네티스(Kubernetes)에 대응하고 있으며, 클라우드 컨트롤러와 서비스 브로커 간의 v2 서비스 API를 보여줍니다. 
-이 API는 클라우드 컨트롤러 API와 혼동되어서는 안됩니다.
+Container 서비스 브로커가 수행하는 Container 서비스 관리 작업은 다음과 같습니다.
+- Catalog : Container 서비스 카탈로그 조회
+- Provisioning : Container 서비스 인스턴스 생성 ( parameters "owner", "org_name" 필수 )
+- Updateprovisioning : Container 서비스 인스턴스 갱신
+- Deprovisioning : Container 서비스 인스턴스 삭제
 
-이 브로커에는 CaaS 서버 혹은 CaaS 릴리즈가 포함되어 있지 않습니다.
-대신 CaaS 서버의 서비스를 관리하는 CaaS 자바 브로커를 배포하는 것을 의미합니다.
+[서비스팩 개발 가이드](https://github.com/PaaS-TA/Guide-3.0-Penne-/blob/master/Service-Guide/Tools/PaaS-TA%20Container%20%EC%84%9C%EB%B9%84%EC%8A%A4%ED%8C%A9%20%EC%84%A4%EC%B9%98%20%EA%B0%80%EC%9D%B4%EB%93%9C_v1.0.md)의 API 개발 가이드를 참고하시면 아키텍쳐와 기술, 구현과 개발에 대해 자세히 알 수 있습니다.
 
-CaaS 서비스 브로커는 CaaS 서버와 PaaS-TA(클라우드 파운드리)간의 서비스를 제공하는 것을 말하며, 독립 실행하여 실행되는 CaaS 서버 응용프로그램은 별도로 지원하지 않습니다.
+## 개발 환경
+- JDK 8
+- Gradle 4.4.1
+- Spring Boot 1.5.14
+- Spring Boot Cf Service Broker 2.4.0
+- JSch 0.1.54
+- Hibernate Validator 5.1.0
+- Json Path 2.2.0
+- Jacoco 0.8.1
 
-이 브로커가 수행하는 CaaS 관리 작업은 다음과 같습니다.
-- CaaS 서비스의 카탈로그 등록
-- CaaS 인스턴스 프로비저닝 생성 (네임스페이스 및 유저 생성)
-- CaaS 인스턴스 프로비저닝 플랜의 갱신
-- CaaS 인스턴스 프로비저닝 해제 (유저 및 네임스페이스 삭제)
-이 브로커에서는 CaaS 서비스에 대한 바인딩/언바인딩은 제공하지 않습니다.
-[서비스팩 개발 가이드](https://github.com/PaaS-TA/Documents-PaaSTA-1.0/blob/master/Development-Guide/ServicePack_develope_guide.md)의 API 개발 가이드를 참고하시면 아키텍쳐와 기술, 구현과 개발에 대해 자세히 알 수 있습니다.
-
---------------------
-이 브로커의 소스코드를 사용하기 위한 환경은 다음과 같습니다.
-- 빌드 환경 : Java 8 + Gradle 4.x
-- 의존성 패키지
-  - PaaS-TA Service Java broker (>= Java 8)
-  - Spring boot 1.5.14
-    > Spring boot JPA \
-      Spring boot Web \
-      Spring boot Security \
-      Spring boot Session core \
-      Spring boot Test
-  
-  - MySQL JDBC Driver (Runtime Provider)
-  - Jayway Json-Path
-
-----------
-
-가능한 명령 목록 (로컬 환경)
+## 가능한 명령 목록 (로컬 환경)
 
 - Catalog 조회 : http://localhost:8888/v2/catalog
   - Method : GET 
