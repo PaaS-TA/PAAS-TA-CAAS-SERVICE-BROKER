@@ -98,6 +98,9 @@ public class InstanceServiceImpl implements ServiceInstanceService {
 		caasService.createNamespaceUser(instance, getPlan(instance));
 		instance.withDashboardUrl(propertyService.getDashboardUrl(instance.getServiceInstanceId()));
 
+		// Private Registry의 Secret을 생성한다.
+		caasService.createPrivateDockerSecret(instance.getCaasNamespace());
+
 		try {
 			logger.info("Save data broker DB");
 			instanceRepository.save(instance);

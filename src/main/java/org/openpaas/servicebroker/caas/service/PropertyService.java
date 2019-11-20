@@ -39,6 +39,21 @@ public class PropertyService {
     @Value("${roleSet.administratorCode}")
     private String roleSetCode;
 
+    @Value("${private.docker.registry.auth.id}")
+	private String authId;
+
+	@Value("${private.docker.registry.auth.password}")
+	private String authPassword;
+
+	@Value("${private.docker.registry.uri}")
+	private String privateDockerUri;
+
+	@Value("${private.docker.registry.port}")
+	private String privateDockerPort;
+
+	@Value("${private.docker.registry.secret.name}")
+	private String privateDockerSecretName;
+
     public String getCaasClusterCommand() {
 		return caasClusterCommand;
 	}
@@ -103,4 +118,43 @@ public class PropertyService {
 		this.roleSetCode = roleSetCode;
 	}
 
+	public String getAuthId() {
+		return authId;
+	}
+
+	public void setAuthId(String authId) {
+		this.authId = authId;
+	}
+
+	public String getAuthPassword() {
+		return authPassword;
+	}
+
+	public void setAuthPassword(String authPassword) {
+		this.authPassword = authPassword;
+	}
+
+	public String getPrivateDockerUri() {
+		return privateDockerUri;
+	}
+
+	public void setPrivateDockerUri(String privateDockerUri) {
+		this.privateDockerUri = privateDockerUri;
+	}
+
+	public String getPrivateDockerPort() {
+		return privateDockerPort;
+	}
+
+	public void setPrivateDockerPort(String privateDockerPort) {
+		this.privateDockerPort = privateDockerPort;
+	}
+
+	public String getPrivateDockerSecretName() {
+		return privateDockerSecretName;
+	}
+
+	public void setPrivateDockerSecretName(String privateDockerSecretName) {
+		this.privateDockerSecretName = privateDockerSecretName;
+	}
 }

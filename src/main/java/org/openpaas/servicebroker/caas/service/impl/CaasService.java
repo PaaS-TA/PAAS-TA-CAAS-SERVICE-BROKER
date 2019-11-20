@@ -1,8 +1,8 @@
 package org.openpaas.servicebroker.caas.service.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import org.json.JSONObject;
 import org.openpaas.servicebroker.caas.exception.CaasException;
 import org.openpaas.servicebroker.caas.model.JpaServiceInstance;
 import org.openpaas.servicebroker.caas.service.PropertyService;
@@ -14,10 +14,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.client.HttpStatusCodeException;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 이 서비스 브로커에서 접근하는 CaaS에 대한 서비스를 위한 클래스이다.
@@ -313,4 +315,68 @@ public class CaasService {
 		if (null != responseBody)
 			logger.debug("Change ResourceQuota response body : {}", responseBody);
 	}
+
+	/**
+	 * private docker repository 의 secret 을 생성한다.
+	 *
+	 * @param nameSpace the space name
+	 * @return String
+	 */
+	public String createPrivateDockerSecret(String nameSpace) {
+		String username = propertyService.getAuthId();
+		String password = propertyService.getAuthPassword();
+		String docker_repo_uri = propertyService.getPrivateDockerUri() + ":" + propertyService.getPrivateDockerPort();
+		String secretName = propertyService.getPrivateDockerSecretName();
+
+		logger.info("docker_repo_uri::::::" + docker_repo_uri + "   username:::::" + username + "    password::::::" + password);
+
+		Map secretMap = new HashMap();
+
+		// Secret YAML 의 secret
+		String encodedSecret = Base64Utils.encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8));
+		logger.info("AUTH ::::: " + encodedSecret);
+		secretMap.put("secret", encodedSecret);
+
+
+		Map auth_property = new HashMap<String,String>(){{put("username", username); put("password", password); put("auth", encodedSecret);}};
+		logger.info("auth_property ::::: " + auth_property);
+
+
+		Map auth_value = new HashMap<String,Map<?,?>>(){{put(docker_repo_uri, auth_property);}};
+		logger.info("auth_value ::::: " + auth_value);
+
+
+		Map auth_result = new HashMap<String,Map<?,?>>(){{put("auths", auth_value);}};
+		logger.info("auth_result ::::: " + auth_result);
+
+
+		// Docker Secret YAML
+		JSONObject jsonObject = new JSONObject(auth_result);
+		logger.info(jsonObject.toString());
+		String auth_base64 = Base64Utils.encodeToString(jsonObject.toString().getBytes(StandardCharsets.UTF_8));
+		logger.info(auth_base64);
+
+
+
+		Map<String, Object> model = new HashMap<>();
+		model.put("secretName", secretName);
+		model.put("spaceName", nameSpace);
+		model.put("configJson", auth_base64);
+
+		String yml = null;
+		try {
+			yml = templateService.convert("privateDocker/create_private_docker_secret.ftl", model);
+		} catch (CaasException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		String responseBody = restTemplateService.send(propertyService.getCaasUrl() + "/api/v1/namespaces/" + nameSpace + "/secrets", yml, HttpMethod.POST, String.class);
+
+		if (null != responseBody)
+			logger.debug("Change ResourceQuota response body : {}", responseBody);
+
+		return responseBody;
+	}
+
 }
