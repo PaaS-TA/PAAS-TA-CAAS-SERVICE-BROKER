@@ -88,7 +88,7 @@ public class AdminTokenService {
 			
 	}
 	
-	private boolean tokenExist() {
+	public boolean tokenExist() {
 		return adminTokenRepository.exists(Constants.TOKEN_KEY);
 	}
 	
