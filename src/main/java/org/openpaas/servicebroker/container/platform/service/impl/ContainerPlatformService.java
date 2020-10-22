@@ -79,7 +79,7 @@ public class ContainerPlatformService {
     }
 
     /**
-     * spacename은 serviceInstance ID 에 앞에는 paas- 뒤에는 -cp를 붙인다. instance/create_namespace.ftl의
+     * spacename은 serviceInstance ID 에 앞에는 paas- 뒤에는 -caas를 붙인다. instance/create_namespace.ftl의
      * 변수를 채운 후 restTemplateService로 rest 통신한다.
      *
      * @author Hyerin
@@ -89,7 +89,7 @@ public class ContainerPlatformService {
         logger.debug("create namespace!!! {}", serviceInstanceId);
 
         Map<String, Object> model = new HashMap<>();
-        String spaceName = "paas-" + serviceInstanceId.toLowerCase() + "-cp";
+        String spaceName = "paas-" + serviceInstanceId.toLowerCase() + "-caas";
         model.put("name", spaceName);
         String yml = null;
         try {
