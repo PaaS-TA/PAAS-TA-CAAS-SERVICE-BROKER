@@ -9,12 +9,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.openpaas.servicebroker.caas.model.Constants;
-import org.openpaas.servicebroker.caas.model.JpaAdminToken;
-import org.openpaas.servicebroker.caas.repo.JpaAdminTokenRepository;
-import org.openpaas.servicebroker.caas.service.PropertyService;
-import org.openpaas.servicebroker.caas.service.RestTemplateService;
-import org.openpaas.servicebroker.caas.service.impl.AdminTokenService;
+import org.openpaas.servicebroker.container.platform.model.Constants;
+import org.openpaas.servicebroker.container.platform.model.JpaAdminToken;
+import org.openpaas.servicebroker.container.platform.repo.JpaAdminTokenRepository;
+import org.openpaas.servicebroker.container.platform.service.PropertyService;
+import org.openpaas.servicebroker.container.platform.service.RestTemplateService;
+import org.openpaas.servicebroker.container.platform.service.impl.AdminTokenService;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
@@ -46,7 +46,7 @@ public class AdminTokenServiceTest {
 		adminTokenEmpty.setTokenValue("def-value");
 		adminTokenEmpty.getTokenValue();
 		
-		propertyService.setCaasUrl("hihi");
+		propertyService.setContainerPlatformUrl("hihi");
 		propertyService.setDashboardUrl("asdasdasdasd");
 		
 	}
@@ -59,7 +59,7 @@ public class AdminTokenServiceTest {
 //		when(propertyService.getAdminToken()).thenReturn(adminTokenId);
 		when(adminTokenRepository.exists(adminTokenId)).thenReturn(true);
 		when(restTemplateService.tokenValidation()).thenReturn(true);
-		when(propertyService.getCaasClusterCommand()).thenReturn("pwd");
+		when(propertyService.getContainerPlatformClusterCommand()).thenReturn("pwd");
 		
 		// 실제 함수를 호출한다.
 		adminTokenService.checkToken();
@@ -78,7 +78,7 @@ public class AdminTokenServiceTest {
 			when(adminTokenRepository.exists(Constants.TOKEN_KEY)).thenReturn(true);
 			when(restTemplateService.tokenValidation()).thenReturn(false);
 //			when(sshService.executeSsh("pwd")).thenReturn("yaho");;
-			when(propertyService.getCaasClusterCommand()).thenReturn("pwd");
+			when(propertyService.getContainerPlatformClusterCommand()).thenReturn("pwd");
 			when(adminTokenRepository.save(adminToken)).thenReturn(adminToken);
 			
 			// 실제 함수를 호출한다.
@@ -96,7 +96,7 @@ public class AdminTokenServiceTest {
 		// 값을 세팅한다.	
 //		when(propertyService.getAdminToken()).thenReturn(adminTokenId);
 		when(adminTokenRepository.exists(adminTokenId)).thenReturn(false);
-		when(propertyService.getCaasClusterCommand()).thenReturn("pwd");
+		when(propertyService.getContainerPlatformClusterCommand()).thenReturn("pwd");
 //		when(sshService.executeSsh("pwd")).thenReturn("yaho");
 		when(adminTokenRepository.save(adminToken)).thenReturn(adminToken);
 		

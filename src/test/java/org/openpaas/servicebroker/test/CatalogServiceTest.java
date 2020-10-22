@@ -5,7 +5,7 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 import org.mockito.Mock;
-import org.openpaas.servicebroker.caas.service.impl.CatalogServiceImpl;
+import org.openpaas.servicebroker.container.platform.service.impl.CatalogServiceImpl;
 import org.openpaas.servicebroker.model.Catalog;
 import org.openpaas.servicebroker.model.ServiceDefinition;
 import org.openpaas.servicebroker.model.fixture.ServiceFixture;

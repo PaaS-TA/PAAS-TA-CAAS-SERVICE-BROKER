@@ -16,16 +16,16 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openpaas.servicebroker.caas.model.JpaServiceInstance;
-import org.openpaas.servicebroker.caas.model.User;
-import org.openpaas.servicebroker.caas.repo.JpaServiceInstanceRepository;
-import org.openpaas.servicebroker.caas.service.PropertyService;
-import org.openpaas.servicebroker.caas.service.RestTemplateService;
-import org.openpaas.servicebroker.caas.service.impl.AdminTokenService;
-import org.openpaas.servicebroker.caas.service.impl.CatalogServiceImpl;
-import org.openpaas.servicebroker.caas.service.impl.InstanceServiceImpl;
-import org.openpaas.servicebroker.caas.service.impl.CaasService;
-import org.openpaas.servicebroker.caas.service.impl.UserService;
+import org.openpaas.servicebroker.container.platform.model.JpaServiceInstance;
+import org.openpaas.servicebroker.container.platform.model.User;
+import org.openpaas.servicebroker.container.platform.repo.JpaServiceInstanceRepository;
+import org.openpaas.servicebroker.container.platform.service.PropertyService;
+import org.openpaas.servicebroker.container.platform.service.RestTemplateService;
+import org.openpaas.servicebroker.container.platform.service.impl.AdminTokenService;
+import org.openpaas.servicebroker.container.platform.service.impl.CatalogServiceImpl;
+import org.openpaas.servicebroker.container.platform.service.impl.InstanceServiceImpl;
+import org.openpaas.servicebroker.container.platform.service.impl.ContainerPlatformService;
+import org.openpaas.servicebroker.container.platform.service.impl.UserService;
 import org.openpaas.servicebroker.exception.ServiceBrokerException;
 import org.openpaas.servicebroker.exception.ServiceInstanceExistsException;
 import org.openpaas.servicebroker.model.CreateServiceInstanceRequest;
@@ -55,7 +55,7 @@ public class InstanceServiceImplTest {
     private JpaServiceInstanceRepository instanceRepository;
 
 	@Mock
-    CaasService caasService;
+    ContainerPlatformService caasService;
     
 	@Mock
 	AdminTokenService adminTokenService;
@@ -92,9 +92,9 @@ public class InstanceServiceImplTest {
 		
 		jpaServiceInstance = new JpaServiceInstance(request);
 		jpaServiceInstance.setServiceInstanceId(TestConstants.SV_INSTANCE_ID_001);
-		jpaServiceInstance.setCaasAccountTokenName(TestConstants.JPA_CAAS_ACCOUNT_ACCESS_TOKEN);
-		jpaServiceInstance.setCaasAccountName(TestConstants.JPA_CAAS_ACCOUNT_NAME);
-		jpaServiceInstance.setCaasNamespace(TestConstants.JPA_CAAS_NAMESPACE);
+		jpaServiceInstance.setContainerPlatformAccountTokenName(TestConstants.JPA_CAAS_ACCOUNT_ACCESS_TOKEN);
+		jpaServiceInstance.setContainerPlatformAccountName(TestConstants.JPA_CAAS_ACCOUNT_NAME);
+		jpaServiceInstance.setContainerPlatformNamespace(TestConstants.JPA_CAAS_NAMESPACE);
 		jpaServiceInstance.setUserId(TestConstants.PARAM_KEY_OWNER_VALUE);
 		Map<String,Object> jpaMap = new HashMap<>();
 		jpaMap.put(TestConstants.PARAM_KEY_OWNER, TestConstants.PARAM_KEY_OWNER_VALUE);
@@ -299,9 +299,9 @@ public class InstanceServiceImplTest {
 		//결과 값이 맞는가 본다.
 		assertThat(instance).isNotNull();
 		assertEquals(jpaServiceInstance, instance);
-		assertEquals(TestConstants.JPA_CAAS_ACCOUNT_ACCESS_TOKEN, jpaServiceInstance.getCaasAccountTokenName());
-		assertEquals(TestConstants.JPA_CAAS_ACCOUNT_NAME, jpaServiceInstance.getCaasAccountName());
-		assertEquals(TestConstants.JPA_CAAS_NAMESPACE, jpaServiceInstance.getCaasNamespace());
+		assertEquals(TestConstants.JPA_CAAS_ACCOUNT_ACCESS_TOKEN, jpaServiceInstance.getContainerPlatformAccountTokenName());
+		assertEquals(TestConstants.JPA_CAAS_ACCOUNT_NAME, jpaServiceInstance.getContainerPlatformAccountName());
+		assertEquals(TestConstants.JPA_CAAS_NAMESPACE, jpaServiceInstance.getContainerPlatformNamespace());
 		assertEquals(TestConstants.JPA_ORGANIZTION_GUID, jpaServiceInstance.getOrganizationGuid());
 		assertEquals(TestConstants.JPA_SERVICE_DEFINITION_ID, jpaServiceInstance.getServiceDefinitionId());
 		assertEquals(TestConstants.JPA_SPACE_GUID, jpaServiceInstance.getSpaceGuid());
@@ -368,7 +368,7 @@ public class InstanceServiceImplTest {
 	/** 통과
 	 * instanceService의
 	 * if ( instance == null )의 값 false 이고
-	 * if (existsNamespace( instance.getCaasNamespace() ))의 existsNamespace 의 return인
+	 * if (existsNamespace( instance.getContainerPlatformNamespace() ))의 existsNamespace 의 return인
 	 * caasService.existsNamespace( namespace ) 가 true일 때 
 	 * @throws ServiceBrokerException 
 	 * */ 
@@ -389,9 +389,9 @@ public class InstanceServiceImplTest {
 		serviceInstance.deleteServiceInstance(delRequest);	
 		
 		assertThat(jpaServiceInstance).isNotNull();
-		assertEquals(TestConstants.JPA_CAAS_ACCOUNT_ACCESS_TOKEN, jpaServiceInstance.getCaasAccountTokenName());
-		assertEquals(TestConstants.JPA_CAAS_ACCOUNT_NAME, jpaServiceInstance.getCaasAccountName());
-		assertEquals(TestConstants.JPA_CAAS_NAMESPACE, jpaServiceInstance.getCaasNamespace());
+		assertEquals(TestConstants.JPA_CAAS_ACCOUNT_ACCESS_TOKEN, jpaServiceInstance.getContainerPlatformAccountTokenName());
+		assertEquals(TestConstants.JPA_CAAS_ACCOUNT_NAME, jpaServiceInstance.getContainerPlatformAccountName());
+		assertEquals(TestConstants.JPA_CAAS_NAMESPACE, jpaServiceInstance.getContainerPlatformNamespace());
 		assertEquals(TestConstants.JPA_ORGANIZTION_GUID, jpaServiceInstance.getOrganizationGuid());
 		assertEquals(TestConstants.JPA_SERVICE_DEFINITION_ID, jpaServiceInstance.getServiceDefinitionId());
 		assertEquals(TestConstants.JPA_SPACE_GUID, jpaServiceInstance.getSpaceGuid());

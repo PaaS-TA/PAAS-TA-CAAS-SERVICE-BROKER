@@ -8,11 +8,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openpaas.servicebroker.caas.model.JpaServiceInstance;
-import org.openpaas.servicebroker.caas.model.User;
-import org.openpaas.servicebroker.caas.service.PropertyService;
-import org.openpaas.servicebroker.caas.service.RestTemplateService;
-import org.openpaas.servicebroker.caas.service.impl.UserService;
+import org.openpaas.servicebroker.container.platform.model.JpaServiceInstance;
+import org.openpaas.servicebroker.container.platform.model.User;
+import org.openpaas.servicebroker.container.platform.service.PropertyService;
+import org.openpaas.servicebroker.container.platform.service.RestTemplateService;
+import org.openpaas.servicebroker.container.platform.service.impl.UserService;
 import org.openpaas.servicebroker.model.Plan;
 import org.paasta.servicebroker.apiplatform.common.TestConstants;
 import org.springframework.http.HttpMethod;
@@ -36,16 +36,16 @@ public class UserServiceTest {
 	@Before
     public void setup() {
 		jpaServiceInstance = new JpaServiceInstance();
-		jpaServiceInstance.setCaasAccountName(TestConstants.JPA_CAAS_ACCOUNT_NAME);
-		jpaServiceInstance.setCaasAccountTokenName(TestConstants.JPA_CAAS_ACCOUNT_ACCESS_TOKEN);
-		jpaServiceInstance.setCaasNamespace(TestConstants.JPA_CAAS_NAMESPACE);
+		jpaServiceInstance.setContainerPlatformAccountName(TestConstants.JPA_CAAS_ACCOUNT_NAME);
+		jpaServiceInstance.setContainerPlatformAccountTokenName(TestConstants.JPA_CAAS_ACCOUNT_ACCESS_TOKEN);
+		jpaServiceInstance.setContainerPlatformNamespace(TestConstants.JPA_CAAS_NAMESPACE);
 		jpaServiceInstance.setPlanId(TestConstants.SERVICEDEFINITION_PLAN_ID);
 		jpaServiceInstance.setServiceInstanceId(TestConstants.SV_INSTANCE_ID_001);
 		
 		//테스트 커버리지는 올리기 위한 뻘짓 (하지마세요)
-		user.setCaasAccountName("name");
-		user.setCaasAccountTokenName("token_value");
-		user.setCaasNamespace("namespace");
+		user.setContainerPlatformAccountName("name");
+		user.setContainerPlatformAccountTokenName("token_value");
+		user.setContainerPlatformNamespace("namespace");
 		user.setId("auto_value");
 		user.setOrganizationGuid("org_guid");
 		user.setServiceInstanceId("instance_id");
@@ -55,9 +55,9 @@ public class UserServiceTest {
 		user.setPlanName(TestConstants.PLAN_NAME);
 		user.setPlanDescription(TestConstants.PLAN_DESC);
 		
-		user.getCaasAccountName();
-		user.getCaasAccountTokenName();
-		user.getCaasNamespace();
+		user.getContainerPlatformAccountName();
+		user.getContainerPlatformAccountTokenName();
+		user.getContainerPlatformNamespace();
 		user.getId();
 		user.getOrganizationGuid();
 		user.getRoleSetCode();
