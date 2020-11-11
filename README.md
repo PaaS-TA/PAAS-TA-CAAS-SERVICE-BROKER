@@ -14,7 +14,16 @@ PAAS-TA-CAAS-SERVICE-BROKER가 수행하는 Container 서비스 관리 작업은
 - Updateprovisioning : PAAS-TA-CAAS-SERVICE-BROKER 인스턴스 갱신
 - Deprovisioning : PAAS-TA-CAAS-SERVICE-BROKER 인스턴스 삭제
 
-[서비스팩 개발 가이드](https://github.com/PaaS-TA/Guide-3.0-Penne-/blob/master/Service-Guide/Tools/PaaS-TA%20Container%20%EC%84%9C%EB%B9%84%EC%8A%A4%ED%8C%A9%20%EC%84%A4%EC%B9%98%20%EA%B0%80%EC%9D%B4%EB%93%9C_v1.0.md)의 API 개발 가이드를 참고하시면 아키텍쳐와 기술, 구현과 개발에 대해 자세히 알 수 있습니다.
+### PAAS-TA-CAAS-SERVICE-BROKER 설치 방법
+
+[서비스팩 설치 가이드](https://github.com/PaaS-TA/Guide-5.0-Ravioli/blob/master/service-guide/tools/PAAS-TA_CONTAINER_SERVICE_INSTALL_GUIDE_V2.0.md)의 가이드를 참고하시면 아키텍쳐와 설치 및 사용법에 대해 자세히 알 수 있습니다.
+
+### PAAS-TA-CAAS-SERVICE-BROKER 빌드 방법
+
+PAAS-TA-CAAS-SERVICE-BROKER 소스 코드를 활용하여 로컬 환경에서 빌드하고 싶을 때 다음 명령어를 입력합니다.
+```
+$ gradle build
+```
 
 ## 개발 환경
 - JDK 8
