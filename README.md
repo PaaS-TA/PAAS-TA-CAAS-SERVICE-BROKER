@@ -91,3 +91,7 @@ $ gradle build
   - Parameters : 
     > service_id : \<predefined_service_id\> \
       plan_id : \<plan_id_of_service\>
+
+## 라이센스
+
+[Apache-2.0 License](http://www.apache.org/licenses/LICENSE-2.0)
