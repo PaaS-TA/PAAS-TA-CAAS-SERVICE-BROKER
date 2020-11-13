@@ -96,4 +96,5 @@ PAAS-TA-CAAS-SERVICE-BROKER의 개발 환경은 다음과 같습니다.
 
 ## 라이선스
 
-[Apache-2.0 License](http://www.apache.org/licenses/LICENSE-2.0)
+
+PAAS-TA-CAAS-SERVICE-BROKER의 라이선스는 [Apache-2.0 License](http://www.apache.org/licenses/LICENSE-2.0) 입니다.
