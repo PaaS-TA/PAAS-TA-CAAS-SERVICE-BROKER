@@ -92,6 +92,6 @@ $ gradle build
     > service_id : \<predefined_service_id\> \
       plan_id : \<plan_id_of_service\>
 
-## 라이스
+## 라이선스
 
 [Apache-2.0 License](http://www.apache.org/licenses/LICENSE-2.0)
