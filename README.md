@@ -12,7 +12,7 @@ PaaS-TA 에서 제공하는 Container 서비스 브로커로 클라우드 컨트
 ## 시작하기
 
 Container 서비스 브로커가 수행하는 서비스 관리 작업은 다음과 같습니다.
-- Catalog : Container 서비스 인스턴스 카탈로그 조회
+- Catalog : Container 서비스 카탈로그 조회
 - Provisioning : Container 서비스 인스턴스 인스턴스 생성 ( parameters "owner", "org_name" 필수 )
 - Updateprovisioning : Container 서비스 인스턴스 인스턴스 갱신
 - Deprovisioning : Container 서비스 인스턴스 인스턴스 삭제
