@@ -57,9 +57,9 @@ public class ContainerPlatformServiceTest {
 		
 		jpaServiceInstance = new JpaServiceInstance(request);
 		jpaServiceInstance.setServiceInstanceId(TestConstants.SV_INSTANCE_ID_001);
-		jpaServiceInstance.setContainerPlatformAccountTokenName(TestConstants.JPA_CAAS_ACCOUNT_ACCESS_TOKEN);
-		jpaServiceInstance.setContainerPlatformAccountName(TestConstants.JPA_CAAS_ACCOUNT_NAME);
-		jpaServiceInstance.setContainerPlatformNamespace(TestConstants.JPA_CAAS_NAMESPACE);
+		jpaServiceInstance.setCaasAccountTokenName(TestConstants.JPA_CAAS_ACCOUNT_ACCESS_TOKEN);
+		jpaServiceInstance.setCaasAccountName(TestConstants.JPA_CAAS_ACCOUNT_NAME);
+		jpaServiceInstance.setCaasNamespace(TestConstants.JPA_CAAS_NAMESPACE);
 		Map<String,Object> jpaMap = new HashMap<>();
 		jpaMap.put(TestConstants.PARAM_KEY_OWNER, TestConstants.PARAM_KEY_OWNER_VALUE);
 		jpaServiceInstance.setParameters(jpaMap);
@@ -86,9 +86,9 @@ public class ContainerPlatformServiceTest {
         // 결과 값이 맞는지 체크한다.
         assertThat(instance).isNotNull();
 		assertEquals(jpaServiceInstance, instance);
-		//assertEquals(TestConstants.JPA_CAAS_ACCOUNT_ACCESS_TOKEN, jpaServiceInstance.getContainerPlatformAccountAccessToken());
-		assertEquals(TestConstants.ORG_GUID_001 + "-" +TestConstants.JPA_CAAS_ACCOUNT_NAME, jpaServiceInstance.getContainerPlatformAccountName());
-		assertEquals(TestConstants.JPA_CAAS_NAMESPACE, jpaServiceInstance.getContainerPlatformNamespace());
+		//assertEquals(TestConstants.JPA_CAAS_ACCOUNT_ACCESS_TOKEN, jpaServiceInstance.getCaasAccountAccessToken());
+		assertEquals(TestConstants.ORG_GUID_001 + "-" +TestConstants.JPA_CAAS_ACCOUNT_NAME, jpaServiceInstance.getCaasAccountName());
+		assertEquals(TestConstants.JPA_CAAS_NAMESPACE, jpaServiceInstance.getCaasNamespace());
 		assertEquals(TestConstants.JPA_ORGANIZTION_GUID, jpaServiceInstance.getOrganizationGuid());
 		assertEquals(TestConstants.JPA_SERVICE_DEFINITION_ID, jpaServiceInstance.getServiceDefinitionId());
 		assertEquals(TestConstants.JPA_SPACE_GUID, jpaServiceInstance.getSpaceGuid());
@@ -103,7 +103,7 @@ public class ContainerPlatformServiceTest {
     	when(restTemplateService.send(propertyService.getContainerPlatformUrl(), createNamespaceYml, HttpMethod.DELETE, String.class)).thenReturn(createNamespaceYml);
     	
     	// 실제로 테스트할 함수를 호출한다.
-    	caasService.deleteNamespace(jpaServiceInstance.getContainerPlatformNamespace());
+    	caasService.deleteNamespace(jpaServiceInstance.getCaasNamespace());
     	
     	// 결과 값이 맞는지 체크한다.
     	// TODO : 결과 값이 없으면 어떻게 해야하지...?
@@ -117,7 +117,7 @@ public class ContainerPlatformServiceTest {
     	when(restTemplateService.send(propertyService.getContainerPlatformUrl(), createNamespaceYml, HttpMethod.PUT, String.class)).thenReturn(createNamespaceYml);
     	
     	// 실제로 테스트할 함수를 호출한다.
-    	caasService.changeResourceQuota(jpaServiceInstance.getContainerPlatformAccountName(), PlanFixture.getPlanOne());
+    	caasService.changeResourceQuota(jpaServiceInstance.getCaasAccountName(), PlanFixture.getPlanOne());
     	
     	// 결과 값이 맞는지 체크한다.
     	// TODO : 결과 값이 없으면 어떻게 해야하지...?
@@ -132,7 +132,7 @@ public class ContainerPlatformServiceTest {
     	when(restTemplateService.send(propertyService.getContainerPlatformUrl(), createNamespaceYml, HttpMethod.PUT, String.class)).thenReturn(null);
     	
     	// 실제로 테스트할 함수를 호출한다.
-    	caasService.changeResourceQuota(jpaServiceInstance.getContainerPlatformAccountName(), PlanFixture.getPlanOne());
+    	caasService.changeResourceQuota(jpaServiceInstance.getCaasAccountName(), PlanFixture.getPlanOne());
     	
     	// 결과 값이 맞는지 체크한다.
     	// TODO : 결과 값이 없으면 어떻게 해야하지...?
