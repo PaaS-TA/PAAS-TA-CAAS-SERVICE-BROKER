@@ -29,11 +29,11 @@ ext {
     hibernateValidatorVersion = '5.1.0.Final'
     jsonPathVersion = '2.2.0'
 
-    mainClassName = 'org.openpaas.servicebroker.caas.config.Application'
+    mainClassName = 'org.openpaas.servicebroker.container.platform.config.Application'
     jacocoVersion = '0.8.1'
 }
 
-def mainClassName = 'org.openpaas.servicebroker.caas.config.Application'
+def mainClassName = 'org.openpaas.servicebroker.container.platform.config.Application'
 
 sourceCompatibility = 1.8
 version = '1.0'
